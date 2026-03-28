@@ -2,273 +2,227 @@
 
 import { motion } from 'framer-motion';
 
-// ── Logo shape coordinates ────────────────────────────────────────────────────
-//
-// The WYN WIN mark is two nested, elongated skewed parallelograms —
-// think stacked planes tilting forward. The long axis runs upper-left →
-// lower-right, the shape tapers at top and bottom like a tall kite.
-//
-// All coordinates assume a 500 × 500 viewBox.
-//
-// OUTER shape — the larger plane (back layer)
-const OUTER = '245,8 422,178 255,492 78,322';
-// INNER shape — smaller plane (front layer), offset right+down
-const INNER = '278,68 392,192 234,444 120,318';
+// ── Simple diamond (rhombus) centred at 250,250 in a 500×500 viewBox ─────────
+const D = '250,50 460,250 250,450 40,250';
+const CORNERS = D.split(' ').map((p) => p.split(',').map(Number) as [number, number]);
 
-// Tiny accent version (scaled down to ~80px, offset to centre of a 80×80 box)
-const ACCENT_OUTER = '40,2 72,30 42,78 10,50';
-const ACCENT_INNER = '47,12 65,32 38,70 20,50';
+// Accent mark — tiny rhombus for eyebrow ornament (80×80 viewBox)
+const ACCENT = '40,4 76,40 40,76 4,40';
 
-// ── Filters ───────────────────────────────────────────────────────────────────
-const Defs = ({ id }: { id: string }) => (
-  <defs>
-    <filter id={`${id}-pink`} x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="12" result="blur" />
-      <feMerge>
-        <feMergeNode in="blur" />
-        <feMergeNode in="SourceGraphic" />
-      </feMerge>
-    </filter>
-    <filter id={`${id}-white`} x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="8" result="blur" />
-      <feMerge>
-        <feMergeNode in="blur" />
-        <feMergeNode in="SourceGraphic" />
-      </feMerge>
-    </filter>
-    <filter id={`${id}-bloom`} x="-100%" y="-100%" width="300%" height="300%">
-      <feGaussianBlur stdDeviation="22" result="blur" />
-      <feMerge>
-        <feMergeNode in="blur" />
-        <feMergeNode in="SourceGraphic" />
-      </feMerge>
-    </filter>
-  </defs>
-);
-
-// ── Helper — parse polygon string into [cx, cy] centroid ─────────────────────
-function centroid(pts: string): [number, number] {
-  const pairs = pts.trim().split(/\s+/).map((p) => p.split(',').map(Number));
-  const cx = pairs.reduce((s, [x]) => s + x, 0) / pairs.length;
-  const cy = pairs.reduce((s, [, y]) => s + y, 0) / pairs.length;
-  return [cx, cy];
-}
-
-const [OCX, OCY] = centroid(OUTER); // ≈ 250, 250
-const [ICX, ICY] = centroid(INNER); // ≈ 256, 256
+// ── Concertina: squash vertically → normal → squash horizontally → normal ────
+const SQUEEZE_ANIM = {
+  scaleX: [1, 0.55, 1, 1.55, 1],
+  scaleY: [1, 1.6,  1, 0.58, 1],
+};
+const SQUEEZE_T = {
+  duration: 4,
+  repeat: Infinity,
+  ease: 'easeInOut' as const,
+  times: [0, 0.25, 0.5, 0.75, 1],
+};
 
 // ── HeroDiamonds ─────────────────────────────────────────────────────────────
-// The main hero graphic — two interacting logo-mark planes animated on the
-// right side of the hero. Used in HeroSection.
+// Right-side graphic on the home hero. Diamond window with light shining through.
 export function HeroDiamonds() {
   return (
     <svg viewBox="0 0 500 500" fill="none" aria-hidden="true" className="w-full h-full">
-      <Defs id="hd" />
+      <defs>
+        {/* Soft edge glow */}
+        <filter id="hd-edge" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="5" result="b" />
+          <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+        {/* Wide ambient bloom */}
+        <filter id="hd-bloom" x="-100%" y="-100%" width="300%" height="300%">
+          <feGaussianBlur stdDeviation="28" />
+        </filter>
+        {/* Corner sparkle */}
+        <filter id="hd-spark" x="-300%" y="-300%" width="700%" height="700%">
+          <feGaussianBlur stdDeviation="9" />
+        </filter>
+        {/* Sweeping flare */}
+        <filter id="hd-sweep" x="-100%" y="-100%" width="300%" height="300%">
+          <feGaussianBlur stdDeviation="22" />
+        </filter>
 
-      {/* ── Background echo rings (very faint, different speeds) ── */}
-      {(['10,48 470,198 490,452 30,302', '30,28 450,218 470,472 50,282'] as const).map(
-        (pts, i) => (
-          <motion.polygon
-            key={i}
-            points={pts}
-            stroke="white"
-            strokeWidth="0.5"
-            opacity={0.04}
-            style={{ transformOrigin: `${OCX}px ${OCY}px` }}
-            animate={{ rotate: i % 2 === 0 ? 360 : -360 }}
-            transition={{ duration: 60 + i * 20, repeat: Infinity, ease: 'linear' }}
-          />
-        )
-      )}
+        {/* Diamond mask — light visible only through the diamond window */}
+        <mask id="hd-mask">
+          <motion.g
+            style={{ transformOrigin: '250px 250px' }}
+            animate={SQUEEZE_ANIM}
+            transition={SQUEEZE_T}
+          >
+            <polygon points={D} fill="white" />
+          </motion.g>
+        </mask>
+      </defs>
 
-      {/* ── Outer plane — pink, rocks forward ── */}
-      <motion.g
-        style={{ transformOrigin: `${OCX}px ${OCY}px` }}
-        animate={{ rotate: [0, 3, 0, -3, 0] }}
-        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-      >
-        {/* Glow halo */}
-        <polygon
-          points={OUTER}
-          stroke="#E8006A"
-          strokeWidth="3"
-          opacity="0.3"
-          filter="url(#hd-pink)"
+      {/* ── Ambient light source visible through the diamond window ── */}
+      <g mask="url(#hd-mask)">
+        {/* Base warm glow */}
+        <motion.circle
+          cx="260" cy="210" r="200"
+          fill="white"
+          filter="url(#hd-bloom)"
+          animate={{ opacity: [0.35, 0.6, 0.35], cy: [210, 230, 210] }}
+          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
         />
-        {/* Main stroke */}
-        <polygon points={OUTER} stroke="#E8006A" strokeWidth="2" opacity="0.9" />
-        {/* Dashed inner echo */}
-        <polygon
-          points={OUTER}
-          stroke="#E8006A"
-          strokeWidth="0.75"
-          opacity="0.2"
-          strokeDasharray="8 8"
-          transform="scale(0.88) translate(30 30)"
+        {/* Pink tint towards edges */}
+        <motion.circle
+          cx="250" cy="250" r="240"
+          fill="#E8006A"
+          filter="url(#hd-bloom)"
+          animate={{ opacity: [0.15, 0.28, 0.15] }}
+          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
         />
-        {/* Corner accent dots */}
-        {OUTER.split(' ').map((p, i) => {
-          const [cx, cy] = p.split(',').map(Number);
-          return (
-            <motion.circle
-              key={i}
-              cx={cx}
-              cy={cy}
-              r="4"
-              fill="#E8006A"
-              animate={{ opacity: [0.4, 1, 0.4], scale: [1, 1.6, 1] }}
-              style={{ transformOrigin: `${cx}px ${cy}px` }}
-              transition={{ duration: 3, repeat: Infinity, delay: i * 0.6 }}
-            />
-          );
-        })}
-      </motion.g>
-
-      {/* ── Inner plane — white, rocks back (opposite phase) ── */}
-      <motion.g
-        style={{ transformOrigin: `${ICX}px ${ICY}px` }}
-        animate={{ rotate: [0, -3, 0, 3, 0] }}
-        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-      >
-        <polygon
-          points={INNER}
-          stroke="white"
-          strokeWidth="3"
-          opacity="0.1"
-          filter="url(#hd-white)"
-        />
-        <polygon points={INNER} stroke="white" strokeWidth="1.5" opacity="0.6" />
-        <polygon
-          points={INNER}
-          stroke="white"
-          strokeWidth="0.5"
-          opacity="0.15"
-          strokeDasharray="6 6"
-          transform="scale(0.9) translate(25 25)"
-        />
-        {INNER.split(' ').map((p, i) => {
-          const [cx, cy] = p.split(',').map(Number);
-          return (
-            <motion.circle
-              key={i}
-              cx={cx}
-              cy={cy}
-              r="3"
-              fill="white"
-              animate={{ opacity: [0.2, 0.7, 0.2], scale: [1, 1.4, 1] }}
-              style={{ transformOrigin: `${cx}px ${cy}px` }}
-              transition={{ duration: 3, repeat: Infinity, delay: i * 0.6 + 2 }}
-            />
-          );
-        })}
-      </motion.g>
-
-      {/* ── Overlap bloom — glows where the two planes interact ── */}
-      <motion.ellipse
-        cx="285"
-        cy="258"
-        rx="40"
-        ry="70"
-        fill="#E8006A"
-        animate={{ opacity: [0.05, 0.16, 0.05] }}
-        transition={{ duration: 5, repeat: Infinity }}
-        filter="url(#hd-bloom)"
-        transform="rotate(-32 285 258)"
-      />
-
-      {/* ── Animated dashed spine connecting outer & inner centres ── */}
-      <motion.line
-        x1={OCX} y1={OCY} x2={ICX} y2={ICY}
-        stroke="white"
-        strokeWidth="0.75"
-        opacity="0.25"
-        strokeDasharray="4 4"
-        animate={{ strokeDashoffset: [0, -8] }}
-        transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-      />
-
-      {/* ── Floating particle logo-marks ── */}
-      {(
-        [
-          { tx: -170, ty: -210, s: 0.18, delay: 0,   color: '#E8006A' },
-          { tx:  180, ty: -210, s: 0.14, delay: 1.4, color: 'white'   },
-          { tx:  200, ty:  190, s: 0.16, delay: 0.7, color: 'white'   },
-          { tx: -190, ty:  190, s: 0.13, delay: 2.1, color: '#E8006A' },
-          { tx:   -5, ty: -240, s: 0.12, delay: 0.4, color: 'white'   },
-          { tx:    5, ty:  240, s: 0.10, delay: 1.8, color: '#E8006A' },
-          { tx:  240, ty:   -5, s: 0.11, delay: 1.1, color: 'white'   },
-          { tx: -240, ty:    5, s: 0.09, delay: 2.5, color: '#E8006A' },
-          { tx: -120, ty: -230, s: 0.08, delay: 3.0, color: 'white'   },
-          { tx:  120, ty:  230, s: 0.08, delay: 0.9, color: '#E8006A' },
-        ] as { tx: number; ty: number; s: number; delay: number; color: string }[]
-      ).map(({ tx, ty, s, delay, color }, i) => (
+        {/* Sweeping light shaft — the flare that the diamond interrupts */}
         <motion.g
-          key={i}
-          transform={`translate(${250 + tx} ${250 + ty}) scale(${s})`}
-          animate={{ opacity: [0.12, 0.45, 0.12], y: [0, -10, 0] }}
-          transition={{ duration: 3.5 + delay * 0.3, repeat: Infinity, delay, ease: 'easeInOut' }}
+          animate={{ x: [-350, 550], opacity: [0, 1, 1, 0] }}
+          transition={{
+            duration: 2.2,
+            repeat: Infinity,
+            repeatDelay: 5,
+            ease: 'easeInOut',
+            times: [0, 0.1, 0.9, 1],
+          }}
         >
-          <polygon points={OUTER} stroke={color} strokeWidth="3" opacity="1" fill="none" />
+          <rect
+            x="180" y="-20" width="140" height="540"
+            fill="white"
+            filter="url(#hd-sweep)"
+            transform="rotate(-18 250 250)"
+          />
         </motion.g>
-      ))}
+      </g>
+
+      {/* ── Diamond frame — the window edges that catch the light ── */}
+      <motion.g
+        style={{ transformOrigin: '250px 250px' }}
+        animate={SQUEEZE_ANIM}
+        transition={SQUEEZE_T}
+      >
+        {/* Outer glow halo on edges */}
+        <polygon
+          points={D}
+          stroke="white"
+          strokeWidth="14"
+          opacity="0.12"
+          filter="url(#hd-edge)"
+        />
+        {/* Main pink edge */}
+        <polygon
+          points={D}
+          stroke="#E8006A"
+          strokeWidth="2.5"
+          opacity="0.9"
+          filter="url(#hd-edge)"
+        />
+        {/* Thin white inner highlight */}
+        <polygon points={D} stroke="white" strokeWidth="0.75" opacity="0.6" />
+
+        {/* Corner sparkles — light refracting at each vertex */}
+        {CORNERS.map(([cx, cy], i) => (
+          <motion.circle
+            key={i}
+            cx={cx} cy={cy} r="12"
+            fill="white"
+            filter="url(#hd-spark)"
+            animate={{ opacity: [0.2, 0.85, 0.2] }}
+            transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.5, ease: 'easeInOut' }}
+          />
+        ))}
+      </motion.g>
     </svg>
   );
 }
 
 // ── DiamondCorner ─────────────────────────────────────────────────────────────
-// Partial logo-mark for page hero top-right corners — mostly off-screen.
+// Corner decoration for page heroes — same window concept, no sweep.
 export function DiamondCorner({ className = '' }: { className?: string }) {
   return (
     <div className={`pointer-events-none select-none ${className}`} aria-hidden="true">
       <svg viewBox="0 0 500 500" fill="none" className="w-full h-full">
         <defs>
-          <filter id="dc-glow" x="-40%" y="-40%" width="180%" height="180%">
-            <feGaussianBlur stdDeviation="6" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
+          <filter id="dc-edge" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="5" result="b" />
+            <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
           </filter>
+          <filter id="dc-bloom" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="28" />
+          </filter>
+          <filter id="dc-spark" x="-300%" y="-300%" width="700%" height="700%">
+            <feGaussianBlur stdDeviation="9" />
+          </filter>
+
+          <mask id="dc-mask">
+            <motion.g
+              style={{ transformOrigin: '250px 250px' }}
+              animate={SQUEEZE_ANIM}
+              transition={SQUEEZE_T}
+            >
+              <polygon points={D} fill="white" />
+            </motion.g>
+          </mask>
         </defs>
 
-        {/* Back echo — slow rotation */}
-        <motion.polygon
-          points={OUTER}
-          stroke="#E8006A"
-          strokeWidth="0.8"
-          opacity="0.12"
-          style={{ transformOrigin: `${OCX}px ${OCY}px` }}
-          animate={{ rotate: 360 }}
-          transition={{ duration: 50, repeat: Infinity, ease: 'linear' }}
-        />
-        {/* Main outer */}
-        <motion.polygon
-          points={OUTER}
-          stroke="#E8006A"
-          strokeWidth="1.5"
-          opacity="0.5"
-          style={{ transformOrigin: `${OCX}px ${OCY}px` }}
-          animate={{ rotate: [0, 2.5, 0, -2.5, 0] }}
-          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-          filter="url(#dc-glow)"
-        />
-        {/* Inner plane */}
-        <motion.polygon
-          points={INNER}
-          stroke="white"
-          strokeWidth="1"
-          opacity="0.25"
-          style={{ transformOrigin: `${ICX}px ${ICY}px` }}
-          animate={{ rotate: [0, -2.5, 0, 2.5, 0] }}
-          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-        />
+        {/* Light through diamond window */}
+        <g mask="url(#dc-mask)">
+          <motion.circle
+            cx="260" cy="210" r="200"
+            fill="white"
+            filter="url(#dc-bloom)"
+            animate={{ opacity: [0.3, 0.55, 0.3], cy: [210, 230, 210] }}
+            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.circle
+            cx="250" cy="250" r="240"
+            fill="#E8006A"
+            filter="url(#dc-bloom)"
+            animate={{ opacity: [0.12, 0.24, 0.12] }}
+            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+          />
+        </g>
+
+        {/* Diamond frame */}
+        <motion.g
+          style={{ transformOrigin: '250px 250px' }}
+          animate={SQUEEZE_ANIM}
+          transition={SQUEEZE_T}
+        >
+          <polygon
+            points={D}
+            stroke="white"
+            strokeWidth="14"
+            opacity="0.1"
+            filter="url(#dc-edge)"
+          />
+          <polygon
+            points={D}
+            stroke="#E8006A"
+            strokeWidth="2.5"
+            opacity="0.7"
+            filter="url(#dc-edge)"
+          />
+          <polygon points={D} stroke="white" strokeWidth="0.75" opacity="0.5" />
+
+          {CORNERS.map(([cx, cy], i) => (
+            <motion.circle
+              key={i}
+              cx={cx} cy={cy} r="10"
+              fill="white"
+              filter="url(#dc-spark)"
+              animate={{ opacity: [0.15, 0.7, 0.15] }}
+              transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.5, ease: 'easeInOut' }}
+            />
+          ))}
+        </motion.g>
       </svg>
     </div>
   );
 }
 
 // ── DiamondAccent ─────────────────────────────────────────────────────────────
-// Tiny inline spinning logo-mark — used as an eyebrow ornament.
+// Tiny inline spinning rhombus — eyebrow ornament.
 export function DiamondAccent({
   color = '#E8006A',
   size = 16,
@@ -289,14 +243,13 @@ export function DiamondAccent({
       animate={{ rotate: 360 }}
       transition={{ duration: speed, repeat: Infinity, ease: 'linear' }}
     >
-      <polygon points={ACCENT_OUTER} stroke={color} strokeWidth="4" fill={color} fillOpacity="0.15" />
-      <polygon points={ACCENT_INNER} stroke={color} strokeWidth="2.5" fill="none" opacity="0.6" />
+      <polygon points={ACCENT} stroke={color} strokeWidth="4" fill={color} fillOpacity="0.15" />
     </motion.svg>
   );
 }
 
 // ── SectionDiamondBg ──────────────────────────────────────────────────────────
-// Very faint animated logo-marks in the background of navy sections.
+// Very faint concertinaing diamond in the background of navy sections.
 export function SectionDiamondBg() {
   return (
     <div className="absolute inset-0 pointer-events-none select-none overflow-hidden" aria-hidden="true">
@@ -304,25 +257,16 @@ export function SectionDiamondBg() {
         viewBox="0 0 900 600"
         fill="none"
         preserveAspectRatio="xMaxYMid slice"
-        className="absolute w-full h-full opacity-[0.04]"
+        className="absolute w-full h-full"
       >
-        {/* Outer plane — back-right */}
         <motion.g
-          transform="translate(550 50) scale(0.9)"
-          style={{ transformOrigin: `${OCX + 550}px ${OCY + 50}px` }}
-          animate={{ rotate: [0, 2, 0, -2, 0] }}
-          transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+          transform="translate(540 50) scale(0.85)"
+          style={{ transformOrigin: '790px 300px' }}
+          animate={SQUEEZE_ANIM}
+          transition={{ ...SQUEEZE_T, duration: 6 }}
         >
-          <polygon points={OUTER} stroke="white" strokeWidth="1.5" />
-        </motion.g>
-        {/* Inner plane — front-right, counter-rock */}
-        <motion.g
-          transform="translate(600 80) scale(0.75)"
-          style={{ transformOrigin: `${ICX + 600}px ${ICY + 80}px` }}
-          animate={{ rotate: [0, -2, 0, 2, 0] }}
-          transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-        >
-          <polygon points={INNER} stroke="#E8006A" strokeWidth="2" />
+          <polygon points={D} stroke="white" strokeWidth="1" opacity="0.06" />
+          <polygon points={D} stroke="#E8006A" strokeWidth="0.5" opacity="0.04" />
         </motion.g>
       </svg>
     </div>

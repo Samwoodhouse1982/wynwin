@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
 
     const subject = isSimple
       ? `New enquiry from ${fields.firstName} ${fields.lastName}`
-      : `New enquiry from ${fields.name}${fields.company ? ` — ${fields.company}` : ''}`;
+      : `New enquiry from ${fields.name}${fields.company ? ` (${fields.company})` : ''}`;
 
     const htmlBody = isSimple
       ? `

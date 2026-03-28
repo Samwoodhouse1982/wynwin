@@ -44,16 +44,18 @@ function Field({
   label,
   error,
   required,
+  labelClassName,
   children,
 }: {
   label: string;
   error?: string;
   required?: boolean;
+  labelClassName?: string;
   children: React.ReactNode;
 }) {
   return (
     <div>
-      <label className={labelClass}>
+      <label className={labelClassName ?? labelClass}>
         {label}
         {required && <span className="text-pink ml-0.5">*</span>}
       </label>
@@ -207,7 +209,7 @@ export function FullContactForm({ onDark = false }: { onDark?: boolean }) {
       <div className="flex flex-col items-center gap-3 py-12 text-center">
         <CheckCircle className="text-mint" size={40} />
         <p className={`text-lg font-semibold ${onDark ? 'text-white' : 'text-navy'}`}>
-          Thanks — we&apos;ll be in touch soon.
+          Thanks, we&apos;ll be in touch soon.
         </p>
         <p className={`text-sm ${onDark ? 'text-white/60' : 'text-navy/60'}`}>
           Expect a reply within one business day.
@@ -220,28 +222,27 @@ export function FullContactForm({ onDark = false }: { onDark?: boolean }) {
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
       <input type="text" {...register('_gotcha')} className="hidden" tabIndex={-1} autoComplete="off" />
 
-      <Field label="Name" error={errors.name?.message} required>
+      <Field label="Name" error={errors.name?.message} required labelClassName={resolvedLabelClass}>
         <input
           {...register('name')}
           className={resolvedInputClass}
           placeholder="Jane Smith"
-          style={onDark ? {} : undefined}
         />
       </Field>
 
-      <Field label="Email" error={errors.email?.message} required>
+      <Field label="Email" error={errors.email?.message} required labelClassName={resolvedLabelClass}>
         <input {...register('email')} type="email" className={resolvedInputClass} placeholder="jane@company.com" />
       </Field>
 
-      <Field label="Job title" error={errors.jobTitle?.message}>
+      <Field label="Job title" error={errors.jobTitle?.message} labelClassName={resolvedLabelClass}>
         <input {...register('jobTitle')} className={resolvedInputClass} placeholder="Marketing Manager" />
       </Field>
 
-      <Field label="Company name" error={errors.company?.message} required>
+      <Field label="Company name" error={errors.company?.message} required labelClassName={resolvedLabelClass}>
         <input {...register('company')} className={resolvedInputClass} placeholder="Acme Ltd" />
       </Field>
 
-      <Field label="What do you need?" error={errors.message?.message} required>
+      <Field label="What do you need?" error={errors.message?.message} required labelClassName={resolvedLabelClass}>
         <textarea
           {...register('message')}
           rows={5}

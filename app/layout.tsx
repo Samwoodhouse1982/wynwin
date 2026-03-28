@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans, Permanent_Marker } from 'next/font/google';
+import { Plus_Jakarta_Sans, Unbounded } from 'next/font/google';
 import './globals.css';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
-import PreFooterCta from '@/components/PreFooterCta';
 import { META } from '@/lib/constants';
 
 const jakarta = Plus_Jakarta_Sans({
@@ -13,9 +12,9 @@ const jakarta = Plus_Jakarta_Sans({
   display: 'swap',
 });
 
-const permanentMarker = Permanent_Marker({
+const unbounded = Unbounded({
   subsets: ['latin'],
-  weight: '400',
+  weight: ['400', '500', '600', '700', '800', '900'],
   variable: '--font-syne',
   display: 'swap',
 });
@@ -44,11 +43,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en-GB" className={`${jakarta.variable} ${permanentMarker.variable}`}>
+    <html lang="en-GB" className={`${jakarta.variable} ${unbounded.variable}`}>
       <body className="min-h-screen flex flex-col antialiased">
         <Nav />
         <main className="flex-1 pt-16 lg:pt-20">{children}</main>
-        <PreFooterCta />
         <Footer />
       </body>
     </html>

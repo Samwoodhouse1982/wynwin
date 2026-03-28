@@ -13,12 +13,12 @@ export default function Footer() {
             <Image
               src="/logo.png"
               alt="WYN WIN"
-              width={120}
-              height={40}
-              className="h-10 w-auto brightness-0 invert"
+              width={300}
+              height={100}
+              className="w-1/2 h-auto"
             />
             <p className="text-white/60 text-sm leading-relaxed">
-              {BRAND.tagline}
+              Whatever You Need,<br />Whenever It&apos;s Needed.
             </p>
           </div>
 

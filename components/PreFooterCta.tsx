@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight, Phone } from 'lucide-react';
-import { HeroDiamonds } from '@/components/DiamondGraphic';
 import { BRAND } from '@/lib/constants';
 
 export default function PreFooterCta() {
@@ -18,12 +17,7 @@ export default function PreFooterCta() {
           backgroundSize: '18px 18px',
         }}
       />
-      {/* Diamond graphic — right edge */}
-      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-64 h-64 opacity-15 pointer-events-none">
-        <HeroDiamonds />
-      </div>
-
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-20">
+<div className="relative max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-20">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
           <motion.div
             initial={{ opacity: 0, x: -24 }}
@@ -38,7 +32,7 @@ export default function PreFooterCta() {
               Ready to get things done?
             </h2>
             <p className="text-white/75 mt-2">
-              We respond fast — usually the same day.
+              We respond fast, usually the same day.
             </p>
           </motion.div>
 

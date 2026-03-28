@@ -4,9 +4,10 @@ import HeroSection from '@/components/HeroSection';
 import WhyWorkWithUs from '@/components/WhyWorkWithUs';
 import HowWeHelp from '@/components/HowWeHelp';
 import ServiceCard from '@/components/ServiceCard';
+import TestimonialsSection from '@/components/TestimonialsSection';
+import PreFooterCta from '@/components/PreFooterCta';
 import { SimpleContactForm } from '@/components/ContactForm';
 import Reveal, { RevealItem } from '@/components/Reveal';
-import { SectionDiamondBg } from '@/components/DiamondGraphic';
 import { HOME, META } from '@/lib/constants';
 
 export const metadata: Metadata = {
@@ -66,7 +67,6 @@ export default function HomePage() {
 
       {/* Services Preview */}
       <section className="bg-navy py-20 lg:py-28 relative overflow-hidden">
-        <SectionDiamondBg />
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="mb-12">
             <Reveal stagger>
@@ -78,7 +78,7 @@ export default function HomePage() {
               <RevealItem>
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
                   <h2 className="text-3xl md:text-4xl font-bold text-white max-w-md">
-                    Four ways we help your team thrive.
+                    How we help your team.
                   </h2>
                   <Link
                     href="/what-we-do"
@@ -106,7 +106,7 @@ export default function HomePage() {
           <Reveal direction="none" delay={0.4}>
             <div className="mt-10 pt-10 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-6">
               <p className="text-white/50 text-sm">
-                Not sure which service fits? We handle much more — just ask.
+                Not sure which service fits? We handle much more. Just ask.
               </p>
               <Link
                 href="/get-in-touch"
@@ -118,6 +118,8 @@ export default function HomePage() {
           </Reveal>
         </div>
       </section>
+
+      <TestimonialsSection />
 
       {/* Inline Contact Form */}
       <section className="bg-cream py-20 lg:py-28">
@@ -131,7 +133,7 @@ export default function HomePage() {
                 Ready to get things done?
               </h2>
               <p className="text-navy/60 leading-relaxed mb-6">
-                Drop us a message and we&apos;ll come back to you fast — usually the same day.
+                Drop us a message and we&apos;ll come back to you fast, usually the same day.
               </p>
               <div className="space-y-2 text-sm text-navy/60">
                 <p>
@@ -155,6 +157,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <PreFooterCta />
     </>
   );
 }

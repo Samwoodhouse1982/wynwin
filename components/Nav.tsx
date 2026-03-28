@@ -33,9 +33,9 @@ export default function Nav() {
           <Image
             src="/logo.png"
             alt="WYN WIN"
-            width={120}
-            height={40}
-            className="h-8 lg:h-10 w-auto"
+            width={160}
+            height={54}
+            className="h-10 lg:h-14 w-auto"
             priority
           />
         </Link>

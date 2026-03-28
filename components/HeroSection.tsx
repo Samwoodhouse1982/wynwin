@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { motion, type Variants } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import HeroServiceShowcase from '@/components/HeroServiceShowcase';
+import { SunFlare } from '@/components/SunFlare';
 import { HOME } from '@/lib/constants';
 
 const fadeUp: Variants = {
@@ -17,16 +18,23 @@ export default function HeroSection() {
   return (
     <section className="relative bg-navy min-h-[90vh] flex items-center overflow-hidden">
       {/* Angled grid */}
-      <div
-        className="absolute inset-0 opacity-[0.04]"
-        style={{
-          backgroundImage:
-            'repeating-linear-gradient(45deg,transparent,transparent 60px,#fff 60px,#fff 61px),repeating-linear-gradient(-45deg,transparent,transparent 60px,#fff 60px,#fff 61px)',
-        }}
-      />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.04]">
+        <motion.div
+          className="absolute -inset-[120px]"
+          style={{
+            backgroundImage:
+              'repeating-linear-gradient(45deg,transparent,transparent 60px,#fff 60px,#fff 61px),repeating-linear-gradient(-45deg,transparent,transparent 60px,#fff 60px,#fff 61px)',
+          }}
+          animate={{ x: [0, 85], y: [0, 85] }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+        />
+      </div>
 
       {/* Pink glow blob — left */}
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-pink rounded-full opacity-10 blur-3xl translate-y-1/2 -translate-x-1/3 pointer-events-none" />
+
+      {/* Sun flare — top right */}
+      <SunFlare className="absolute top-0 right-0 w-[560px] h-[560px] opacity-60" />
 
       <div className="relative w-full max-w-7xl mx-auto px-6 lg:px-8 py-24 lg:py-32">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_480px] gap-10 lg:gap-16 items-center">

@@ -69,7 +69,7 @@ export default function GetInTouchPage() {
               <RevealItem>
                 <p className="text-white/60 leading-relaxed mb-10">
                   Tell us what you need and we&apos;ll come back to you fast. Whether it&apos;s a
-                  quick question or a full project brief — we&apos;re here.
+                  quick question or a full project brief. We&apos;re here.
                 </p>
               </RevealItem>
 

@@ -46,12 +46,12 @@ export default function CookiesPage() {
                     <td className="px-4 py-3">
                       Understand how visitors use the site (e.g. Google Analytics or Plausible)
                     </td>
-                    <td className="px-4 py-3">No — with consent</td>
+                    <td className="px-4 py-3">No (with consent)</td>
                   </tr>
                   <tr className="bg-white">
                     <td className="px-4 py-3 font-medium text-navy">Preferences</td>
                     <td className="px-4 py-3">Remember your settings</td>
-                    <td className="px-4 py-3">No — with consent</td>
+                    <td className="px-4 py-3">No (with consent)</td>
                   </tr>
                 </tbody>
               </table>

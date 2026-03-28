@@ -7,28 +7,23 @@ import Link from 'next/link';
 const SERVICES = [
   {
     number: '01',
-    lines: ['Logistics &', 'Event Support'],
-    chips: ['Planning', 'Venues', 'Staffing', 'Transport'],
+    lines: ['Strategy &', 'Intelligence'],
+    chips: ['Go-to-Market', 'Segmentation', 'Awards', 'ROI', 'Sales Enablement'],
   },
   {
     number: '02',
     lines: ['Brand &', 'Creative'],
-    chips: ['Content', 'Campaigns', 'Social', 'Research'],
+    chips: ['Influencers', 'Case Studies', 'SEO', 'Video', 'Campaigns'],
   },
   {
     number: '03',
     lines: ['Operations &', 'Management'],
-    chips: ['Assets', 'Workspace', 'Fulfilment', 'Data'],
+    chips: ['Assets', 'MarTech', 'Fulfilment', 'Data Compliance'],
   },
   {
     number: '04',
-    lines: ['Sourcing &', 'Procurement'],
-    chips: ['Materials', 'Media', 'Print', 'Procurement'],
-  },
-  {
-    number: '05',
-    lines: ['Strategy &', 'Intelligence'],
-    chips: ['GTM', 'Awards', 'Commercial', 'Product Mktg', 'Research'],
+    lines: ['Logistics &', 'Procurement'],
+    chips: ['Events', 'Venues', 'Print & Merch', 'Paid Media'],
   },
 ] as const;
 
@@ -83,7 +78,7 @@ export default function HeroServiceShowcase() {
 
         <div className="p-8 lg:p-10">
           {/* Tab indicators + labels — top nav */}
-          <div className="grid grid-cols-5 gap-2 mb-8">
+          <div className="grid grid-cols-4 gap-2 mb-8">
             {SERVICES.map((svc, i) => (
               <button
                 key={i}

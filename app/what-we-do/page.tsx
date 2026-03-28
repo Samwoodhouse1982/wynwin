@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import ServicePillar from '@/components/ServicePillar';
 import ServicesNav from '@/components/ServicesNav';
+import ServicesOverview from '@/components/ServicesOverview';
 import PageHero from '@/components/PageHero';
+import PreFooterCta from '@/components/PreFooterCta';
 import Reveal, { RevealItem } from '@/components/Reveal';
 import { FullContactForm } from '@/components/ContactForm';
 import { SERVICES, META } from '@/lib/constants';
@@ -21,6 +23,7 @@ export default function WhatWeDoPage() {
       />
 
       <ServicesNav />
+      <ServicesOverview />
 
       {/* Service Pillars */}
       {SERVICES.pillars.map((pillar, i) => (
@@ -55,6 +58,8 @@ export default function WhatWeDoPage() {
           </div>
         </div>
       </section>
+
+      <PreFooterCta />
     </>
   );
 }

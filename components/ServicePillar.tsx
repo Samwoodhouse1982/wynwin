@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { motion, type Variants } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import { SERVICE_ICON_MAP } from '@/components/ServiceSectionIcons';
 
 interface Service {
   name: string;
@@ -32,7 +33,7 @@ export default function ServicePillar({ id, title, services, index }: ServicePil
   return (
     <section
       id={id}
-      className={`py-20 lg:py-28 scroll-mt-24 ${isEven ? 'bg-cream' : 'bg-white'}`}
+      className={`py-14 lg:py-20 scroll-mt-24 ${isEven ? 'bg-cream' : 'bg-white'}`}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Heading with animated underline sweep */}
@@ -46,15 +47,21 @@ export default function ServicePillar({ id, title, services, index }: ServicePil
           <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-3">
             0{index + 1}
           </p>
-          <div className="relative inline-block">
-            <h2 className="text-3xl md:text-4xl font-bold text-navy">{title}</h2>
-            <motion.div
-              className="absolute -bottom-2 left-0 h-0.5 bg-pink"
-              initial={{ width: 0 }}
-              whileInView={{ width: '100%' }}
-              viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-            />
+          <div className="flex items-center gap-4">
+            {/* Animated icon */}
+            <div className="flex-shrink-0 opacity-90">
+              {(() => { const Icon = SERVICE_ICON_MAP[id]; return Icon ? <Icon /> : null; })()}
+            </div>
+            <div className="relative inline-block">
+              <h2 className="text-3xl md:text-4xl font-bold text-navy">{title}</h2>
+              <motion.div
+                className="absolute -bottom-2 left-0 h-0.5 bg-pink"
+                initial={{ width: 0 }}
+                whileInView={{ width: '100%' }}
+                viewport={{ once: true, margin: '-80px' }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+              />
+            </div>
           </div>
         </motion.div>
 
@@ -74,9 +81,9 @@ export default function ServicePillar({ id, title, services, index }: ServicePil
               className="bg-navy/5 hover:bg-navy/10 rounded-2xl p-7 transition-colors duration-200 cursor-default"
             >
               <div className="flex items-start gap-3">
-                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-pink flex-shrink-0" />
+                <div className="mt-[9px] w-1.5 h-1.5 rounded-full bg-pink flex-shrink-0" />
                 <div>
-                  <h3 className="font-bold text-navy mb-2">{service.name}</h3>
+                  <h3 className="font-bold text-navy mb-2 leading-snug">{service.name}</h3>
                   <p className="text-navy/60 text-sm leading-relaxed">{service.detail}</p>
                 </div>
               </div>
