@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans, Unbounded } from 'next/font/google';
+import { GoogleAnalytics } from '@next/third-parties/google';
 import './globals.css';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
@@ -49,6 +50,7 @@ export default function RootLayout({
         <main className="flex-1 pt-16 lg:pt-20">{children}</main>
         <Footer />
       </body>
+      <GoogleAnalytics gaId="G-BNH3Q60D6T" />
     </html>
   );
 }
