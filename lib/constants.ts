@@ -40,7 +40,7 @@ export const HOME = {
     tagline: 'WYN WIN: Whatever You Need, Whenever It\'s Needed.',
     ctas: [
       { label: 'What We Do', href: '/what-we-do', variant: 'outline' as const },
-      { label: 'Get Shit Done', href: '/get-in-touch', variant: 'primary' as const },
+      { label: 'GET IT DONE.', href: '/get-in-touch', variant: 'primary' as const },
     ],
   },
   valueProp: {
