@@ -1,0 +1,105 @@
+'use client';
+
+import Link from 'next/link';
+import { motion, type Variants } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
+
+interface Service {
+  name: string;
+  detail: string;
+}
+
+interface ServicePillarProps {
+  id: string;
+  title: string;
+  services: readonly Service[];
+  index: number;
+}
+
+const cardVariants: Variants = {
+  hidden: { opacity: 0, y: 28 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+};
+
+const cardContainer: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.1 } },
+};
+
+export default function ServicePillar({ id, title, services, index }: ServicePillarProps) {
+  const isEven = index % 2 === 0;
+
+  return (
+    <section
+      id={id}
+      className={`py-20 lg:py-28 scroll-mt-24 ${isEven ? 'bg-cream' : 'bg-white'}`}
+    >
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        {/* Heading with animated underline sweep */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6 }}
+          className="mb-12"
+        >
+          <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-3">
+            0{index + 1}
+          </p>
+          <div className="relative inline-block">
+            <h2 className="text-3xl md:text-4xl font-bold text-navy">{title}</h2>
+            <motion.div
+              className="absolute -bottom-2 left-0 h-0.5 bg-pink"
+              initial={{ width: 0 }}
+              whileInView={{ width: '100%' }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+            />
+          </div>
+        </motion.div>
+
+        {/* Cards */}
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          variants={cardContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: '-40px' }}
+        >
+          {services.map((service) => (
+            <motion.div
+              key={service.name}
+              variants={cardVariants}
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              className="bg-navy/5 hover:bg-navy/10 rounded-2xl p-7 transition-colors duration-200 cursor-default"
+            >
+              <div className="flex items-start gap-3">
+                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-pink flex-shrink-0" />
+                <div>
+                  <h3 className="font-bold text-navy mb-2">{service.name}</h3>
+                  <p className="text-navy/60 text-sm leading-relaxed">{service.detail}</p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+        {/* Per-pillar CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mt-10 flex items-center justify-between border-t border-navy/10 pt-8"
+        >
+          <p className="text-navy/50 text-sm">Need help with {title.toLowerCase()}?</p>
+          <Link
+            href="/get-in-touch"
+            className="inline-flex items-center gap-2 text-pink font-semibold text-sm hover:gap-3 transition-all duration-200"
+          >
+            Get in touch <ArrowRight size={14} />
+          </Link>
+        </motion.div>
+      </div>
+    </section>
+  );
+}

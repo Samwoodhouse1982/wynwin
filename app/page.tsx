@@ -1,65 +1,160 @@
-import Image from "next/image";
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import HeroSection from '@/components/HeroSection';
+import WhyWorkWithUs from '@/components/WhyWorkWithUs';
+import HowWeHelp from '@/components/HowWeHelp';
+import ServiceCard from '@/components/ServiceCard';
+import { SimpleContactForm } from '@/components/ContactForm';
+import Reveal, { RevealItem } from '@/components/Reveal';
+import { SectionDiamondBg } from '@/components/DiamondGraphic';
+import { HOME, META } from '@/lib/constants';
 
-export default function Home() {
+export const metadata: Metadata = {
+  title: META.home.title,
+  description: META.home.description,
+};
+
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      <HeroSection />
+
+      {/* Value Proposition */}
+      <section className="bg-white py-20 lg:py-28">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <Reveal stagger>
+              <RevealItem>
+                <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-4">
+                  Our value
+                </p>
+              </RevealItem>
+              <RevealItem>
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-navy mb-6 leading-tight">
+                  {HOME.valueProp.headline}
+                </h2>
+              </RevealItem>
+              {HOME.valueProp.body.split('\n\n').map((para, i) => (
+                <RevealItem key={i}>
+                  <p className="text-navy/60 text-lg leading-relaxed mb-4">{para}</p>
+                </RevealItem>
+              ))}
+              <RevealItem>
+                <div className="flex flex-wrap gap-4 pt-4">
+                  <Link
+                    href="/get-in-touch"
+                    className="inline-flex items-center gap-2 px-7 py-3.5 bg-pink text-white font-semibold rounded-full hover:bg-pink-dark transition-colors duration-200"
+                  >
+                    Get In Touch
+                  </Link>
+                  <Link
+                    href="/what-we-do"
+                    className="inline-flex items-center gap-2 px-7 py-3.5 border border-navy/20 text-navy font-semibold rounded-full hover:border-navy hover:bg-navy/5 transition-colors duration-200"
+                  >
+                    See What We Do
+                  </Link>
+                </div>
+              </RevealItem>
+            </Reveal>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      <HowWeHelp />
+
+      <WhyWorkWithUs background="white" />
+
+      {/* Services Preview */}
+      <section className="bg-navy py-20 lg:py-28 relative overflow-hidden">
+        <SectionDiamondBg />
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="mb-12">
+            <Reveal stagger>
+              <RevealItem>
+                <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-4">
+                  What we do
+                </p>
+              </RevealItem>
+              <RevealItem>
+                <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+                  <h2 className="text-3xl md:text-4xl font-bold text-white max-w-md">
+                    Four ways we help your team thrive.
+                  </h2>
+                  <Link
+                    href="/what-we-do"
+                    className="inline-flex items-center gap-2 text-pink font-semibold text-sm hover:gap-3 transition-all duration-200 whitespace-nowrap"
+                  >
+                    See all services →
+                  </Link>
+                </div>
+              </RevealItem>
+            </Reveal>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {HOME.servicesPreview.map((service, i) => (
+              <ServiceCard
+                key={service.title}
+                title={service.title}
+                body={service.body}
+                href={service.href}
+                index={i}
+              />
+            ))}
+          </div>
+
+          {/* Nudge below cards */}
+          <Reveal direction="none" delay={0.4}>
+            <div className="mt-10 pt-10 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-6">
+              <p className="text-white/50 text-sm">
+                Not sure which service fits? We handle much more — just ask.
+              </p>
+              <Link
+                href="/get-in-touch"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-pink text-white font-semibold rounded-full hover:bg-pink-dark transition-colors duration-200 whitespace-nowrap text-sm"
+              >
+                Talk to us →
+              </Link>
+            </div>
+          </Reveal>
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* Inline Contact Form */}
+      <section className="bg-cream py-20 lg:py-28">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+            <Reveal direction="left">
+              <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-4">
+                Get in touch
+              </p>
+              <h2 className="text-3xl md:text-4xl font-bold text-navy mb-4">
+                Ready to get things done?
+              </h2>
+              <p className="text-navy/60 leading-relaxed mb-6">
+                Drop us a message and we&apos;ll come back to you fast — usually the same day.
+              </p>
+              <div className="space-y-2 text-sm text-navy/60">
+                <p>
+                  Or reach us directly:{' '}
+                  <a href="tel:+447307176143" className="text-pink font-medium hover:underline">
+                    0730 717 6143
+                  </a>
+                </p>
+                <p>
+                  <a href="mailto:hello@wynwin.co.uk" className="text-pink font-medium hover:underline">
+                    hello@wynwin.co.uk
+                  </a>
+                </p>
+              </div>
+            </Reveal>
+            <Reveal direction="right" delay={0.15}>
+              <div className="bg-white rounded-2xl p-8 shadow-sm">
+                <SimpleContactForm />
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

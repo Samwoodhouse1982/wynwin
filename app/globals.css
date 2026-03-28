@@ -1,26 +1,71 @@
 @import "tailwindcss";
 
+@theme {
+  --color-pink: #E8006A;
+  --color-pink-dark: #C4005A;
+  --color-navy: #0D1B3E;
+  --color-navy-light: #1a2f5e;
+  --color-cream: #F8F6F2;
+  --color-mint: #00C896;
+  --color-offwhite: #FAFAF8;
+
+  /* Syne for headings — geometric, characterful, agency feel */
+  --font-display: var(--font-syne), system-ui, sans-serif;
+  /* Plus Jakarta Sans for body — clean and readable */
+  --font-body: var(--font-jakarta), system-ui, sans-serif;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #F8F6F2;
+  --foreground: #0D1B3E;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Syne on all headings automatically */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #E8006A;
+  border-radius: 3px;
+}
+
+/* Section reveal animations */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.6s ease forwards;
 }
