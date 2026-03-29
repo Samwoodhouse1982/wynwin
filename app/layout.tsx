@@ -4,6 +4,7 @@ import { GoogleAnalytics } from '@next/third-parties/google';
 import './globals.css';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
+import { ThemeProvider } from '@/components/ThemeProvider';
 import { META } from '@/lib/constants';
 
 const jakarta = Plus_Jakarta_Sans({
@@ -44,11 +45,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en-GB" className={`${jakarta.variable} ${unbounded.variable}`}>
+    <html lang="en-GB" className={`${jakarta.variable} ${unbounded.variable}`} suppressHydrationWarning>
       <body className="min-h-screen flex flex-col antialiased">
-        <Nav />
-        <main className="flex-1 pt-16 lg:pt-20">{children}</main>
-        <Footer />
+        <ThemeProvider>
+          <Nav />
+          <main className="flex-1 pt-16 lg:pt-20">{children}</main>
+          <Footer />
+        </ThemeProvider>
       </body>
       <GoogleAnalytics gaId="G-BNH3Q60D6T" />
     </html>

@@ -24,8 +24,8 @@ export default function WhyWorkWithUs({ background = 'white' }: Props) {
   const bgClass = isDark
     ? 'bg-navy text-white'
     : background === 'cream'
-    ? 'bg-cream text-navy'
-    : 'bg-white text-navy';
+    ? 'bg-cream dark:bg-navy-light text-navy dark:text-white'
+    : 'bg-white dark:bg-navy text-navy dark:text-white';
 
   return (
     <section className={`${bgClass} py-20 lg:py-28`}>
@@ -61,7 +61,7 @@ export default function WhyWorkWithUs({ background = 'white' }: Props) {
               className="group"
             >
               {/* Animated top line */}
-              <div className="relative h-0.5 bg-navy/10 mb-6 overflow-hidden">
+              <div className="relative h-0.5 bg-navy/10 dark:bg-white/10 mb-6 overflow-hidden">
                 <motion.div
                   className="absolute inset-y-0 left-0 bg-pink"
                   initial={{ width: 0 }}
@@ -98,7 +98,7 @@ export default function WhyWorkWithUs({ background = 'white' }: Props) {
             className={`inline-flex items-center gap-2 px-7 py-3.5 font-semibold rounded-full transition-colors duration-200 ${
               isDark
                 ? 'bg-pink text-white hover:bg-pink-dark'
-                : 'bg-navy text-white hover:bg-navy-light'
+                : 'bg-navy dark:bg-pink text-white hover:bg-navy-light dark:hover:bg-pink-dark'
             }`}
           >
             Work with us →

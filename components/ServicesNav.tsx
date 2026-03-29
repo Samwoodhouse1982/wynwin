@@ -47,7 +47,7 @@ export default function ServicesNav() {
   }, [activeId]);
 
   return (
-    <div className="sticky top-16 lg:top-20 z-40 bg-white border-b border-navy/10 shadow-sm">
+    <div className="sticky top-16 lg:top-20 z-40 bg-white dark:bg-navy border-b border-navy/10 dark:border-white/10 shadow-sm">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <nav
           ref={navRef}
@@ -63,7 +63,7 @@ export default function ServicesNav() {
                 className={`py-1 border-b-2 transition-all duration-200 ${
                   isActive
                     ? 'text-pink border-pink'
-                    : 'text-navy/50 border-transparent hover:text-navy hover:border-navy/30'
+                    : 'text-navy/50 dark:text-white/50 border-transparent hover:text-navy dark:hover:text-white hover:border-navy/30 dark:hover:border-white/30'
                 }`}
               >
                 {pillar.title}

@@ -33,7 +33,7 @@ export default function ServicePillar({ id, title, services, index }: ServicePil
   return (
     <section
       id={id}
-      className={`py-14 lg:py-20 scroll-mt-24 ${isEven ? 'bg-cream' : 'bg-white'}`}
+      className={`py-14 lg:py-20 scroll-mt-24 ${isEven ? 'bg-cream dark:bg-navy-light' : 'bg-white dark:bg-navy'}`}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Heading with animated underline sweep */}
@@ -53,7 +53,7 @@ export default function ServicePillar({ id, title, services, index }: ServicePil
               {(() => { const Icon = SERVICE_ICON_MAP[id]; return Icon ? <Icon /> : null; })()}
             </div>
             <div className="relative inline-block">
-              <h2 className="text-3xl md:text-4xl font-bold text-navy">{title}</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-navy dark:text-white">{title}</h2>
               <motion.div
                 className="absolute -bottom-2 left-0 h-0.5 bg-pink"
                 initial={{ width: 0 }}
@@ -78,13 +78,13 @@ export default function ServicePillar({ id, title, services, index }: ServicePil
               key={service.name}
               variants={cardVariants}
               whileHover={{ y: -4, transition: { duration: 0.2 } }}
-              className="bg-navy/5 hover:bg-navy/10 rounded-2xl p-7 transition-colors duration-200 cursor-default"
+              className="bg-navy/5 dark:bg-white/5 hover:bg-navy/10 dark:hover:bg-white/10 rounded-2xl p-7 transition-colors duration-200 cursor-default"
             >
               <div className="flex items-start gap-3">
                 <div className="mt-[9px] w-1.5 h-1.5 rounded-full bg-pink flex-shrink-0" />
                 <div>
-                  <h3 className="font-bold text-navy mb-2 leading-snug">{service.name}</h3>
-                  <p className="text-navy/60 text-sm leading-relaxed">{service.detail}</p>
+                  <h3 className="font-bold text-navy dark:text-white mb-2 leading-snug">{service.name}</h3>
+                  <p className="text-navy/60 dark:text-white/70 text-sm leading-relaxed">{service.detail}</p>
                 </div>
               </div>
             </motion.div>
@@ -96,9 +96,9 @@ export default function ServicePillar({ id, title, services, index }: ServicePil
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="mt-10 flex items-center justify-between border-t border-navy/10 pt-8"
+          className="mt-10 flex items-center justify-between border-t border-navy/10 dark:border-white/10 pt-8"
         >
-          <p className="text-navy/50 text-sm">Need help with {title.toLowerCase()}?</p>
+          <p className="text-navy/50 dark:text-white/70 text-sm">Need help with {title.toLowerCase()}?</p>
           <Link
             href="/get-in-touch"
             className="inline-flex items-center gap-2 text-pink font-semibold text-sm hover:gap-3 transition-all duration-200"

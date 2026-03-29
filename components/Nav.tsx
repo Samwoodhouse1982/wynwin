@@ -4,13 +4,18 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Sun, Moon } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import { NAV_LINKS } from '@/lib/constants';
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
@@ -58,8 +63,15 @@ export default function Nav() {
           ))}
         </ul>
 
-        {/* Desktop CTA */}
-        <div className="hidden md:block">
+        {/* Desktop CTA + theme toggle */}
+        <div className="hidden md:flex items-center gap-3">
+          <button
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            aria-label="Toggle dark mode"
+            className="text-white/70 hover:text-white p-2 transition-colors"
+          >
+            {mounted ? (theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />) : <Moon size={18} />}
+          </button>
           <Link
             href="/get-in-touch"
             className="inline-flex items-center px-5 py-2.5 bg-pink text-white text-sm font-semibold rounded-full hover:bg-pink-dark transition-colors duration-200"
@@ -69,13 +81,22 @@ export default function Nav() {
         </div>
 
         {/* Mobile toggle */}
-        <button
-          onClick={() => setOpen(!open)}
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          className="md:hidden text-white p-2 -mr-2"
-        >
-          {open ? <X size={22} /> : <Menu size={22} />}
-        </button>
+        <div className="md:hidden flex items-center gap-1">
+          <button
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            aria-label="Toggle dark mode"
+            className="text-white/70 hover:text-white p-2 transition-colors"
+          >
+            {mounted ? (theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />) : <Moon size={18} />}
+          </button>
+          <button
+            onClick={() => setOpen(!open)}
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            className="text-white p-2 -mr-2"
+          >
+            {open ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </nav>
 
       {/* Mobile drawer */}

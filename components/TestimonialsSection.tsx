@@ -16,7 +16,7 @@ const card: Variants = {
 
 export default function TestimonialsSection() {
   return (
-    <section className="bg-cream py-20 lg:py-28">
+    <section className="bg-cream dark:bg-navy-light py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -29,7 +29,7 @@ export default function TestimonialsSection() {
             <DiamondAccent />
             What clients say
           </p>
-          <h2 className="text-3xl md:text-4xl font-bold text-navy max-w-lg">
+          <h2 className="text-3xl md:text-4xl font-bold text-navy dark:text-white max-w-lg">
             Trusted by teams who need things done.
           </h2>
         </motion.div>
@@ -45,7 +45,7 @@ export default function TestimonialsSection() {
             <motion.div
               key={i}
               variants={card}
-              className="bg-white rounded-2xl p-8 flex flex-col gap-6 shadow-sm hover:shadow-md transition-shadow duration-300"
+              className="bg-white dark:bg-navy dark:border dark:border-white/10 rounded-2xl p-8 flex flex-col gap-6 shadow-sm hover:shadow-md transition-shadow duration-300"
             >
               <svg
                 width="32"
@@ -60,10 +60,10 @@ export default function TestimonialsSection() {
                   fill="currentColor"
                 />
               </svg>
-              <p className="text-navy/70 text-lg leading-relaxed flex-1">{t.quote}</p>
+              <p className="text-navy/70 dark:text-white/70 text-lg leading-relaxed flex-1">{t.quote}</p>
               <div>
-                <p className="font-bold text-navy text-sm">{t.name}</p>
-                <p className="text-navy/50 text-sm">{t.company}</p>
+                <p className="font-bold text-navy dark:text-white text-sm">{t.name}</p>
+                <p className="text-navy/50 dark:text-white/60 text-sm">{t.company}</p>
               </div>
             </motion.div>
           ))}

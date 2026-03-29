@@ -23,7 +23,7 @@ const card: Variants = {
 
 export default function HowWeHelp() {
   return (
-    <section className="bg-cream py-20 lg:py-28">
+    <section className="bg-cream dark:bg-navy-light py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -36,7 +36,7 @@ export default function HowWeHelp() {
             <DiamondAccent speed={12} />
             How we help
           </p>
-          <h2 className="text-3xl md:text-4xl font-bold text-navy max-w-xl">
+          <h2 className="text-3xl md:text-4xl font-bold text-navy dark:text-white max-w-xl">
             We become part of your team.
           </h2>
         </motion.div>
@@ -55,7 +55,7 @@ export default function HowWeHelp() {
                 key={i}
                 variants={card}
                 whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow duration-300 cursor-default"
+                className="bg-white dark:bg-navy dark:border dark:border-white/10 rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow duration-300 cursor-default"
               >
                 <motion.div
                   className="mb-5"
@@ -66,8 +66,8 @@ export default function HowWeHelp() {
                 >
                   <Icon />
                 </motion.div>
-                <h3 className="text-lg font-bold text-navy mb-3">{item.heading}</h3>
-                <p className="text-navy/60 text-sm leading-relaxed">{item.body}</p>
+                <h3 className="text-lg font-bold text-navy dark:text-white mb-3">{item.heading}</h3>
+                <p className="text-navy/60 dark:text-white/70 text-sm leading-relaxed">{item.body}</p>
               </motion.div>
             );
           })}

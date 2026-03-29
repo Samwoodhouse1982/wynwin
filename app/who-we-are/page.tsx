@@ -24,14 +24,14 @@ export default function WhoWeArePage() {
       <PageHero eyebrow="About us" headline={ABOUT.headline} />
 
       {/* About copy */}
-      <section className="bg-white py-20 lg:py-28">
+      <section className="bg-white dark:bg-navy py-20 lg:py-28">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
             {/* Copy */}
             <Reveal stagger>
               {ABOUT.body.map((para, i) => (
                 <RevealItem key={i}>
-                  <p className="text-navy/70 text-lg leading-relaxed mb-6">{para}</p>
+                  <p className="text-navy/70 dark:text-white/70 text-lg leading-relaxed mb-6">{para}</p>
                 </RevealItem>
               ))}
               <RevealItem>
@@ -49,14 +49,14 @@ export default function WhoWeArePage() {
             {/* Highlight cards */}
             <Reveal stagger>
               <RevealItem>
-                <h2 className="text-2xl font-bold text-navy mb-6">What sets us apart</h2>
+                <h2 className="text-2xl font-bold text-navy dark:text-white mb-6">What sets us apart</h2>
               </RevealItem>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {highlights.map((item, i) => (
                   <RevealItem key={item.stat} direction={i % 2 === 0 ? 'left' : 'right'}>
-                    <div className="bg-cream rounded-2xl p-6 space-y-2 h-full hover:shadow-md transition-shadow duration-300">
-                      <p className="text-lg font-bold text-navy leading-snug">{item.stat}</p>
-                      <p className="text-sm text-navy/60">{item.label}</p>
+                    <div className="bg-cream dark:bg-navy-light rounded-2xl p-6 space-y-2 h-full hover:shadow-md transition-shadow duration-300">
+                      <p className="text-lg font-bold text-navy dark:text-white leading-snug">{item.stat}</p>
+                      <p className="text-sm text-navy/60 dark:text-white/60">{item.label}</p>
                     </div>
                   </RevealItem>
                 ))}

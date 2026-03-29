@@ -22,7 +22,7 @@ interface PageHeroProps {
 
 export default function PageHero({ eyebrow, headline, subline, dark = true }: PageHeroProps) {
   return (
-    <section className={`${dark ? 'bg-navy' : 'bg-cream'} py-20 lg:py-28 overflow-hidden relative`}>
+    <section className={`${dark ? 'bg-navy' : 'bg-cream dark:bg-navy-light'} py-20 lg:py-28 overflow-hidden relative`}>
       {/* Angled grid */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ opacity: dark ? 0.04 : 0.06 }}>
         <motion.div
@@ -54,14 +54,14 @@ export default function PageHero({ eyebrow, headline, subline, dark = true }: Pa
           </motion.p>
           <motion.h1
             variants={item}
-            className={`text-5xl md:text-6xl font-bold mb-4 leading-tight ${dark ? 'text-white' : 'text-navy'}`}
+            className={`text-5xl md:text-6xl font-bold mb-4 leading-tight ${dark ? 'text-white' : 'text-navy dark:text-white'}`}
           >
             {headline}
           </motion.h1>
           {subline && (
             <motion.p
               variants={item}
-              className={`text-xl max-w-xl ${dark ? 'text-white/60' : 'text-navy/60'}`}
+              className={`text-xl max-w-xl ${dark ? 'text-white/60' : 'text-navy/60 dark:text-white/60'}`}
             >
               {subline}
             </motion.p>

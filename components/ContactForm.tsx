@@ -34,8 +34,8 @@ type FullValues = z.infer<typeof fullSchema>;
 // ── Shared field styles ─────────────────────────────────────
 
 const inputClass =
-  'w-full px-4 py-3 rounded-xl border border-navy/20 bg-white text-navy placeholder:text-navy/40 text-sm focus:outline-none focus:ring-2 focus:ring-pink/40 focus:border-pink transition-all duration-200';
-const labelClass = 'block text-sm font-medium text-navy mb-1.5';
+  'w-full px-4 py-3 rounded-xl border border-navy/20 dark:border-white/20 bg-white dark:bg-navy-light text-navy dark:text-white placeholder:text-navy/40 dark:placeholder:text-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-pink/40 focus:border-pink transition-all duration-200';
+const labelClass = 'block text-sm font-medium text-navy dark:text-white mb-1.5';
 const errorClass = 'mt-1 text-xs text-red-500';
 
 // ── Sub-components ──────────────────────────────────────────
@@ -97,8 +97,8 @@ export function SimpleContactForm() {
     return (
       <div className="flex flex-col items-center gap-3 py-12 text-center">
         <CheckCircle className="text-mint" size={40} />
-        <p className="text-lg font-semibold text-navy">Thanks for getting in touch!</p>
-        <p className="text-navy/60 text-sm">We&apos;ll be back with you shortly.</p>
+        <p className="text-lg font-semibold text-navy dark:text-white">Thanks for getting in touch!</p>
+        <p className="text-navy/60 dark:text-white/60 text-sm">We&apos;ll be back with you shortly.</p>
       </div>
     );
   }
@@ -137,7 +137,7 @@ export function SimpleContactForm() {
             type="checkbox"
             className="mt-0.5 w-4 h-4 rounded border-navy/30 text-pink accent-pink"
           />
-          <span className="text-xs text-navy/60 leading-relaxed">
+          <span className="text-xs text-navy/60 dark:text-white/60 leading-relaxed">
             {BRAND.consentNote}{' '}
             <a href="/privacy" className="underline hover:text-pink">
               Privacy Policy
