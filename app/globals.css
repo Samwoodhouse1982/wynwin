@@ -61,6 +61,28 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 3px;
 }
 
+/* Dark mode — direct overrides (outside @layer, guaranteed to win) */
+.dark .bg-cream { background-color: #1a2f5e; }
+.dark .bg-offwhite { background-color: #1a2f5e; }
+.dark section.bg-white,
+.dark div.bg-white:not(input):not(textarea) { background-color: #0d1b3e; }
+.dark .text-navy { color: #f8f6f2; }
+.dark .text-navy\/50 { color: rgba(248,246,242,0.5); }
+.dark .text-navy\/55 { color: rgba(248,246,242,0.55); }
+.dark .text-navy\/60 { color: rgba(248,246,242,0.6); }
+.dark .text-navy\/70 { color: rgba(248,246,242,0.7); }
+.dark .border-navy\/8 { border-color: rgba(255,255,255,0.08); }
+.dark .border-navy\/10 { border-color: rgba(255,255,255,0.1); }
+.dark .border-navy\/20 { border-color: rgba(255,255,255,0.2); }
+.dark input,
+.dark textarea {
+  background-color: #1a2f5e;
+  border-color: rgba(255,255,255,0.2);
+  color: #f8f6f2;
+}
+.dark input::placeholder,
+.dark textarea::placeholder { color: rgba(248,246,242,0.4); }
+
 /* Section reveal animations */
 @keyframes fadeUp {
   from {
