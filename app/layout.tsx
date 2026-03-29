@@ -29,9 +29,19 @@ export const metadata: Metadata = {
   description: META.home.description,
   metadataBase: new URL(META.siteUrl),
   openGraph: {
+    title: META.home.title,
+    description: META.home.description,
+    url: META.siteUrl,
     siteName: META.siteName,
+    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'WYN WIN — Services for Busy People' }],
     type: 'website',
     locale: 'en_GB',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: META.home.title,
+    description: META.home.description,
+    images: ['/opengraph-image'],
   },
   robots: {
     index: true,

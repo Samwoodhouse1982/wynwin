@@ -7,6 +7,18 @@ import { BRAND, META } from '@/lib/constants';
 export const metadata: Metadata = {
   title: META.getInTouch.title,
   description: META.getInTouch.description,
+  openGraph: {
+    title: META.getInTouch.title,
+    description: META.getInTouch.description,
+    url: `${META.siteUrl}/get-in-touch`,
+    images: [{ url: '/opengraph-image', width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: META.getInTouch.title,
+    description: META.getInTouch.description,
+    images: ['/opengraph-image'],
+  },
 };
 
 const contactLinks = [

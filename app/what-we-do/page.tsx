@@ -11,6 +11,18 @@ import { SERVICES, META } from '@/lib/constants';
 export const metadata: Metadata = {
   title: META.whatWeDo.title,
   description: META.whatWeDo.description,
+  openGraph: {
+    title: META.whatWeDo.title,
+    description: META.whatWeDo.description,
+    url: `${META.siteUrl}/what-we-do`,
+    images: [{ url: '/opengraph-image', width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: META.whatWeDo.title,
+    description: META.whatWeDo.description,
+    images: ['/opengraph-image'],
+  },
 };
 
 export default function WhatWeDoPage() {
