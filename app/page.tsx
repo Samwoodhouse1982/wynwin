@@ -33,7 +33,7 @@ export default function HomePage() {
       <HeroSection />
 
       {/* Value Proposition */}
-      <section className="bg-white py-20 lg:py-28">
+      <section className="bg-white dark:bg-navy py-20 lg:py-28">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="max-w-3xl">
             <Reveal stagger>
@@ -43,13 +43,13 @@ export default function HomePage() {
                 </p>
               </RevealItem>
               <RevealItem>
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-navy mb-6 leading-tight">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-navy dark:text-white mb-6 leading-tight">
                   {HOME.valueProp.headline}
                 </h2>
               </RevealItem>
               {HOME.valueProp.body.split('\n\n').map((para, i) => (
                 <RevealItem key={i}>
-                  <p className="text-navy/60 text-lg leading-relaxed mb-4">{para}</p>
+                  <p className="text-navy/60 dark:text-white/60 text-lg leading-relaxed mb-4">{para}</p>
                 </RevealItem>
               ))}
               <RevealItem>
@@ -62,7 +62,7 @@ export default function HomePage() {
                   </Link>
                   <Link
                     href="/what-we-do"
-                    className="inline-flex items-center gap-2 px-7 py-3.5 border border-navy/20 text-navy font-semibold rounded-full hover:border-navy hover:bg-navy/5 transition-colors duration-200"
+                    className="inline-flex items-center gap-2 px-7 py-3.5 border border-navy/20 dark:border-white/20 text-navy dark:text-white font-semibold rounded-full hover:border-navy dark:hover:border-white/50 hover:bg-navy/5 dark:hover:bg-white/5 transition-colors duration-200"
                   >
                     See What We Do
                   </Link>
@@ -134,20 +134,20 @@ export default function HomePage() {
       <TestimonialsSection />
 
       {/* Inline Contact Form */}
-      <section className="bg-cream py-20 lg:py-28">
+      <section className="bg-cream dark:bg-navy py-20 lg:py-28">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
             <Reveal direction="left">
               <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-4">
                 Get in touch
               </p>
-              <h2 className="text-3xl md:text-4xl font-bold text-navy mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-navy dark:text-white mb-4">
                 Ready to get things done?
               </h2>
-              <p className="text-navy/60 leading-relaxed mb-6">
+              <p className="text-navy/60 dark:text-white/60 leading-relaxed mb-6">
                 Drop us a message and we&apos;ll come back to you fast, usually the same day.
               </p>
-              <div className="space-y-2 text-sm text-navy/60">
+              <div className="space-y-2 text-sm text-navy/60 dark:text-white/60">
                 <p>
                   Or reach us directly:{' '}
                   <a href="tel:+447307176143" className="text-pink font-medium hover:underline">
@@ -162,7 +162,7 @@ export default function HomePage() {
               </div>
             </Reveal>
             <Reveal direction="right" delay={0.15}>
-              <div className="bg-white rounded-2xl p-8 shadow-sm">
+              <div className="bg-white dark:bg-navy-light rounded-2xl p-8 shadow-sm">
                 <SimpleContactForm />
               </div>
             </Reveal>
