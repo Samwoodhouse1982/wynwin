@@ -97,7 +97,7 @@ export default function GetInTouchPage() {
                       {link.icon}
                     </div>
                     <div>
-                      <p className="text-xs text-white/40 uppercase tracking-wider mb-0.5">
+                      <p className="text-xs text-white/60 uppercase tracking-wider mb-0.5">
                         {link.label}
                       </p>
                       <p className="text-white font-medium group-hover:text-pink transition-colors duration-200">

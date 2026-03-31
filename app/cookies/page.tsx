@@ -1,8 +1,19 @@
 import type { Metadata } from 'next';
+import { META } from '@/lib/constants';
 
 export const metadata: Metadata = {
   title: 'Cookie Policy | WYN WIN',
   description: 'How WYN WIN Services Ltd uses cookies on wynwin.co.uk.',
+  openGraph: {
+    title: 'Cookie Policy | WYN WIN',
+    description: 'How WYN WIN Services Ltd uses cookies on wynwin.co.uk.',
+    url: `${META.siteUrl}/cookies`,
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Cookie Policy | WYN WIN',
+    description: 'How WYN WIN Services Ltd uses cookies on wynwin.co.uk.',
+  },
 };
 
 export default function CookiesPage() {

@@ -69,7 +69,7 @@ export default function HowWeWork() {
                   transition={{ duration: 0.7, delay: i * 0.2 + 0.3 }}
                 />
               </div>
-              <span className="block text-6xl font-bold text-white/10 group-hover:text-pink/30 transition-colors duration-500 mb-4 leading-none">
+              <span className="block text-6xl font-bold text-white/10 group-hover:text-pink transition-colors duration-500 mb-4 leading-none">
                 {step.number}
               </span>
               <h3 className="text-lg font-bold text-white mb-3">{step.heading}</h3>

@@ -100,7 +100,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-white/10 space-y-2 text-white/40 text-xs">
+        <div className="mt-12 pt-8 border-t border-white/10 space-y-2 text-white/60 text-xs">
           <p>© 2025 {BRAND.legal.company}. All Rights Reserved.</p>
           <p>
             Registered in {BRAND.legal.country}. Company Number{' '}

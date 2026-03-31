@@ -26,6 +26,8 @@ export const metadata: Metadata = {
 const highlights = [
   { stat: 'Start-ups to enterprise', label: 'We\'ve worked with businesses of every size' },
   { stat: 'Rapid response', label: 'We move fast. No committee, no delays.' },
+  { stat: 'Global reach', label: 'We\'ve delivered for clients and campaigns across the world' },
+  { stat: 'Regulated markets', label: 'Experienced working within highly regulated industries where precision and compliance matter' },
   { stat: 'Trusted network', label: 'Broad supplier relationships built over years' },
   { stat: 'Flexible billing', label: 'Invoicing to suit your project or budget' },
 ];

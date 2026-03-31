@@ -97,7 +97,7 @@ export default function HeroServiceShowcase() {
                 />
                 <span
                   className={`text-[10px] font-semibold uppercase tracking-wider leading-tight block transition-colors duration-300 ${
-                    i === active ? 'text-pink' : 'text-white/30 group-hover:text-white/50'
+                    i === active ? 'text-pink' : 'text-white/50 group-hover:text-white/70'
                   }`}
                 >
                   {svc.lines[0].replace(' &', '')}

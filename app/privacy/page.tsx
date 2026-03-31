@@ -1,9 +1,19 @@
 import type { Metadata } from 'next';
-import { BRAND } from '@/lib/constants';
+import { BRAND, META } from '@/lib/constants';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | WYN WIN',
   description: 'How WYN WIN Services Ltd collects, uses, and protects your personal data.',
+  openGraph: {
+    title: 'Privacy Policy | WYN WIN',
+    description: 'How WYN WIN Services Ltd collects, uses, and protects your personal data.',
+    url: `${META.siteUrl}/privacy`,
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Privacy Policy | WYN WIN',
+    description: 'How WYN WIN Services Ltd collects, uses, and protects your personal data.',
+  },
 };
 
 export default function PrivacyPage() {
