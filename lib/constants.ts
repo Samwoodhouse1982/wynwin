@@ -195,7 +195,7 @@ export const SERVICES = {
         {
           name: 'Product and Service Launches',
           detail:
-            'Full-funnel launch planning and execution — from pre-launch build-up and announcement through to post-launch follow-up and measurement.',
+            'Full-funnel launch planning and execution, from pre-launch build-up and announcement through to post-launch follow-up and measurement.',
         },
         {
           name: 'Campaign Reporting and Analytics',
@@ -205,7 +205,7 @@ export const SERVICES = {
         {
           name: 'Launch Events, Conferences, and Tradeshows',
           detail:
-            'End-to-end planning and delivery of launch events, conferences, and tradeshow appearances — from concept and logistics through to onsite execution and post-event follow-up.',
+            'End-to-end planning and delivery of launch events, conferences, and tradeshow appearances, from concept and logistics through to onsite execution and post-event follow-up.',
         },
         {
           name: 'Project Management',
