@@ -135,11 +135,6 @@ export const SERVICES = {
           detail:
             'Product positioning, messaging frameworks, launch planning, competitive differentiation, and go-to-market enablement materials.',
         },
-        {
-          name: 'Fractional Experts',
-          detail:
-            'Strategic and tactical specialists embedded into your team or available on demand. Senior-level expertise without the full-time overhead.',
-        },
       ],
     },
     {
@@ -208,6 +203,11 @@ export const SERVICES = {
             'End-to-end performance tracking, ROI analysis, attribution reporting, and post-campaign reviews to inform future activity.',
         },
         {
+          name: 'Launch Events, Conferences, and Tradeshows',
+          detail:
+            'End-to-end planning and delivery of launch events, conferences, and tradeshow appearances — from concept and logistics through to onsite execution and post-event follow-up.',
+        },
+        {
           name: 'Project Management',
           detail:
             'End-to-end coordination across multiple workstreams, stakeholders, and suppliers. Clear milestones, clean delivery.',
@@ -237,6 +237,11 @@ export const SERVICES = {
           name: 'Marketing Tech and Data',
           detail:
             'Strategic martech stack analysis, planning and deployment; data review and analysis including cleaning, consolidation, and compliance checks.',
+        },
+        {
+          name: 'Fractional Experts',
+          detail:
+            'Strategic and tactical specialists embedded into your team or available on demand. Senior-level expertise without the full-time overhead.',
         },
       ],
     },
