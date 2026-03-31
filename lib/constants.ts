@@ -69,13 +69,18 @@ export const HOME = {
   servicesPreview: [
     {
       title: 'Strategy and intelligence',
-      body: 'Go-to-market planning, audience research, segmentation, competitive intelligence, and integrated campaign frameworks that sharpen your direction.',
+      body: 'Go-to-market planning, audience research, segmentation, competitive intelligence, product marketing, and commercial support.',
       href: '/what-we-do#strategy',
     },
     {
       title: 'Brand and creative',
-      body: 'Creative brand management, content development, social media, influencer alignment, client success stories, market research, and campaign execution.',
+      body: 'Brand management, content development, influencer and partnership acquisition, client success stories, and brand research.',
       href: '/what-we-do#brand',
+    },
+    {
+      title: 'Projects and campaigns',
+      body: 'Campaign planning and execution, content and social, paid media, events, product launches, project management, and performance reporting.',
+      href: '/what-we-do#projects',
     },
     {
       title: 'Operations and management',
@@ -84,7 +89,7 @@ export const HOME = {
     },
     {
       title: 'Logistics and procurement',
-      body: 'Event logistics, venue booking, staffing, materials, print, paid media, storage, delivery, and asset lifecycle management.',
+      body: 'Venue booking, print and materials, branded merch, storage, delivery, advance purchasing, and asset lifecycle management.',
       href: '/what-we-do#logistics',
     },
   ],
@@ -114,11 +119,6 @@ export const SERVICES = {
           name: 'Competitive Intelligence',
           detail:
             'Ongoing competitor monitoring, market mapping, benchmarking, pricing analysis, and whitespace identification.',
-        },
-        {
-          name: 'Campaign Planning and Frameworks',
-          detail:
-            'Integrated marketing planning, budget modelling, KPI frameworks, reporting structures, and strategic roadmaps.',
         },
         {
           name: 'Awards',
@@ -152,16 +152,6 @@ export const SERVICES = {
             'Managing brand collaborations, ethical and brand alignment review, shortlisting, outreach, recruitment, and contracting.',
         },
         {
-          name: 'Content and Campaigns',
-          detail:
-            'Ideation and execution, planning, management, and rollout; case studies, ROI calculations, SEO, UGC, podcast recording, greenscreen, filming, and quality review.',
-        },
-        {
-          name: 'Social Media Management',
-          detail:
-            'Proactive content planning, responsive posting, real-time onsite event coverage, and competitor presence audit.',
-        },
-        {
           name: 'Brand and Audience Research',
           detail:
             'Anonymised user feedback, real-world mystery and secret shopper programmes, and brand sentiment analysis.',
@@ -175,6 +165,52 @@ export const SERVICES = {
           name: 'Client Success Stories',
           detail:
             'End-to-end case study production: interviewing, writing, design briefing, approval management, and multi-channel distribution.',
+        },
+      ],
+    },
+    {
+      id: 'projects',
+      title: 'Projects and Campaigns',
+      services: [
+        {
+          name: 'Campaign Planning and Frameworks',
+          detail:
+            'Integrated marketing planning, budget modelling, KPI frameworks, reporting structures, and strategic roadmaps.',
+        },
+        {
+          name: 'Content and Campaigns',
+          detail:
+            'Ideation and execution, planning, management, and rollout; case studies, ROI calculations, SEO, UGC, podcast recording, greenscreen, filming, and quality review.',
+        },
+        {
+          name: 'Social Media Management',
+          detail:
+            'Proactive content planning, responsive posting, real-time onsite event coverage, and competitor presence audit.',
+        },
+        {
+          name: 'Events and Exhibitions',
+          detail:
+            'End-to-end event and exhibition management: planning, setup, venue booking, logistics, staffing, onsite delivery, and teardown.',
+        },
+        {
+          name: 'Paid Media Planning',
+          detail:
+            'Cross-channel media planning, negotiation, and purchase of on- and offline advertising space.',
+        },
+        {
+          name: 'Product and Service Launches',
+          detail:
+            'Full-funnel launch planning and execution — from pre-launch build-up and announcement through to post-launch follow-up and measurement.',
+        },
+        {
+          name: 'Campaign Reporting and Analytics',
+          detail:
+            'End-to-end performance tracking, ROI analysis, attribution reporting, and post-campaign reviews to inform future activity.',
+        },
+        {
+          name: 'Project Management',
+          detail:
+            'End-to-end coordination across multiple workstreams, stakeholders, and suppliers. Clear milestones, clean delivery.',
         },
       ],
     },
@@ -209,11 +245,6 @@ export const SERVICES = {
       title: 'Logistics and Procurement',
       services: [
         {
-          name: 'Events and Exhibitions',
-          detail:
-            'Event planning, setup, venue booking, logistics, staffing, teardown, onsite installations, and exhibit refurbishment.',
-        },
-        {
           name: 'Venue Search and Booking',
           detail:
             'Scouting and screening, shortlisting, and contracting event venues to fit any brief.',
@@ -232,11 +263,6 @@ export const SERVICES = {
           name: 'Purchase of Materials',
           detail:
             'Rapid advance purchase and delivery of goods: tech, promo, and marketing materials from reliable providers.',
-        },
-        {
-          name: 'Paid Media Planning',
-          detail:
-            'Cross-channel media planning, negotiation, and purchase of on- and offline advertising space.',
         },
         {
           name: 'Asset Lifecycle Management',
@@ -293,7 +319,7 @@ export const META = {
   whatWeDo: {
     title: 'What We Do | WYN WIN',
     description:
-      'Explore WYN WIN\'s four service pillars: Strategy & Intelligence, Brand & Creative, Operations & Management, and Logistics & Procurement.',
+      'Explore WYN WIN\'s five service pillars: Strategy & Intelligence, Brand & Creative, Projects & Campaigns, Operations & Management, and Logistics & Procurement.',
   },
   whoWeAre: {
     title: 'Who We Are | WYN WIN',

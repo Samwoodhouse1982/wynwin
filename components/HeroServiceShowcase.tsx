@@ -8,22 +8,27 @@ const SERVICES = [
   {
     number: '01',
     lines: ['Strategy &', 'Intelligence'],
-    chips: ['Go-to-Market', 'Segmentation', 'Awards', 'ROI', 'Sales Enablement'],
+    chips: ['Go-to-Market', 'Segmentation', 'Awards', 'Commercial Support', 'Fractional Experts'],
   },
   {
     number: '02',
     lines: ['Brand &', 'Creative'],
-    chips: ['Influencers', 'Case Studies', 'SEO', 'Video', 'Campaigns'],
+    chips: ['Influencers', 'Case Studies', 'Content', 'Brand Research'],
   },
   {
     number: '03',
+    lines: ['Projects &', 'Campaigns'],
+    chips: ['Campaigns', 'Social Media', 'Paid Media', 'Events', 'Launches', 'Reporting'],
+  },
+  {
+    number: '04',
     lines: ['Operations &', 'Management'],
     chips: ['Assets', 'MarTech', 'Fulfilment', 'Data Compliance'],
   },
   {
-    number: '04',
+    number: '05',
     lines: ['Logistics &', 'Procurement'],
-    chips: ['Events', 'Venues', 'Print & Merch', 'Paid Media'],
+    chips: ['Venues', 'Print & Merch', 'Storage', 'Purchasing'],
   },
 ] as const;
 
@@ -78,7 +83,7 @@ export default function HeroServiceShowcase() {
 
         <div className="p-8 lg:p-10">
           {/* Tab indicators + labels — top nav */}
-          <div className="grid grid-cols-4 gap-2 mb-8">
+          <div className="grid grid-cols-5 gap-2 mb-8">
             {SERVICES.map((svc, i) => (
               <button
                 key={i}

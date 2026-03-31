@@ -179,10 +179,43 @@ export function LogisticsIcon() {
   );
 }
 
+// ─────────────────────────────────────────────────────────
+// Projects & Campaigns
+// Three bars rise sequentially like a campaign build-up
+// ─────────────────────────────────────────────────────────
+export function CampaignsIcon() {
+  const BARS = [
+    { x: 7,  maxH: 16, delay: 0 },
+    { x: 19, maxH: 26, delay: 0.28 },
+    { x: 31, maxH: 34, delay: 0.56 },
+  ] as const;
+  const BASE_Y = 42;
+
+  return (
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+      {BARS.map(({ x, maxH, delay }, i) => (
+        <g key={i}>
+          <rect x={x} y={BASE_Y - maxH} width={8} height={maxH} rx={2} fill="#0D1B3E" fillOpacity={0.08} />
+          <motion.rect
+            x={x} width={8} rx={2} fill="#E8006A"
+            animate={{
+              height: [0, maxH, maxH, 0],
+              y: [BASE_Y, BASE_Y - maxH, BASE_Y - maxH, BASE_Y],
+            }}
+            transition={{ duration: 3.2, repeat: Infinity, delay, times: [0, 0.32, 0.72, 1] }}
+          />
+        </g>
+      ))}
+      <line x1={3} y1={BASE_Y} x2={41} y2={BASE_Y} stroke="#0D1B3E" strokeWidth={1.5} strokeOpacity={0.18} strokeLinecap="round" />
+    </svg>
+  );
+}
+
 // Lookup map — keyed by pillar id
 export const SERVICE_ICON_MAP: Record<string, ComponentType> = {
   strategy:   StrategyIcon,
   brand:      BrandIcon,
+  projects:   CampaignsIcon,
   operations: OperationsIcon,
   logistics:  LogisticsIcon,
 };
