@@ -303,7 +303,7 @@ export const ABOUT = {
 
 export const TESTIMONIALS = [
   {
-    quote: 'Sam Woodhouse is supporting - and has integrated into - the Audience Social Marketing team with ease and brings strong NHS and commercial sector experience. It\'s a win win !',
+    quote: 'Sam is supporting - and has integrated into - the Audience Social Marketing team with ease and brings strong NHS and commercial sector experience. It\'s a win win !',
     name: 'Ed Gyde',
     company: 'CEO, Audience Social Marketing',
     linkedin: 'https://www.linkedin.com/in/ed-gyde/',

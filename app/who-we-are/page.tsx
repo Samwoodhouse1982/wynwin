@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import PageHero from '@/components/PageHero';
 import HowWeWork from '@/components/HowWeWork';
 import PreFooterCta from '@/components/PreFooterCta';
@@ -84,8 +85,15 @@ export default function WhoWeArePage() {
       <section className="bg-cream dark:bg-navy-light py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <Reveal direction="up">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-6">
-              <div className="flex-1">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-8">
+              <Image
+                src="/sam-woodhouse.jpg"
+                alt="Sam Woodhouse, MD and Founder of WYN WIN"
+                width={96}
+                height={96}
+                className="rounded-full object-cover w-24 h-24 shrink-0 grayscale"
+              />
+              <div>
                 <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-3">Founder</p>
                 <h2 className="text-2xl font-bold text-navy dark:text-white mb-1">Sam Woodhouse</h2>
                 <p className="text-navy/60 dark:text-white/60 text-base mb-4">MD and Founder, WYN WIN</p>
