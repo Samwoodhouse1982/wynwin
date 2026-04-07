@@ -77,7 +77,18 @@ export default function TestimonialsSection() {
               <p className="text-navy/75 dark:text-white/75 text-lg leading-relaxed flex-1 relative">{t.quote}</p>
 
               <div className="border-t border-navy/10 dark:border-white/10 pt-5">
-                <p className="font-bold text-navy dark:text-white text-sm">{t.name}</p>
+                {'linkedin' in t ? (
+                  <a
+                    href={t.linkedin as string}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-bold text-navy dark:text-white text-sm hover:text-pink dark:hover:text-pink transition-colors duration-200"
+                  >
+                    {t.name}
+                  </a>
+                ) : (
+                  <p className="font-bold text-navy dark:text-white text-sm">{t.name}</p>
+                )}
                 <p className="text-navy/50 dark:text-white/50 text-sm">{t.company}</p>
               </div>
             </motion.div>

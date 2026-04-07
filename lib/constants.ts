@@ -303,14 +303,16 @@ export const ABOUT = {
 
 export const TESTIMONIALS = [
   {
-    quote: 'WYN WIN stepped in at short notice and handled everything we couldn\'t get to. Our team finally had breathing room to focus on the things that actually moved the needle.',
-    name: 'Marketing Director',
-    company: 'B2B SaaS scale-up',
+    quote: 'Sam Woodhouse is supporting - and has integrated into - the Audience Social Marketing team with ease and brings strong NHS and commercial sector experience. It\'s a win win !',
+    name: 'Ed Gyde',
+    company: 'CEO, Audience Social Marketing',
+    linkedin: 'https://www.linkedin.com/in/ed-gyde/',
   },
   {
-    quote: 'It\'s rare to find a partner who just gets on with it. No chasing, no hand-holding. They deliver exactly what you need, exactly when you need it.',
-    name: 'Head of Marketing',
-    company: 'Consumer brand',
+    quote: 'Sam knows his stuff.',
+    name: 'Dr Tauseef Mehrali',
+    company: 'VP Regulatory | GP',
+    linkedin: 'https://www.linkedin.com/in/tauseef-mehrali/',
   },
 ] as const;
 
