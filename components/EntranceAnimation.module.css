@@ -1,0 +1,51 @@
+.stage {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #1B2033;
+  overflow: hidden;
+}
+
+/* Floating diamond background */
+.diamonds {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.diamond {
+  position: absolute;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transform: rotate(45deg);
+  animation: floatUp linear infinite;
+}
+
+@keyframes floatUp {
+  0%   { transform: rotate(45deg) translateY(0);       opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: rotate(45deg) translateY(-130vh);   opacity: 0; }
+}
+
+/* Logo wrapper */
+.logoWrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.logoInner {
+  width: min(700px, 92vw);
+  opacity: 0; /* hidden until JS sets dash arrays */
+  will-change: transform, opacity;
+}
+
+.logoSvg {
+  width: 100%;
+  display: block;
+  overflow: visible;
+}
