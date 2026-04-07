@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { META } from '@/lib/constants';
+import { BRAND, META } from '@/lib/constants';
 
 export const metadata: Metadata = {
   title: 'Cookie Policy | WYN WIN',
@@ -94,8 +94,8 @@ export default function CookiesPage() {
                 Privacy Policy
               </a>{' '}
               or contact us at{' '}
-              <a href="mailto:hello@wynwin.co.uk" className="text-pink hover:underline">
-                hello@wynwin.co.uk
+              <a href={BRAND.emailHref} className="text-pink hover:underline">
+                {BRAND.email}
               </a>
               .
             </p>
