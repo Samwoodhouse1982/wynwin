@@ -12,7 +12,13 @@ const fadeUp: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.7 } },
 };
 
-export default function HeroSection() {
+// Headline gets a heavier blur-in for a premium feel
+const headlineIn: Variants = {
+  hidden: { opacity: 0, y: 40, filter: 'blur(8px)' },
+  show:   { opacity: 1, y: 0,  filter: 'blur(0px)', transition: { duration: 0.9 } },
+};
+
+export default function HeroSection({ ready = false }: { ready?: boolean }) {
   const { headline, body, tagline, ctas } = HOME.hero;
 
   return (
@@ -34,7 +40,7 @@ export default function HeroSection() {
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-pink rounded-full opacity-10 blur-3xl translate-y-1/2 -translate-x-1/3 pointer-events-none" />
 
       {/* Sun flare — top right */}
-      <SunFlare className="absolute top-0 right-0 w-[560px] h-[560px] opacity-60" />
+      <SunFlare className="absolute top-0 right-0 w-[680px] h-[680px] opacity-85" />
 
       <div className="relative w-full max-w-7xl mx-auto px-6 lg:px-8 py-24 lg:py-32">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_480px] gap-10 lg:gap-16 items-center">
@@ -42,18 +48,18 @@ export default function HeroSection() {
           {/* ── Left: copy ── */}
           <motion.div
             initial="hidden"
-            animate="show"
+            animate={ready ? 'show' : 'hidden'}
             variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12 } } }}
           >
             <motion.p
               variants={fadeUp}
               className="text-pink font-semibold text-sm uppercase tracking-widest mb-6"
             >
-              WYN WIN Services
+              Whatever You Need, Whenever It&apos;s Needed.
             </motion.p>
 
             <motion.h1
-              variants={fadeUp}
+              variants={headlineIn}
               className="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight tracking-tight mb-8"
             >
               {headline}
@@ -61,19 +67,12 @@ export default function HeroSection() {
 
             <motion.p
               variants={fadeUp}
-              className="text-lg md:text-xl text-white/70 leading-relaxed mb-4 max-w-xl"
+              className="text-lg md:text-xl text-white/70 leading-relaxed mb-10 max-w-xl"
             >
               {body}
             </motion.p>
 
-            <motion.p
-              variants={fadeUp}
-              className="text-base font-semibold text-mint mb-10"
-            >
-              {tagline}
-            </motion.p>
-
-            <motion.div variants={fadeUp} className="flex flex-wrap gap-4">
+<motion.div variants={fadeUp} className="flex flex-wrap gap-4">
               {ctas.map((cta) => (
                 <Link
                   key={cta.label}
@@ -93,7 +92,7 @@ export default function HeroSection() {
 
           {/* ── Right: service showcase ── */}
           <div className="hidden lg:block">
-            <HeroServiceShowcase />
+            <HeroServiceShowcase ready={ready} />
           </div>
         </div>
       </div>

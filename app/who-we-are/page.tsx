@@ -68,9 +68,9 @@ export default function WhoWeArePage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {highlights.map((item, i) => (
                   <RevealItem key={item.stat} direction={i % 2 === 0 ? 'left' : 'right'}>
-                    <div className="bg-cream dark:bg-navy-light rounded-2xl p-6 space-y-2 h-full hover:shadow-md transition-shadow duration-300">
+                    <div className="bg-white dark:bg-white/5 border border-navy/10 dark:border-white/10 hover:border-pink/40 rounded-2xl p-6 space-y-2 h-full shadow-sm hover:shadow-md transition-all duration-300">
                       <p className="text-lg font-bold text-navy dark:text-white leading-snug">{item.stat}</p>
-                      <p className="text-sm text-navy/60 dark:text-white/60">{item.label}</p>
+                      <p className="text-sm text-navy/65 dark:text-white/65">{item.label}</p>
                     </div>
                   </RevealItem>
                 ))}

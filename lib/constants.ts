@@ -74,7 +74,7 @@ export const HOME = {
     },
     {
       title: 'Brand and creative',
-      body: 'Brand management, content development, influencer and partnership acquisition, client success stories, and brand research.',
+      body: 'Brand management, content development, influencer and partnership acquisition, client success stories, brand research, and website development and design.',
       href: '/what-we-do#brand',
     },
     {
@@ -160,6 +160,11 @@ export const SERVICES = {
           name: 'Client Success Stories',
           detail:
             'End-to-end case study production: interviewing, writing, design briefing, approval management, and multi-channel distribution.',
+        },
+        {
+          name: 'Website Development and Design',
+          detail:
+            'Design and build of marketing websites, landing pages, and microsites. From concept and wireframe through to development, QA, and launch.',
         },
       ],
     },

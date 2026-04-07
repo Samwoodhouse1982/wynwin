@@ -56,11 +56,22 @@ export default function HowWeWork() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: '-80px' }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 relative"
         >
+          {/* Connecting line across all three steps (desktop only) */}
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-white/10 hidden md:block pointer-events-none">
+            <motion.div
+              className="absolute inset-y-0 left-0 bg-pink/40"
+              initial={{ width: 0 }}
+              whileInView={{ width: '100%' }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.2, delay: 0.4, ease: 'easeOut' }}
+            />
+          </div>
+
           {steps.map((step, i) => (
             <motion.div key={step.number} variants={item} className="group">
-              <div className="relative h-0.5 bg-white/10 mb-6 overflow-hidden">
+              <div className="relative h-0.5 bg-white/10 mb-6 overflow-hidden md:hidden">
                 <motion.div
                   className="absolute inset-y-0 left-0 bg-pink"
                   initial={{ width: 0 }}
@@ -69,6 +80,7 @@ export default function HowWeWork() {
                   transition={{ duration: 0.7, delay: i * 0.2 + 0.3 }}
                 />
               </div>
+              <div className="hidden md:block h-0.5 mb-6" />
               <span className="block text-6xl font-bold text-white/10 group-hover:text-pink transition-colors duration-500 mb-4 leading-none">
                 {step.number}
               </span>

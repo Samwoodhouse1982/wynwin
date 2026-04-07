@@ -5,17 +5,36 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Menu, X, Sun, Moon } from 'lucide-react';
-import { useTheme } from 'next-themes';
+import { motion, AnimatePresence } from 'framer-motion';
 import { NAV_LINKS } from '@/lib/constants';
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isDark, setIsDark] = useState(false);
   const pathname = usePathname();
-  const { theme, setTheme } = useTheme();
 
-  useEffect(() => setMounted(true), []);
+  // Read theme directly from the DOM. Bypasses next-themes React context entirely —
+  // Turbopack can load next-themes in multiple chunks, each with their own createContext()
+  // instance, causing useTheme() to return the no-op fallback in some components.
+  useEffect(() => {
+    const update = () => setIsDark(document.documentElement.classList.contains('dark'));
+    update();
+    setMounted(true);
+    const observer = new MutationObserver(update);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
+  const toggleTheme = () => {
+    const html = document.documentElement;
+    const newTheme = html.classList.contains('dark') ? 'light' : 'dark';
+    html.classList.remove('light', 'dark');
+    html.classList.add(newTheme);
+    html.style.colorScheme = newTheme;
+    try { localStorage.setItem('theme', newTheme); } catch { /* ignore */ }
+  };
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
@@ -29,7 +48,9 @@ export default function Nav() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-navy shadow-lg shadow-navy/20' : 'bg-navy/95'
+        scrolled
+          ? 'bg-navy/80 backdrop-blur-md border-b border-white/10 shadow-lg shadow-navy/30'
+          : 'bg-navy/95'
       }`}
     >
       <nav className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-16 lg:h-20">
@@ -66,11 +87,11 @@ export default function Nav() {
         {/* Desktop CTA + theme toggle */}
         <div className="hidden md:flex items-center gap-3">
           <button
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            onClick={toggleTheme}
             aria-label="Toggle dark mode"
             className="text-white/70 hover:text-white p-2 transition-colors"
           >
-            {mounted ? (theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />) : <Moon size={18} />}
+            {mounted ? (isDark ? <Sun size={18} /> : <Moon size={18} />) : <Moon size={18} />}
           </button>
           <Link
             href="/get-in-touch"
@@ -83,11 +104,11 @@ export default function Nav() {
         {/* Mobile toggle */}
         <div className="md:hidden flex items-center gap-1">
           <button
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            onClick={toggleTheme}
             aria-label="Toggle dark mode"
             className="text-white/70 hover:text-white p-2 transition-colors"
           >
-            {mounted ? (theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />) : <Moon size={18} />}
+            {mounted ? (isDark ? <Sun size={18} /> : <Moon size={18} />) : <Moon size={18} />}
           </button>
           <button
             onClick={() => setOpen(!open)}
@@ -100,27 +121,36 @@ export default function Nav() {
       </nav>
 
       {/* Mobile drawer */}
-      {open && (
-        <div className="md:hidden bg-navy border-t border-white/10 px-6 pb-6 pt-4 flex flex-col gap-4">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`text-base font-medium py-2 border-b border-white/10 transition-colors ${
-                pathname === link.href ? 'text-pink' : 'text-white/80'
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
-          <Link
-            href="/get-in-touch"
-            className="mt-2 inline-flex items-center justify-center px-5 py-3 bg-pink text-white font-semibold rounded-full"
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            key="mobile-drawer"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden bg-navy/95 backdrop-blur-md border-t border-white/10 px-6 pb-6 pt-4 flex flex-col gap-4"
           >
-            Get In Touch
-          </Link>
-        </div>
-      )}
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`text-base font-medium py-2 border-b border-white/10 transition-colors ${
+                  pathname === link.href ? 'text-pink' : 'text-white/80'
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+            <Link
+              href="/get-in-touch"
+              className="mt-2 inline-flex items-center justify-center px-5 py-3 bg-pink text-white font-semibold rounded-full"
+            >
+              Get In Touch
+            </Link>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

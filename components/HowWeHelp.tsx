@@ -23,7 +23,7 @@ const card: Variants = {
 
 export default function HowWeHelp() {
   return (
-    <section className="bg-cream dark:bg-navy-light py-20 lg:py-28">
+    <section className="bg-cream dark:bg-navy py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -55,7 +55,7 @@ export default function HowWeHelp() {
                 key={i}
                 variants={card}
                 whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className="bg-white dark:bg-navy dark:border dark:border-white/10 rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow duration-300 cursor-default"
+                className="bg-white dark:bg-white/5 border border-navy/8 dark:border-white/10 hover:border-pink/40 rounded-2xl p-8 transition-colors duration-300 cursor-default"
               >
                 <motion.div
                   className="mb-5"
@@ -67,7 +67,7 @@ export default function HowWeHelp() {
                   <Icon />
                 </motion.div>
                 <h3 className="text-lg font-bold text-navy dark:text-white mb-3">{item.heading}</h3>
-                <p className="text-navy/60 dark:text-white/70 text-sm leading-relaxed">{item.body}</p>
+                <p className="text-navy/60 dark:text-white/60 text-sm leading-relaxed">{item.body}</p>
               </motion.div>
             );
           })}

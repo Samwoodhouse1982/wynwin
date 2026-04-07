@@ -1,5 +1,10 @@
 import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans, Unbounded } from 'next/font/google';
+// ── OPTION A (active): Unbounded + Instrument Sans ───────────────────────────
+import { Instrument_Sans, Unbounded } from 'next/font/google';
+// ── OPTION B: Bricolage Grotesque + Instrument Sans ───────────────────────────
+// import { Bricolage_Grotesque, Instrument_Sans } from 'next/font/google';
+// ── ORIGINAL: Unbounded + Plus Jakarta Sans ──────────────────────────────────
+// import { Plus_Jakarta_Sans, Unbounded } from 'next/font/google';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import './globals.css';
 import Nav from '@/components/Nav';
@@ -7,19 +12,48 @@ import Footer from '@/components/Footer';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { META } from '@/lib/constants';
 
-const jakarta = Plus_Jakarta_Sans({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800'],
-  variable: '--font-jakarta',
-  display: 'swap',
-});
-
-const unbounded = Unbounded({
+// ── OPTION A ─────────────────────────────────────────────────────────────────
+const display = Unbounded({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700', '800', '900'],
   variable: '--font-syne',
   display: 'swap',
 });
+
+const body = Instrument_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-jakarta',
+  display: 'swap',
+});
+
+// ── OPTION B (uncomment + comment out above to try) ───────────────────────────
+// const display = Bricolage_Grotesque({
+//   subsets: ['latin'],
+//   weight: ['400', '500', '600', '700', '800'],
+//   variable: '--font-syne',
+//   display: 'swap',
+// });
+// const body = Instrument_Sans({
+//   subsets: ['latin'],
+//   weight: ['400', '500', '600', '700'],
+//   variable: '--font-jakarta',
+//   display: 'swap',
+// });
+
+// ── ORIGINAL (uncomment + comment out above to revert) ───────────────────────
+// const body = Plus_Jakarta_Sans({
+//   subsets: ['latin'],
+//   weight: ['300', '400', '500', '600', '700', '800'],
+//   variable: '--font-jakarta',
+//   display: 'swap',
+// });
+// const display = Unbounded({
+//   subsets: ['latin'],
+//   weight: ['400', '500', '600', '700', '800', '900'],
+//   variable: '--font-syne',
+//   display: 'swap',
+// });
 
 export const metadata: Metadata = {
   title: {
@@ -55,7 +89,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en-GB" className={`${jakarta.variable} ${unbounded.variable}`} suppressHydrationWarning>
+    <html lang="en-GB" className={`${body.variable} ${display.variable}`} suppressHydrationWarning>
       <body className="min-h-screen flex flex-col antialiased">
         <ThemeProvider>
           <Nav />

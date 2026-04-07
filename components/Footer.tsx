@@ -5,7 +5,7 @@ import { BRAND } from '@/lib/constants';
 
 export default function Footer() {
   return (
-    <footer className="bg-navy text-white">
+    <footer className="bg-navy text-white border-t-2 border-pink/30">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {/* Brand */}
@@ -100,14 +100,13 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-white/10 space-y-2 text-white/60 text-xs">
-          <p>© 2025 {BRAND.legal.company}. All Rights Reserved.</p>
+        <div className="mt-12 pt-8 border-t border-white/10 text-white/40 text-xs">
           <p>
-            Registered in {BRAND.legal.country}. Company Number{' '}
-            {BRAND.legal.companyNumber}
+            © 2025 {BRAND.legal.company}. All Rights Reserved.
+            {' · '}Registered in {BRAND.legal.country}, No. {BRAND.legal.companyNumber}
+            {' · '}VAT {BRAND.legal.vat}
+            {' · '}ICO {BRAND.legal.ico}
           </p>
-          <p>VAT Registration Number {BRAND.legal.vat}</p>
-          <p>ICO Data Protection Registration {BRAND.legal.ico}</p>
         </div>
       </div>
     </footer>

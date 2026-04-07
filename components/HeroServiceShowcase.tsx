@@ -13,7 +13,7 @@ const SERVICES = [
   {
     number: '02',
     lines: ['Brand &', 'Creative'],
-    chips: ['Influencers', 'Case Studies', 'Content', 'Brand Research'],
+    chips: ['Influencers', 'Case Studies', 'Content', 'Brand Research', 'Web Design & Dev'],
   },
   {
     number: '03',
@@ -34,7 +34,7 @@ const SERVICES = [
 
 const TICK = 3600; // ms per service
 
-export default function HeroServiceShowcase() {
+export default function HeroServiceShowcase({ ready = false }: { ready?: boolean }) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const [key, setKey] = useState(0); // forces progress bar to restart
@@ -57,8 +57,8 @@ export default function HeroServiceShowcase() {
     <motion.div
       className="relative flex flex-col justify-center"
       initial={{ opacity: 0, x: 40 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.8, delay: 0.4 }}
+      animate={ready ? { opacity: 1, x: 0 } : { opacity: 0, x: 40 }}
+      transition={{ duration: 0.8, delay: 0.2 }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >

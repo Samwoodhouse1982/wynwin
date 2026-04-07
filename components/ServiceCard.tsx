@@ -22,17 +22,12 @@ export default function ServiceCard({ title, body, href, index = 0 }: ServiceCar
     >
       <Link
         href={href}
-        className="group block bg-white/5 hover:bg-white/10 border border-white/10 hover:border-pink/50 rounded-2xl p-8 transition-all duration-300 h-full"
+        className="group block bg-white/5 hover:bg-white/10 border border-white/10 hover:border-pink/50 rounded-2xl p-8 transition-all duration-300 h-full overflow-hidden"
       >
         <div className="flex flex-col h-full gap-4">
           {/* Animated top accent line */}
           <div className="relative h-0.5 bg-white/10 overflow-hidden rounded-full">
-            <motion.div
-              className="absolute inset-y-0 left-0 bg-pink"
-              initial={{ width: '20%' }}
-              whileHover={{ width: '100%' }}
-              transition={{ duration: 0.3 }}
-            />
+            <div className="absolute inset-y-0 left-0 bg-pink w-[20%] group-hover:w-full transition-all duration-300 ease-out" />
           </div>
 
           <h3 className="text-lg font-bold text-white leading-snug group-hover:text-pink transition-colors duration-200">
