@@ -120,7 +120,7 @@ export function SunFlare({ className = '' }: { className?: string }) {
             strokeWidth={ray.w}
             strokeLinecap="round"
             filter="url(#sf-f-ray)"
-            animate={{ opacity: ray.o }}
+            animate={{ opacity: [...ray.o] }}
             transition={{ duration: ray.dur, repeat: Infinity, ease: 'easeInOut', delay: ray.d }}
           />
         ))}
