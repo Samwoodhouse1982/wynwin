@@ -27,6 +27,7 @@ export const NAV_LINKS = [
   { label: 'Home', href: '/' },
   { label: 'What We Do', href: '/what-we-do' },
   { label: 'Who We Are', href: '/who-we-are' },
+  { label: 'Get In Touch', href: '/get-in-touch' },
 ] as const;
 
 // ============================================================
@@ -40,7 +41,7 @@ export const HOME = {
     tagline: 'WYN WIN: Whatever You Need, Whenever It\'s Needed.',
     ctas: [
       { label: 'What We Do', href: '/what-we-do', variant: 'outline' as const },
-      { label: 'GET **IT DONE.', href: '/get-in-touch', variant: 'primary' as const },
+      { label: 'Work with us', href: '/get-in-touch', variant: 'primary' as const },
     ],
   },
   valueProp: {
@@ -188,9 +189,9 @@ export const SERVICES = {
             'Proactive content planning, responsive posting, real-time onsite event coverage, and competitor presence audit.',
         },
         {
-          name: 'Events and Exhibitions',
+          name: 'Events, Exhibitions, and Conferences',
           detail:
-            'End-to-end event and exhibition management: planning, setup, venue booking, logistics, staffing, onsite delivery, and teardown.',
+            'End-to-end planning and delivery of events, exhibitions, conferences, tradeshows, and launch events: concept, logistics, venue booking, staffing, onsite delivery, and post-event follow-up.',
         },
         {
           name: 'Paid Media Planning',
@@ -206,11 +207,6 @@ export const SERVICES = {
           name: 'Campaign Reporting and Analytics',
           detail:
             'End-to-end performance tracking, ROI analysis, attribution reporting, and post-campaign reviews to inform future activity.',
-        },
-        {
-          name: 'Launch Events, Conferences, and Tradeshows',
-          detail:
-            'End-to-end planning and delivery of launch events, conferences, and tradeshow appearances, from concept and logistics through to onsite execution and post-event follow-up.',
         },
         {
           name: 'Project Management',
@@ -293,7 +289,7 @@ export const ABOUT = {
   body: [
     'WYN WIN was founded because we kept seeing the same problem. Marketing teams doing brilliant strategic work, constantly pulled sideways by execution tasks that nobody else could own. Events that need managing. Content that needs producing. Suppliers that need chasing. It\'s not glamorous work, but it\'s mission-critical.',
     'We\'ve spent years inside marketing teams at companies of all sizes, from fast-moving start-ups to global corporations. We know what good looks like. We know how to get things done without being told twice. And we\'ve built a supplier network that means we can move fast, wherever the brief takes us.',
-    'WYN WIN exists to be the team behind your team. The people who pick up what others can\'t, and deliver it exactly as you need it. Whatever you need, whenever it\'s needed.',
+    'WYN WIN exists to be the team behind your team: the people who pick up what others can\'t, and deliver it exactly as you need it.',
   ],
 } as const;
 
@@ -324,9 +320,9 @@ export const META = {
   siteName: 'WYN WIN',
   siteUrl: 'https://wynwin.co.uk',
   home: {
-    title: 'WYN WIN: Services for Busy People',
+    title: 'Marketing Execution Services for Busy Teams | WYN WIN',
     description:
-      'WYN WIN is an outsourced execution partner for marketing teams. We handle logistics, events, procurement, operations, and brand. Whatever you need, whenever you need it.',
+      'WYN WIN is an outsourced execution partner for marketing teams. We handle logistics, events, campaigns, procurement, operations, and brand. Whatever you need, whenever you need it.',
   },
   whatWeDo: {
     title: 'What We Do | WYN WIN',
@@ -341,6 +337,6 @@ export const META = {
   getInTouch: {
     title: 'Get In Touch | WYN WIN',
     description:
-      'Ready to get things done? Contact WYN WIN. We respond fast.',
+      'Contact WYN WIN for marketing operations, events, campaigns, logistics, and fractional marketing support. We respond the same day.',
   },
 } as const;

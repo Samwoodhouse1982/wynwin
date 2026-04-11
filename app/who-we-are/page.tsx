@@ -41,8 +41,8 @@ export default function WhoWeArePage() {
       {/* About copy */}
       <section className="bg-white dark:bg-navy py-20 lg:py-28">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-            {/* Copy */}
+          {/* Full-width copy + CTA */}
+          <div className="max-w-3xl mb-16 lg:mb-20">
             <Reveal stagger>
               {ABOUT.body.map((para, i) => (
                 <RevealItem key={i}>
@@ -60,24 +60,24 @@ export default function WhoWeArePage() {
                 </div>
               </RevealItem>
             </Reveal>
-
-            {/* Highlight cards */}
-            <Reveal stagger>
-              <RevealItem>
-                <h2 className="text-2xl font-bold text-navy dark:text-white mb-6">What sets us apart</h2>
-              </RevealItem>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {highlights.map((item, i) => (
-                  <RevealItem key={item.stat} direction={i % 2 === 0 ? 'left' : 'right'}>
-                    <div className="bg-white dark:bg-white/5 border border-navy/10 dark:border-white/10 hover:border-pink/40 rounded-2xl p-6 space-y-2 h-full shadow-sm hover:shadow-md transition-all duration-300">
-                      <p className="text-lg font-bold text-navy dark:text-white leading-snug">{item.stat}</p>
-                      <p className="text-sm text-navy/65 dark:text-white/65">{item.label}</p>
-                    </div>
-                  </RevealItem>
-                ))}
-              </div>
-            </Reveal>
           </div>
+
+          {/* Highlight cards — full width below copy */}
+          <Reveal stagger>
+            <RevealItem>
+              <h2 className="text-2xl font-bold text-navy dark:text-white mb-8">What sets us apart</h2>
+            </RevealItem>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {highlights.map((item, i) => (
+                <RevealItem key={item.stat} direction={i % 3 === 0 ? 'left' : i % 3 === 2 ? 'right' : 'up'}>
+                  <div className="bg-white dark:bg-white/5 border border-navy/10 dark:border-white/10 hover:border-pink/40 rounded-2xl p-6 space-y-2 h-full shadow-sm hover:shadow-md transition-all duration-300">
+                    <p className="text-lg font-bold text-navy dark:text-white leading-snug">{item.stat}</p>
+                    <p className="text-sm text-navy/65 dark:text-white/65">{item.label}</p>
+                  </div>
+                </RevealItem>
+              ))}
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -97,6 +97,9 @@ export default function WhoWeArePage() {
                 <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-3">Founder</p>
                 <h2 className="text-2xl font-bold text-navy dark:text-white mb-1">Sam Woodhouse</h2>
                 <p className="text-navy/60 dark:text-white/60 text-base mb-4">MD and Founder, WYN WIN</p>
+                <p className="text-navy/70 dark:text-white/70 text-base leading-relaxed mb-6 max-w-xl">
+                  Sam has 18 years of marketing leadership experience across healthcare, AI, and technology, with senior roles at Ada Health and Cerner (now Oracle), alongside earlier work in the NHS and local government. He founded WYN WIN to give marketing teams access to senior-level execution support, without the overhead of full-time headcount.
+                </p>
                 <Link
                   href="https://www.linkedin.com/in/samwoodhouse/"
                   target="_blank"

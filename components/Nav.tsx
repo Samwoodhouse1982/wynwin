@@ -131,7 +131,7 @@ export default function Nav() {
             transition={{ duration: 0.2 }}
             className="md:hidden bg-navy/95 backdrop-blur-md border-t border-white/10 px-6 pb-6 pt-4 flex flex-col gap-4"
           >
-            {NAV_LINKS.map((link) => (
+            {NAV_LINKS.filter((link) => link.href !== '/get-in-touch').map((link) => (
               <Link
                 key={link.href}
                 href={link.href}

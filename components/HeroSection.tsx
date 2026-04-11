@@ -83,7 +83,7 @@ export default function HeroSection({ ready = false }: { ready?: boolean }) {
                       : 'inline-flex items-center gap-2 px-7 py-3.5 border border-white/30 text-white font-semibold rounded-full hover:border-white hover:bg-white/5 transition-all duration-200'
                   }
                 >
-                  {cta.variant === 'primary' ? 'GET **IT DONE.' : cta.label}
+                  {cta.label}
                   {cta.variant === 'primary' && <ArrowRight size={16} />}
                 </Link>
               ))}

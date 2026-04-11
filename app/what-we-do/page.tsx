@@ -3,6 +3,7 @@ import ServicePillar from '@/components/ServicePillar';
 import ServicesNav from '@/components/ServicesNav';
 import ServicesOverview from '@/components/ServicesOverview';
 import PageHero from '@/components/PageHero';
+import HowWeWork from '@/components/HowWeWork';
 import PreFooterCta from '@/components/PreFooterCta';
 import Reveal, { RevealItem } from '@/components/Reveal';
 import { FullContactForm } from '@/components/ContactForm';
@@ -47,6 +48,8 @@ export default function WhatWeDoPage() {
           index={i}
         />
       ))}
+
+      <HowWeWork />
 
       {/* Contact CTA */}
       <section className="bg-navy py-20 lg:py-28">

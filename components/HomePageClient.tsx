@@ -108,7 +108,7 @@ export default function HomePageClient() {
                 <RevealItem>
                   <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
                     <h2 className="text-3xl md:text-4xl font-bold text-white max-w-md">
-                      How we help your team.
+                      What we cover.
                     </h2>
                     <Link
                       href="/what-we-do"
@@ -132,20 +132,6 @@ export default function HomePageClient() {
               ))}
             </div>
 
-            {/* Nudge below cards */}
-            <Reveal direction="none" delay={0.4}>
-              <div className="mt-10 pt-10 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-6">
-                <p className="text-white/50 text-sm">
-                  Not sure which service fits? We handle much more. Just ask.
-                </p>
-                <Link
-                  href="/get-in-touch"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-pink text-white font-semibold rounded-full hover:bg-pink-dark transition-colors duration-200 whitespace-nowrap text-sm"
-                >
-                  Talk to us →
-                </Link>
-              </div>
-            </Reveal>
           </div>
         </section>
 

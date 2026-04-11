@@ -8,7 +8,7 @@ const SERVICES = [
   {
     number: '01',
     lines: ['Strategy &', 'Intelligence'],
-    chips: ['Go-to-Market', 'Segmentation', 'Awards', 'Commercial Support', 'Fractional Experts'],
+    chips: ['Go-to-Market', 'Segmentation', 'Awards', 'Commercial Support', 'Product Marketing'],
   },
   {
     number: '02',
@@ -23,7 +23,7 @@ const SERVICES = [
   {
     number: '04',
     lines: ['Operations &', 'Management'],
-    chips: ['Assets', 'MarTech', 'Fulfilment', 'Data Compliance'],
+    chips: ['Assets', 'MarTech', 'Fulfilment', 'Data Compliance', 'Fractional Experts'],
   },
   {
     number: '05',
