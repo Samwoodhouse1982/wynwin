@@ -11,30 +11,22 @@ export default function ServicesNav() {
   useEffect(() => {
     const ids = SERVICES.pillars.map((p) => p.id);
 
-    const observers = ids.map((id) => {
-      const el = document.getElementById(id);
-      if (!el) return null;
-
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setActiveId(id);
-          }
-        },
-        {
-          // Fire when the section top crosses ~30% from the top of the viewport
-          rootMargin: '-20% 0px -65% 0px',
-          threshold: 0,
+    const handleScroll = () => {
+      // Offset accounts for the main nav + ServicesNav sticky bar heights
+      const offset = 150;
+      let current = ids[0];
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= offset) {
+          current = id;
         }
-      );
-
-      observer.observe(el);
-      return observer;
-    });
-
-    return () => {
-      observers.forEach((obs) => obs?.disconnect());
+      }
+      setActiveId(current);
     };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Auto-scroll the nav bar so the active link stays visible on mobile
