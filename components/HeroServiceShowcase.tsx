@@ -8,17 +8,17 @@ const SERVICES = [
   {
     number: '01',
     lines: ['Strategy &', 'Intelligence'],
-    chips: ['Go-to-Market', 'Segmentation', 'Awards', 'Commercial Support', 'Product Marketing'],
+    chips: ['Go-to-Market', 'Segmentation', 'Awards', 'Sales Enablement', 'ABM', 'Product Marketing', 'Regulated Markets', 'Health Economics'],
   },
   {
     number: '02',
     lines: ['Brand &', 'Creative'],
-    chips: ['Influencers', 'Case Studies', 'Content', 'Brand Research', 'Web Design & Dev'],
+    chips: ['PR & Media', 'Thought Leadership', 'Influencers', 'Case Studies', 'Content', 'Brand Research', 'Web Design & Dev'],
   },
   {
     number: '03',
     lines: ['Projects &', 'Campaigns'],
-    chips: ['Campaigns', 'Social Media', 'Paid Media', 'Events', 'Launches', 'Reporting'],
+    chips: ['Campaigns', 'Email Marketing', 'SEO', 'Social Media', 'Paid Media', 'Events', 'Launches', 'Internal Comms', 'Reporting'],
   },
   {
     number: '04',
