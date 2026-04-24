@@ -70,7 +70,7 @@ export const HOME = {
   servicesPreview: [
     {
       title: 'Strategy and intelligence',
-      body: 'Go-to-market planning, audience research, segmentation, competitive intelligence, product marketing, and commercial support.',
+      body: 'Go-to-market planning, audience research, competitive intelligence, product marketing, commercial support, and regulated device marketing.',
       href: '/what-we-do#strategy',
     },
     {
@@ -135,6 +135,11 @@ export const SERVICES = {
           name: 'Product Marketing',
           detail:
             'Product positioning, messaging frameworks, launch planning, competitive differentiation, and go-to-market enablement materials.',
+        },
+        {
+          name: 'Regulated Device Marketing',
+          detail:
+            'Pre- and post-market marketing strategy for regulated devices and products. Communications that support regulatory approval processes, claims-compliant promotional materials, and ongoing adherence to MHRA, FDA, and EU MDR requirements.',
         },
       ],
     },
@@ -311,6 +316,37 @@ export const TESTIMONIALS = [
     linkedin: 'https://www.linkedin.com/in/tauseef-mehrali/',
   },
 ] as const;
+
+// ============================================================
+// REGULATED MARKETS
+// ============================================================
+
+export const REGULATED_MARKETS = {
+  eyebrow: 'Specialist capability',
+  headline: 'Marketing built for regulated environments.',
+  intro:
+    'Marketing for regulated devices and products demands more than creativity. Every claim needs substantiation. Every channel needs compliance review. Every launch must work within what is permitted, not just what is possible.',
+  body:
+    'We have spent years inside healthcare, medtech, and pharmaceutical environments. We understand how marketing and communications intersect with regulatory processes, and we know how to deliver commercially effective work that stays within those bounds.',
+  capabilities: [
+    {
+      heading: 'Pre-market support',
+      body: 'Build your brand story, stakeholder communications, and go-to-market foundations while the approval process is underway. Arrive at launch ready to move.',
+    },
+    {
+      heading: 'Regulatory approval communications',
+      body: 'Marketing and communications materials that support, not complicate, the regulatory submission. Clear, accurate, and evidenced.',
+    },
+    {
+      heading: 'Post-market compliance',
+      body: 'Promotional material review, claims substantiation, and ongoing adherence to MHRA, FDA, EU MDR, and sector-specific codes of practice.',
+    },
+    {
+      heading: 'Ongoing marketing compliance',
+      body: 'Keeping all marketing activity aligned with evolving regulations, reviewing materials before publication, and helping your team move fast without cutting corners.',
+    },
+  ],
+} as const;
 
 // ============================================================
 // META / SEO
