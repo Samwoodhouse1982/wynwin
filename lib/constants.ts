@@ -101,6 +101,7 @@ export const HOME = {
 // ============================================================
 
 export const SERVICES = {
+  intro: 'Our range reflects two things: hands-on marketing expertise built across disciplines over 18 years, and a trusted network of specialist suppliers we call on when a brief needs it. Whatever we take on, we own end to end. Delivered on time and on budget.',
   pillars: [
     {
       id: 'strategy',

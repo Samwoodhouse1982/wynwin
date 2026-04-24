@@ -36,6 +36,16 @@ export default function WhatWeDoPage() {
       />
 
       <ServicesNav />
+
+      {/* Breadth reassurance */}
+      <div className="bg-white dark:bg-navy border-b border-navy/8 dark:border-white/10">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
+          <p className="text-navy/60 dark:text-white/55 text-sm leading-relaxed max-w-2xl border-l-2 border-pink/50 pl-4">
+            {SERVICES.intro}
+          </p>
+        </div>
+      </div>
+
       <ServicesOverview />
 
       {/* Regulated markets spotlight */}
