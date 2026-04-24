@@ -70,17 +70,17 @@ export const HOME = {
   servicesPreview: [
     {
       title: 'Strategy and intelligence',
-      body: 'Go-to-market planning, audience research, competitive intelligence, product marketing, commercial support, and regulated device marketing.',
+      body: 'Go-to-market planning, audience research, competitive intelligence, sales enablement, ABM, product marketing, regulated device marketing, and health economic analysis.',
       href: '/what-we-do#strategy',
     },
     {
       title: 'Brand and creative',
-      body: 'Brand management, content development, influencer and partnership acquisition, client success stories, brand research, and website development and design.',
+      body: 'Brand management, content development, PR and media relations, thought leadership, influencer and partnership acquisition, client success stories, and website development.',
       href: '/what-we-do#brand',
     },
     {
       title: 'Projects and campaigns',
-      body: 'Campaign planning and execution, content and social, paid media, events, product launches, project management, and performance reporting.',
+      body: 'Campaign planning and execution, email marketing, SEO, content and social, paid media, events, product launches, internal comms, and performance reporting.',
       href: '/what-we-do#projects',
     },
     {
@@ -132,6 +132,11 @@ export const SERVICES = {
             'Commercial strategy, pricing frameworks, revenue planning, sales and partner enablement, and partnership commercials.',
         },
         {
+          name: 'Sales Enablement',
+          detail:
+            'Pitch decks, sales collateral, battlecards, RFP response support, proposal design, and deal-specific marketing assets that help commercial teams convert more effectively.',
+        },
+        {
           name: 'Product Marketing',
           detail:
             'Product positioning, messaging frameworks, launch planning, competitive differentiation, and go-to-market enablement materials.',
@@ -140,6 +145,16 @@ export const SERVICES = {
           name: 'Regulated Device Marketing',
           detail:
             'Pre- and post-market marketing strategy for regulated devices and products. Communications that support regulatory approval processes, claims-compliant promotional materials, and ongoing adherence to MHRA, FDA, and EU MDR requirements.',
+        },
+        {
+          name: 'Account-Based Marketing',
+          detail:
+            'Account identification and tiering, personalised content and campaign planning, stakeholder mapping, and coordinated sales and marketing activity targeting high-value accounts.',
+        },
+        {
+          name: 'ROI and Health Economic Analysis',
+          detail:
+            'Economic modelling to quantify the value of healthcare products and interventions. Cost-effectiveness analysis, budget impact models, payer value propositions, and support for NICE and reimbursement submissions to build the commercial and clinical case for adoption.',
         },
       ],
     },
@@ -161,6 +176,16 @@ export const SERVICES = {
           name: 'Content Development',
           detail:
             'Strategy-led content creation across formats (written, visual, and video) for owned, earned, and paid channels.',
+        },
+        {
+          name: 'PR and Media Relations',
+          detail:
+            'Press release writing and distribution, journalist and analyst outreach, media list management, reactive media handling, coverage tracking, and spokesperson briefing.',
+        },
+        {
+          name: 'Thought Leadership and Executive Content',
+          detail:
+            'Ghostwriting, LinkedIn strategy and content for senior leaders, white papers, opinion articles, speaking submissions, and award nominations for individuals.',
         },
         {
           name: 'Client Success Stories',
@@ -186,7 +211,17 @@ export const SERVICES = {
         {
           name: 'Content and Campaigns',
           detail:
-            'Ideation and execution, planning, management, and rollout; case studies, ROI calculations, SEO, UGC, podcast recording, greenscreen, filming, and quality review.',
+            'Ideation and execution, planning, management, and rollout of content campaigns across owned, earned, and paid channels. UGC, podcast recording, video, and quality review.',
+        },
+        {
+          name: 'SEO',
+          detail:
+            'Technical SEO audits, keyword strategy, on-page optimisation, content gap analysis, and organic performance tracking to improve search visibility and qualified traffic.',
+        },
+        {
+          name: 'Email Marketing',
+          detail:
+            'Campaign build and deployment, list segmentation, automation flow design, A/B testing, deliverability management, and performance reporting across CRM and email platforms.',
         },
         {
           name: 'Social Media Management',
@@ -207,6 +242,11 @@ export const SERVICES = {
           name: 'Product and Service Launches',
           detail:
             'Full-funnel launch planning and execution, from pre-launch build-up and announcement through to post-launch follow-up and measurement.',
+        },
+        {
+          name: 'Internal Communications',
+          detail:
+            'Employee newsletters, leadership communications, town hall and all-hands content, intranet copy, and change communications to keep internal audiences informed and engaged.',
         },
         {
           name: 'Campaign Reporting and Analytics',
@@ -363,7 +403,7 @@ export const META = {
   whatWeDo: {
     title: 'What We Do | WYN WIN',
     description:
-      'Explore WYN WIN\'s five service pillars: Strategy & Intelligence, Brand & Creative, Projects & Campaigns, Operations & Management, and Logistics & Procurement.',
+      'WYN WIN\'s five service pillars cover strategy, brand, campaigns, operations, and logistics. Including PR, email marketing, SEO, sales enablement, ABM, and regulated device marketing.',
   },
   whoWeAre: {
     title: 'Who We Are | WYN WIN',
