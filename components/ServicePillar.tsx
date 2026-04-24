@@ -101,7 +101,7 @@ export default function ServicePillar({ id, title, services, index }: ServicePil
           <p className="text-navy/50 dark:text-white/70 text-sm">Need help with {title.toLowerCase()}?</p>
           <Link
             href="/get-in-touch"
-            className="inline-flex items-center gap-2 text-pink font-semibold text-sm hover:gap-3 transition-all duration-200"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-pink text-white font-semibold text-sm rounded-full hover:bg-pink-dark transition-colors duration-200"
           >
             Get in touch <ArrowRight size={14} />
           </Link>
