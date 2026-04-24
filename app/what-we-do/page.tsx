@@ -48,28 +48,30 @@ export default function WhatWeDoPage() {
 
       <ServicesOverview />
 
-      {/* Regulated markets spotlight */}
-      <section className="bg-navy py-20 lg:py-28">
+      {/* Regulated markets callout */}
+      <section className="bg-white dark:bg-navy border-y border-navy/10 dark:border-white/10 py-10 lg:py-14">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+          <Reveal stagger>
+            <RevealItem>
+              <p className="text-pink font-semibold text-xs uppercase tracking-widest mb-3">
+                {REGULATED_MARKETS.eyebrow}
+              </p>
+            </RevealItem>
+          </Reveal>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
             <Reveal stagger>
               <RevealItem>
-                <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-4">
-                  {REGULATED_MARKETS.eyebrow}
-                </p>
-              </RevealItem>
-              <RevealItem>
-                <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
+                <h2 className="text-xl md:text-2xl font-bold text-navy dark:text-white mb-4 leading-snug">
                   {REGULATED_MARKETS.headline}
                 </h2>
               </RevealItem>
               <RevealItem>
-                <p className="text-white/70 text-lg leading-relaxed mb-4">
+                <p className="text-navy/65 dark:text-white/65 text-sm leading-relaxed mb-3">
                   {REGULATED_MARKETS.intro}
                 </p>
               </RevealItem>
               <RevealItem>
-                <p className="text-white/70 leading-relaxed">
+                <p className="text-navy/65 dark:text-white/65 text-sm leading-relaxed">
                   {REGULATED_MARKETS.body}
                 </p>
               </RevealItem>
@@ -78,9 +80,9 @@ export default function WhatWeDoPage() {
             <Reveal stagger>
               {REGULATED_MARKETS.capabilities.map((cap) => (
                 <RevealItem key={cap.heading} direction="right">
-                  <div className="border-l-2 border-pink/40 hover:border-pink pl-5 mb-6 transition-colors duration-300 cursor-default">
-                    <h3 className="text-base font-bold text-white mb-1.5">{cap.heading}</h3>
-                    <p className="text-white/60 text-sm leading-relaxed">{cap.body}</p>
+                  <div className="border-l-2 border-pink/30 hover:border-pink pl-4 mb-5 transition-colors duration-300 cursor-default">
+                    <h3 className="text-sm font-bold text-navy dark:text-white mb-1">{cap.heading}</h3>
+                    <p className="text-navy/60 dark:text-white/55 text-xs leading-relaxed">{cap.body}</p>
                   </div>
                 </RevealItem>
               ))}
