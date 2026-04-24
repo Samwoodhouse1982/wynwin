@@ -8,7 +8,7 @@ const SERVICES = [
   {
     number: '01',
     lines: ['Strategy &', 'Intelligence'],
-    chips: ['Go-to-Market', 'Segmentation', 'Awards', 'Sales Enablement', 'ABM', 'Product Marketing', 'Regulated Markets', 'Health Economics'],
+    chips: ['Go-to-Market', 'Market Research', 'Competitor Intel', 'Segmentation', 'Awards', 'Sales Enablement', 'ABM', 'Product Marketing', 'Regulated Markets', 'Health Economics'],
   },
   {
     number: '02',

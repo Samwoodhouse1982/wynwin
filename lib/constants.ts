@@ -70,7 +70,7 @@ export const HOME = {
   servicesPreview: [
     {
       title: 'Strategy and intelligence',
-      body: 'Go-to-market planning, audience research, competitive intelligence, sales enablement, ABM, product marketing, regulated device marketing, and health economic analysis.',
+      body: 'Go-to-market planning, market research, competitive intelligence, sales enablement, ABM, product marketing, regulated device marketing, and health economic analysis.',
       href: '/what-we-do#strategy',
     },
     {
@@ -110,6 +110,11 @@ export const SERVICES = {
           name: 'Go-to-Market Planning',
           detail:
             'Market entry strategy, launch sequencing, channel selection, positioning, and value proposition development.',
+        },
+        {
+          name: 'Market Research',
+          detail:
+            'Primary and secondary research, qualitative and quantitative studies, customer insight programmes, survey design and analysis, focus groups, and desk research to inform strategy and decision-making.',
         },
         {
           name: 'Audience Research and Segmentation',
