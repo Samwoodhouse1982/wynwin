@@ -290,8 +290,8 @@ export default function EntranceAnimation({ onComplete }: EntranceAnimationProps
     // onComplete fires here so the page fades in while the panels slide apart
     onComplete?.();
 
-    // Door opens — ease-inout for a deliberate, satisfying split
-    await tween(1400, (r) => {
+    // Door opens — quick, snappy split
+    await tween(500, (r) => {
       const s = easeInOut(r) * big;
       panelA.setAttribute('points', panelPoints(-1, s));
       panelB.setAttribute('points', panelPoints( 1, s));
