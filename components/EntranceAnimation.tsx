@@ -137,7 +137,7 @@ export default function EntranceAnimation({ onComplete }: EntranceAnimationProps
 
     const halfLen = len / 2;
 
-    await tween(7000, (r) => {
+    await tween(3500, (r) => {
       const drawn = easeInOut(r) * halfLen;
 
       // Dot 1 — forward from start
@@ -160,7 +160,7 @@ export default function EntranceAnimation({ onComplete }: EntranceAnimationProps
     });
 
     // Dots fade out
-    await tween(500, (r) => {
+    await tween(300, (r) => {
       const v = String(1 - easeOut(r));
       d1.setAttribute('opacity', v);
       d2.setAttribute('opacity', v);
@@ -170,18 +170,18 @@ export default function EntranceAnimation({ onComplete }: EntranceAnimationProps
   // ── Phase 2: Bar pulses ─────────────────────────────────────────────────────
   const phase2 = useCallback(async (barEl: SVGPathElement) => {
     for (let i = 0; i < 3; i++) {
-      await tween(350, (r) => {
+      await tween(150, (r) => {
         barEl.setAttribute('opacity', String(easeOut(r) * 0.95));
       });
-      await tween(350, (r) => {
+      await tween(150, (r) => {
         barEl.setAttribute('opacity', String(0.95 - easeIn(r) * 0.85));
       });
-      if (i < 2) await wait(80);
+      if (i < 2) await wait(40);
     }
-    await tween(300, (r) => {
+    await tween(180, (r) => {
       barEl.setAttribute('opacity', String(0.1 + easeOut(r) * 0.9));
     });
-    await wait(250);
+    await wait(120);
   }, []);
 
   // ── Phase 3+4: Expand bar → split reveal ───────────────────────────────────
@@ -251,18 +251,18 @@ export default function EntranceAnimation({ onComplete }: EntranceAnimationProps
 
     // Logo slides up and fades; bar expands simultaneously
     await Promise.all([
-      tween(900, (r) => {
+      tween(600, (r) => {
         const p = easeIn(r);
         wrap.style.opacity   = String(1 - p);
         wrap.style.transform = `translateY(${p * -40}px)`;
         barEl.setAttribute('opacity', String(1 - p));
       }),
-      tween(1600, (r) => {
+      tween(900, (r) => {
         setFill(easeInOut(r) * big);
       }),
     ]);
 
-    await wait(300);
+    await wait(150);
 
     // Build split panels — huge parallelogram strips from the seam line
     const panelPoints = (signN: number, slide: number): string => {
@@ -310,7 +310,7 @@ export default function EntranceAnimation({ onComplete }: EntranceAnimationProps
 
     const run = async () => {
       await phase1();
-      await wait(200);
+      await wait(100);
 
       // Create bar glow element (path 6 filled, glowing)
       const barEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
