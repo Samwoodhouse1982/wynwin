@@ -137,8 +137,11 @@ export default function EntranceAnimation({ onComplete }: EntranceAnimationProps
 
     const halfLen = len / 2;
 
-    await tween(3500, (r) => {
-      const drawn = easeInOut(r) * halfLen;
+    await tween(4500, (r) => {
+      // Linear (constant) pen speed: each dot advances at a steady rate so it
+      // visibly *draws* its half of the outline, instead of blurring through
+      // the middle the way an ease-in-out curve does.
+      const drawn = r * halfLen;
 
       // Dot 1 — forward from start
       pathA.setAttribute('stroke-dashoffset', String(len - drawn));
