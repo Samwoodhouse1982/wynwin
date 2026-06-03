@@ -45,11 +45,25 @@ const LOGO_PATH = `
 // The bar shape — path 6 only, used for the pulse glow overlay
 const BAR_PATH = 'M 387,210 L 387,230 L 437,300 L 438,281 Z';
 
+// The outline split into its six sub-paths (each "M … Z"). Stroking every
+// sub-path on its own element is what keeps each white dot welded to the tip of
+// the pink line it is drawing: a lone sub-path's stroke-dashoffset and
+// getPointAtLength share one arc-length space, so they can't drift apart the
+// way a single dash spanning all six sub-paths does.
+const SUBPATHS = LOGO_PATH
+  .split('M')
+  .map((s) => s.trim())
+  .filter(Boolean)
+  .map((s) => `M ${s}`);
+
 // ─── Easing ───────────────────────────────────────────────────────────────────
 const easeInOut = (t: number) =>
   t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 const easeIn  = (t: number) => t * t * t;
+// Gentle symmetric ease — smooth start/stop, less peaky through the middle than
+// the cubic easeInOut, so the trace glides rather than lurches.
+const easeInOutSine = (t: number) => -(Math.cos(Math.PI * t) - 1) / 2;
 
 // ─── Utilities ────────────────────────────────────────────────────────────────
 function tween(ms: number, cb: (r: number) => void): Promise<void> {
@@ -97,8 +111,7 @@ interface EntranceAnimationProps {
 export default function EntranceAnimation({ onComplete }: EntranceAnimationProps) {
   const diamondsRef  = useRef<HTMLDivElement>(null);
   const logoWrapRef  = useRef<HTMLDivElement>(null);
-  const outlineARef  = useRef<SVGPathElement>(null);
-  const outlineBRef  = useRef<SVGPathElement>(null);
+  const subpathRefs  = useRef<(SVGPathElement | null)[]>([]);
   const dot1Ref      = useRef<SVGCircleElement>(null);
   const dot2Ref      = useRef<SVGCircleElement>(null);
   const svgRef       = useRef<SVGSVGElement>(null);
@@ -106,61 +119,112 @@ export default function EntranceAnimation({ onComplete }: EntranceAnimationProps
 
   // ── Phase 1: Two dots trace from opposite ends ──────────────────────────────
   const phase1 = useCallback(async () => {
-    const pathA = outlineARef.current!;
-    const pathB = outlineBRef.current!;
-    const d1    = dot1Ref.current!;
-    const d2    = dot2Ref.current!;
-    const wrap  = logoWrapRef.current!;
+    const paths = subpathRefs.current.filter(Boolean) as SVGPathElement[];
+    const d1   = dot1Ref.current!;
+    const d2   = dot2Ref.current!;
+    const wrap = logoWrapRef.current!;
+    if (paths.length === 0) return;
 
-    const len = pathA.getTotalLength();
+    // Measure each sub-path, then hide each one with its OWN dash. Because a
+    // sub-path is dashed in isolation, its stroke-dashoffset and getPointAtLength
+    // share one arc-length space — so a dot placed by getPointAtLength sits
+    // exactly on the tip of the stroke being revealed, on every frame.
+    const lens  = paths.map((p) => p.getTotalLength());
+    const total = lens.reduce((a, b) => a + b, 0);
+    paths.forEach((p, i) => {
+      p.setAttribute('stroke-dasharray', String(lens[i]));
+      p.setAttribute('stroke-dashoffset', String(lens[i])); // fully hidden
+      p.setAttribute('opacity', '1');
+    });
 
-    // Configure dashes before revealing — nothing visible until dots start
-    pathA.setAttribute('stroke-dasharray',  String(len));
-    pathA.setAttribute('stroke-dashoffset', String(len));
-    pathB.setAttribute('stroke-dasharray',  `0 ${len}`);
-    pathB.setAttribute('stroke-dashoffset', '0');
-    pathA.setAttribute('opacity', '1');
-    pathB.setAttribute('opacity', '1');
-    wrap.style.opacity = '1';
+    // Split the outline into two contiguous runs of whole sub-paths, balanced as
+    // near to half the total length as possible. Dot 1 draws the first run
+    // forward from the start; dot 2 draws the second run in reverse from the
+    // end, so the dots sweep toward each other and finish together.
+    const half = total / 2;
+    let cum = 0;
+    let splitAt = 0;
+    let best = Infinity;
+    for (let i = 0; i < lens.length; i++) {
+      cum += lens[i];
+      const diff = Math.abs(cum - half);
+      if (diff < best) { best = diff; splitAt = i; }
+    }
 
-    // Position dots at their start points before revealing them
-    const ptStart = pathA.getPointAtLength(0);
-    d1.setAttribute('cx', String(ptStart.x));
-    d1.setAttribute('cy', String(ptStart.y));
+    type Seg = { p: SVGPathElement; len: number; start: number };
 
-    const ptEnd = pathA.getPointAtLength(len);
-    d2.setAttribute('cx', String(ptEnd.x));
-    d2.setAttribute('cy', String(ptEnd.y));
+    const forward: Seg[] = [];        // sub-paths [0..splitAt], drawn from start
+    let fAcc = 0;
+    for (let i = 0; i <= splitAt; i++) {
+      forward.push({ p: paths[i], len: lens[i], start: fAcc });
+      fAcc += lens[i];
+    }
+    const lenForward = fAcc || 1;
 
+    const backward: Seg[] = [];       // sub-paths [n-1..splitAt+1], drawn from end
+    let bAcc = 0;
+    for (let i = lens.length - 1; i > splitAt; i--) {
+      backward.push({ p: paths[i], len: lens[i], start: bAcc });
+      bAcc += lens[i];
+    }
+    const lenBackward = bAcc || 1;
+
+    // Park the dots on their starting tips before revealing them.
+    const head1 = forward[0].p.getPointAtLength(0);
+    d1.setAttribute('cx', String(head1.x));
+    d1.setAttribute('cy', String(head1.y));
+    if (backward.length) {
+      const seg = backward[0];
+      const head2 = seg.p.getPointAtLength(seg.len);
+      d2.setAttribute('cx', String(head2.x));
+      d2.setAttribute('cy', String(head2.y));
+    }
     d1.setAttribute('opacity', '1');
     d2.setAttribute('opacity', '1');
+    wrap.style.opacity = '1';
 
-    const halfLen = len / 2;
+    // Dot 1: reveal forward sub-paths from their start; keep the dot on the tip.
+    const drawForward = (dist: number) => {
+      for (const seg of forward) {
+        if (dist >= seg.start + seg.len) {
+          seg.p.setAttribute('stroke-dashoffset', '0');            // done
+        } else if (dist <= seg.start) {
+          seg.p.setAttribute('stroke-dashoffset', String(seg.len)); // not yet
+        } else {
+          const into = dist - seg.start;                           // active sub-path
+          seg.p.setAttribute('stroke-dashoffset', String(seg.len - into));
+          const tip = seg.p.getPointAtLength(into);
+          d1.setAttribute('cx', String(tip.x));
+          d1.setAttribute('cy', String(tip.y));
+        }
+      }
+    };
 
+    // Dot 2: reveal backward sub-paths from their end; keep the dot on the tip.
+    const drawBackward = (dist: number) => {
+      for (const seg of backward) {
+        if (dist >= seg.start + seg.len) {
+          seg.p.setAttribute('stroke-dashoffset', '0');             // done
+        } else if (dist <= seg.start) {
+          seg.p.setAttribute('stroke-dashoffset', String(-seg.len)); // not yet
+        } else {
+          const into = dist - seg.start;                            // active sub-path
+          seg.p.setAttribute('stroke-dashoffset', String(into - seg.len));
+          const tip = seg.p.getPointAtLength(seg.len - into);
+          d2.setAttribute('cx', String(tip.x));
+          d2.setAttribute('cy', String(tip.y));
+        }
+      }
+    };
+
+    // Gentle ease for a smooth, unhurried trace; both runs reach full at r = 1.
     await tween(4500, (r) => {
-      // Linear (constant) pen speed: each dot advances at a steady rate so it
-      // visibly *draws* its half of the outline, instead of blurring through
-      // the middle the way an ease-in-out curve does.
-      const drawn = r * halfLen;
-
-      // Dot 1 — forward from start
-      pathA.setAttribute('stroke-dashoffset', String(len - drawn));
-      try {
-        const pt = pathA.getPointAtLength(drawn);
-        d1.setAttribute('cx', String(pt.x));
-        d1.setAttribute('cy', String(pt.y));
-      } catch { /* path length edge case */ }
-
-      // Dot 2 — backward from end
-      const gap = len - drawn;
-      pathB.setAttribute('stroke-dasharray',  `${drawn} ${gap}`);
-      pathB.setAttribute('stroke-dashoffset', `-${gap}`);
-      try {
-        const pt = pathB.getPointAtLength(Math.max(0, len - drawn));
-        d2.setAttribute('cx', String(pt.x));
-        d2.setAttribute('cy', String(pt.y));
-      } catch { /* path length edge case */ }
+      const e = easeInOutSine(r);
+      drawForward(e * lenForward);
+      drawBackward(e * lenBackward);
     });
+    drawForward(lenForward);
+    drawBackward(lenBackward);
 
     // Dots fade out
     await tween(300, (r) => {
@@ -366,29 +430,23 @@ export default function EntranceAnimation({ onComplete }: EntranceAnimationProps
               </filter>
             </defs>
 
-            {/* outline-a: Dot 1 draws forward from M 2,1 */}
-            <path
-              ref={outlineARef}
-              fill="none"
-              stroke="#ff007f"
-              strokeWidth="2.5"
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              opacity={0}
-              d={LOGO_PATH}
-            />
-
-            {/* outline-b: Dot 2 draws backward from end of path */}
-            <path
-              ref={outlineBRef}
-              fill="none"
-              stroke="#ff007f"
-              strokeWidth="2.5"
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              opacity={0}
-              d={LOGO_PATH}
-            />
+            {/* Outline as individual sub-paths — each stroked with its own dash
+                so its dot stays welded to the tip of the line it is drawing. */}
+            {SUBPATHS.map((d, i) => (
+              <path
+                key={i}
+                ref={(el) => {
+                  subpathRefs.current[i] = el;
+                }}
+                fill="none"
+                stroke="#ff007f"
+                strokeWidth="2.5"
+                strokeLinejoin="round"
+                strokeLinecap="round"
+                opacity={0}
+                d={d}
+              />
+            ))}
 
             {/* Dot 1 — travels forward */}
             <circle ref={dot1Ref} r={5} fill="#ffffff" filter="url(#glow)" opacity={0} />
