@@ -7,6 +7,23 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { BRAND } from '@/lib/constants';
 
+// ── Web3Forms submission ───────────────────────────────────
+// Submissions go straight from the browser to Web3Forms (no backend). The
+// access key is public by design — it can only submit to the form it belongs
+// to, whose recipient inbox is configured in the Web3Forms dashboard.
+const WEB3FORMS_ACCESS_KEY =
+  process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY ?? '732edaa2-f324-4831-a8dd-0e6dc46a92d8';
+
+async function sendToWeb3Forms(fields: Record<string, string>) {
+  const res = await fetch('https://api.web3forms.com/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({ access_key: WEB3FORMS_ACCESS_KEY, ...fields }),
+  });
+  const result = (await res.json().catch(() => null)) as { success?: boolean } | null;
+  if (!res.ok || !result?.success) throw new Error('Web3Forms submission failed');
+}
+
 // ── Schemas ────────────────────────────────────────────────
 
 const simpleSchema = z.object({
@@ -80,12 +97,15 @@ export function SimpleContactForm() {
     if (data._gotcha) return;
     setStatus('loading');
     try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, formType: 'simple' }),
+      const name = `${data.firstName} ${data.lastName}`.trim();
+      await sendToWeb3Forms({
+        subject: `New enquiry from ${name}`,
+        from_name: name || 'WYNWIN website',
+        name,
+        email: data.email,
+        message: data.message,
+        consent: data.consent ? 'Yes — accepted the Privacy Policy' : 'Not given',
       });
-      if (!res.ok) throw new Error();
       setStatus('success');
       reset();
     } catch {
@@ -191,12 +211,17 @@ export function FullContactForm({ onDark = false }: { onDark?: boolean }) {
     if (data._gotcha) return;
     setStatus('loading');
     try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, formType: 'full' }),
-      });
-      if (!res.ok) throw new Error();
+      const fields: Record<string, string> = {
+        subject: `New enquiry from ${data.name}${data.company ? ` (${data.company})` : ''}`,
+        from_name: data.name || 'WYNWIN website',
+        name: data.name,
+        email: data.email,
+      };
+      if (data.jobTitle) fields.job_title = data.jobTitle;
+      fields.company = data.company;
+      fields.message = data.message;
+      fields.consent = data.consent ? 'Yes — accepted the Privacy Policy' : 'Not given';
+      await sendToWeb3Forms(fields);
       setStatus('success');
       reset();
     } catch {
