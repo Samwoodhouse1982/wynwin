@@ -296,7 +296,7 @@ export default function EntranceAnimation({ onComplete }: EntranceAnimationProps
     door.setAttribute('preserveAspectRatio', 'none');
 
     const fill = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-    fill.setAttribute('fill', '#ff007f');
+    fill.setAttribute('fill', '#E8006A');
     fill.setAttribute('opacity', '0');
     door.appendChild(fill);
     document.body.appendChild(door);
@@ -345,8 +345,8 @@ export default function EntranceAnimation({ onComplete }: EntranceAnimationProps
 
     const panelA = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
     const panelB = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-    panelA.setAttribute('fill', '#ff007f');
-    panelB.setAttribute('fill', '#ff007f');
+    panelA.setAttribute('fill', '#E8006A');
+    panelB.setAttribute('fill', '#E8006A');
     panelA.setAttribute('points', panelPoints(-1, 0));
     panelB.setAttribute('points', panelPoints( 1, 0));
     door.appendChild(panelA);
@@ -382,8 +382,8 @@ export default function EntranceAnimation({ onComplete }: EntranceAnimationProps
       // Create bar glow element (path 6 filled, glowing)
       const barEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       barEl.setAttribute('d',            BAR_PATH);
-      barEl.setAttribute('fill',         '#ff007f');
-      barEl.setAttribute('stroke',       '#ff007f');
+      barEl.setAttribute('fill',         '#E8006A');
+      barEl.setAttribute('stroke',       '#E8006A');
       barEl.setAttribute('stroke-width', '2');
       barEl.setAttribute('filter',       'url(#bar-glow)');
       barEl.setAttribute('opacity',      '0');
@@ -439,7 +439,7 @@ export default function EntranceAnimation({ onComplete }: EntranceAnimationProps
                   subpathRefs.current[i] = el;
                 }}
                 fill="none"
-                stroke="#ff007f"
+                stroke="#E8006A"
                 strokeWidth="2.5"
                 strokeLinejoin="round"
                 strokeLinecap="round"

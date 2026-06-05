@@ -1,10 +1,5 @@
-import type { Metadata } from 'next';
-// ── OPTION A (active): Unbounded + Instrument Sans ───────────────────────────
+import type { Metadata, Viewport } from 'next';
 import { Instrument_Sans, Unbounded } from 'next/font/google';
-// ── OPTION B: Bricolage Grotesque + Instrument Sans ───────────────────────────
-// import { Bricolage_Grotesque, Instrument_Sans } from 'next/font/google';
-// ── ORIGINAL: Unbounded + Plus Jakarta Sans ──────────────────────────────────
-// import { Plus_Jakarta_Sans, Unbounded } from 'next/font/google';
 import './globals.css';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
@@ -12,48 +7,21 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 import CookieBanner from '@/components/CookieBanner';
 import { META } from '@/lib/constants';
 
-// ── OPTION A ─────────────────────────────────────────────────────────────────
+// Unbounded — display / headings
 const display = Unbounded({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700', '800', '900'],
-  variable: '--font-syne',
+  variable: '--font-unbounded',
   display: 'swap',
 });
 
+// Instrument Sans — body
 const body = Instrument_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
-  variable: '--font-jakarta',
+  variable: '--font-instrument',
   display: 'swap',
 });
-
-// ── OPTION B (uncomment + comment out above to try) ───────────────────────────
-// const display = Bricolage_Grotesque({
-//   subsets: ['latin'],
-//   weight: ['400', '500', '600', '700', '800'],
-//   variable: '--font-syne',
-//   display: 'swap',
-// });
-// const body = Instrument_Sans({
-//   subsets: ['latin'],
-//   weight: ['400', '500', '600', '700'],
-//   variable: '--font-jakarta',
-//   display: 'swap',
-// });
-
-// ── ORIGINAL (uncomment + comment out above to revert) ───────────────────────
-// const body = Plus_Jakarta_Sans({
-//   subsets: ['latin'],
-//   weight: ['300', '400', '500', '600', '700', '800'],
-//   variable: '--font-jakarta',
-//   display: 'swap',
-// });
-// const display = Unbounded({
-//   subsets: ['latin'],
-//   weight: ['400', '500', '600', '700', '800', '900'],
-//   variable: '--font-syne',
-//   display: 'swap',
-// });
 
 export const metadata: Metadata = {
   title: {
@@ -67,7 +35,7 @@ export const metadata: Metadata = {
     description: META.home.description,
     url: META.siteUrl,
     siteName: META.siteName,
-    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'WYN WIN: Marketing Execution Services for Busy Teams' }],
+    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'WYN WIN — Services for busy people.' }],
     type: 'website',
     locale: 'en_GB',
   },
@@ -81,6 +49,10 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#0D1B3E',
 };
 
 export default function RootLayout({

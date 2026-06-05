@@ -55,7 +55,7 @@ export default function CookiesPage() {
                   <tr className="bg-cream dark:bg-navy">
                     <td className="px-4 py-3 font-medium text-navy dark:text-white">Analytics</td>
                     <td className="px-4 py-3">
-                      Understand how visitors use the site (e.g. Google Analytics or Plausible)
+                      Understand how visitors use the site (Google Analytics, GA4)
                     </td>
                     <td className="px-4 py-3">No (with consent)</td>
                   </tr>

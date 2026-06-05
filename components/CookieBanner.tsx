@@ -22,6 +22,13 @@ export default function CookieBanner() {
     }
   }, []);
 
+  // Allow re-opening the banner from a "Cookie Settings" control elsewhere.
+  useEffect(() => {
+    const reopen = () => setVisible(true);
+    window.addEventListener('wynwin:open-cookie-settings', reopen);
+    return () => window.removeEventListener('wynwin:open-cookie-settings', reopen);
+  }, []);
+
   const accept = () => {
     localStorage.setItem(CONSENT_KEY, 'accepted');
     setConsent('accepted');

@@ -11,10 +11,10 @@
   --color-mint: #00C896;
   --color-offwhite: #FAFAF8;
 
-  /* Syne for headings — geometric, characterful, agency feel */
-  --font-display: var(--font-syne), system-ui, sans-serif;
-  /* Plus Jakarta Sans for body — clean and readable */
-  --font-body: var(--font-jakarta), system-ui, sans-serif;
+  /* Unbounded for headings — geometric, characterful, agency feel */
+  --font-display: var(--font-unbounded), system-ui, sans-serif;
+  /* Instrument Sans for body — clean and readable */
+  --font-body: var(--font-instrument), system-ui, sans-serif;
 }
 
 :root {
@@ -50,11 +50,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Custom scrollbar */
+html {
+  scrollbar-color: #E8006A transparent; /* Firefox: thumb + track */
+}
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
+}
+.dark ::-webkit-scrollbar-track {
+  background: #1a2f5e;
 }
 ::-webkit-scrollbar-thumb {
   background: #E8006A;
@@ -70,7 +76,9 @@ h1, h2, h3, h4, h5, h6 {
 .dark .text-navy\/50 { color: rgba(248,246,242,0.5); }
 .dark .text-navy\/55 { color: rgba(248,246,242,0.55); }
 .dark .text-navy\/60 { color: rgba(248,246,242,0.6); }
+.dark .text-navy\/65 { color: rgba(248,246,242,0.65); }
 .dark .text-navy\/70 { color: rgba(248,246,242,0.7); }
+.dark .text-navy\/75 { color: rgba(248,246,242,0.75); }
 .dark .border-navy\/8 { border-color: rgba(255,255,255,0.08); }
 .dark .border-navy\/10 { border-color: rgba(255,255,255,0.1); }
 .dark .border-navy\/20 { border-color: rgba(255,255,255,0.2); }
@@ -97,4 +105,21 @@ h1, h2, h3, h4, h5, h6 {
 
 .animate-fade-up {
   animation: fadeUp 0.6s ease forwards;
+}
+
+/* Respect users who prefer reduced motion: neutralise CSS animations,
+   infinite loops, transitions, and smooth scrolling. Framer Motion is
+   handled separately via <MotionConfig reducedMotion="user">, and the
+   JS entrance animation is skipped in HomePageClient. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }

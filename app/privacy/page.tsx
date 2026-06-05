@@ -24,7 +24,7 @@ export default function PrivacyPage() {
         <h1 className="text-4xl font-bold text-navy dark:text-white mb-4">Privacy Policy</h1>
         <p className="text-navy/50 dark:text-white/60 text-sm mb-12">Last updated: March 2025</p>
 
-        <div className="prose prose-navy max-w-none space-y-8 text-navy/70 dark:text-white/70">
+        <div className="space-y-8 text-navy/70 dark:text-white/70">
           <section>
             <h2 className="text-xl font-bold text-navy dark:text-white mb-3">Who we are</h2>
             <p className="leading-relaxed">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import HeroSection from '@/components/HeroSection';
 import WhyWorkWithUs from '@/components/WhyWorkWithUs';
@@ -20,29 +20,44 @@ export default function HomePageClient() {
   const [animationDone, setAnimationDone] = useState(false);
   const [heroReady, setHeroReady] = useState(false);
 
-  useEffect(() => {
-    // Play once per first visit (persists across sessions via localStorage)
-    if (!localStorage.getItem(STORAGE_KEY)) {
-      setShowAnimation(true);
-    } else {
-      // Return visitor — skip entrance, hero can animate straight away
-      setAnimationDone(true);
-      setHeroReady(true);
-    }
-  }, []);
-
-  const handleComplete = () => {
+  const handleComplete = useCallback(() => {
     localStorage.setItem(STORAGE_KEY, '1');
-    setAnimationDone(true);
     setShowAnimation(false);
+    setAnimationDone(true);
     // Short delay so the hero stagger begins just as the doors finish clearing
     setTimeout(() => setHeroReady(true), 500);
-  };
+  }, []);
+
+  useEffect(() => {
+    const mql = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    const prefersReduced = !!mql?.matches;
+
+    // Skip the entrance for return visitors and anyone who prefers reduced
+    // motion — reveal the page immediately.
+    if (prefersReduced || localStorage.getItem(STORAGE_KEY)) {
+      setAnimationDone(true);
+      setHeroReady(true);
+      return;
+    }
+
+    setShowAnimation(true);
+
+    // Fail-safe: if the entrance animation never reports completion (e.g. it
+    // throws), reveal the page anyway so content can't get stuck hidden.
+    const failsafe = setTimeout(handleComplete, 6000);
+    return () => clearTimeout(failsafe);
+  }, [handleComplete]);
 
   return (
     <>
+      {/* No-JS fallback: force content visible when JavaScript is unavailable */}
+      <noscript>
+        <style>{`[data-entrance-content]{opacity:1 !important}`}</style>
+      </noscript>
+
       {/* Page content — invisible until animation reveals it */}
       <div
+        data-entrance-content
         style={{
           opacity:    animationDone ? 1 : 0,
           transition: 'opacity 0.9s ease',

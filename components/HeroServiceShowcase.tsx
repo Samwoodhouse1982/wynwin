@@ -41,6 +41,8 @@ export default function HeroServiceShowcase({ ready = false }: { ready?: boolean
 
   useEffect(() => {
     if (paused) return;
+    // Don't auto-advance for visitors who prefer reduced motion.
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
     const t = setInterval(() => {
       setActive((i) => {
         const next = (i + 1) % SERVICES.length;

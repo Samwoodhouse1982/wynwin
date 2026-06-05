@@ -19,7 +19,7 @@ const headlineIn: Variants = {
 };
 
 export default function HeroSection({ ready = false }: { ready?: boolean }) {
-  const { headline, body, tagline, ctas } = HOME.hero;
+  const { headline, body, ctas } = HOME.hero;
 
   return (
     <section className="relative bg-navy min-h-[90vh] flex items-center overflow-hidden">

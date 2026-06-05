@@ -33,7 +33,7 @@ export default function ServicePillar({ id, title, services, index }: ServicePil
   return (
     <section
       id={id}
-      className={`py-14 lg:py-20 scroll-mt-24 ${isEven ? 'bg-cream dark:bg-navy-light' : 'bg-white dark:bg-navy'}`}
+      className={`py-14 lg:py-20 scroll-mt-36 ${isEven ? 'bg-cream dark:bg-navy-light' : 'bg-white dark:bg-navy'}`}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Heading with animated underline sweep */}

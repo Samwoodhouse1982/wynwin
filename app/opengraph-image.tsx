@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'WYN WIN: Services for Busy People';
+export const alt = 'WYN WIN — Services for busy people.';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 

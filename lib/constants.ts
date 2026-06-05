@@ -6,7 +6,7 @@
 export const BRAND = {
   name: 'WYN WIN',
   tagline: 'Whatever You Need, Whenever It\'s Needed.',
-  phone: '0730 717 6143',
+  phone: '07307 176143',
   phoneHref: 'tel:+447307176143',
   email: 'hello@wynwin.co.uk',
   emailHref: 'mailto:hello@wynwin.co.uk',
@@ -350,7 +350,7 @@ export const ABOUT = {
 
 export const TESTIMONIALS = [
   {
-    quote: 'Sam is supporting - and has integrated into - the Audience Social Marketing team with ease and brings strong NHS and commercial sector experience. It\'s a win win !',
+    quote: 'Sam is supporting - and has integrated into - the Audience Social Marketing team with ease and brings strong NHS and commercial sector experience. It\'s a win win!',
     name: 'Ed Gyde',
     company: 'CEO, Audience Social Marketing',
     linkedin: 'https://www.linkedin.com/in/ed-gyde/',

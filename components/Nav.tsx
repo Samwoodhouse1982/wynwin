@@ -45,6 +45,16 @@ export default function Nav() {
   // Close menu on route change
   useEffect(() => setOpen(false), [pathname]);
 
+  // Close the mobile menu on Escape
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open]);
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -72,6 +82,7 @@ export default function Nav() {
             <li key={link.href}>
               <Link
                 href={link.href}
+                aria-current={pathname === link.href ? 'page' : undefined}
                 className={`text-sm font-medium transition-colors duration-200 ${
                   pathname === link.href
                     ? 'text-pink'
@@ -113,9 +124,11 @@ export default function Nav() {
           <button
             onClick={() => setOpen(!open)}
             aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
             className="text-white p-2 -mr-2"
           >
-            {open ? <X size={22} /> : <Menu size={22} />}
+            {open ? <X size={22} aria-hidden /> : <Menu size={22} aria-hidden />}
           </button>
         </div>
       </nav>
@@ -125,6 +138,7 @@ export default function Nav() {
         {open && (
           <motion.div
             key="mobile-drawer"
+            id="mobile-menu"
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
@@ -135,6 +149,7 @@ export default function Nav() {
               <Link
                 key={link.href}
                 href={link.href}
+                aria-current={pathname === link.href ? 'page' : undefined}
                 className={`text-base font-medium py-2 border-b border-white/10 transition-colors ${
                   pathname === link.href ? 'text-pink' : 'text-white/80'
                 }`}

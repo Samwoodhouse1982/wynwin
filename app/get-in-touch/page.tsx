@@ -62,7 +62,7 @@ const contactLinks = [
 
 export default function GetInTouchPage() {
   return (
-    <section className="bg-navy min-h-[calc(100vh-80px)] py-20 lg:py-28">
+    <section className="bg-navy min-h-[calc(100vh-64px)] lg:min-h-[calc(100vh-80px)] py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-16">
           {/* Left — info */}
