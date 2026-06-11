@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Instrument_Sans, Unbounded } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
@@ -69,6 +70,7 @@ export default function RootLayout({
           <Footer />
           <CookieBanner />
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
