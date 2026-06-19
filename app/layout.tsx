@@ -5,6 +5,7 @@ import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import CookieBanner from '@/components/CookieBanner';
+import { Analytics } from '@vercel/analytics/next';
 import { META } from '@/lib/constants';
 
 // Unbounded — display / headings
@@ -69,6 +70,7 @@ export default function RootLayout({
           <Footer />
           <CookieBanner />
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
