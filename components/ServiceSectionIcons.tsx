@@ -9,12 +9,12 @@ import type { ComponentType } from 'react';
 // ─────────────────────────────────────────────────────────
 export function StrategyIcon() {
   return (
-    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true" className="text-navy dark:text-white">
       {/* Crosshair ticks */}
-      <line x1={22} y1={2}  x2={22} y2={8}  stroke="#0D1B3E" strokeWidth={1.5} strokeOpacity={0.18} strokeLinecap="round" />
-      <line x1={22} y1={36} x2={22} y2={42} stroke="#0D1B3E" strokeWidth={1.5} strokeOpacity={0.18} strokeLinecap="round" />
-      <line x1={2}  y1={22} x2={8}  y2={22} stroke="#0D1B3E" strokeWidth={1.5} strokeOpacity={0.18} strokeLinecap="round" />
-      <line x1={36} y1={22} x2={42} y2={22} stroke="#0D1B3E" strokeWidth={1.5} strokeOpacity={0.18} strokeLinecap="round" />
+      <line x1={22} y1={2}  x2={22} y2={8}  stroke="currentColor" strokeWidth={1.5} strokeOpacity={0.18} strokeLinecap="round" />
+      <line x1={22} y1={36} x2={22} y2={42} stroke="currentColor" strokeWidth={1.5} strokeOpacity={0.18} strokeLinecap="round" />
+      <line x1={2}  y1={22} x2={8}  y2={22} stroke="currentColor" strokeWidth={1.5} strokeOpacity={0.18} strokeLinecap="round" />
+      <line x1={36} y1={22} x2={42} y2={22} stroke="currentColor" strokeWidth={1.5} strokeOpacity={0.18} strokeLinecap="round" />
 
       {/* Outer ring */}
       <motion.circle cx={22} cy={22} r={17}
@@ -24,13 +24,13 @@ export function StrategyIcon() {
       />
       {/* Middle ring */}
       <motion.circle cx={22} cy={22} r={11}
-        stroke="#0D1B3E" strokeWidth={1.5} fill="none" strokeOpacity={0.25}
+        stroke="currentColor" strokeWidth={1.5} fill="none" strokeOpacity={0.25}
         animate={{ pathLength: [0, 1, 1, 0] }}
         transition={{ duration: 3.5, repeat: Infinity, times: [0, 0.28, 0.78, 1], delay: 0.22 }}
       />
       {/* Inner ring */}
       <motion.circle cx={22} cy={22} r={5}
-        stroke="#0D1B3E" strokeWidth={1.5} fill="none" strokeOpacity={0.25}
+        stroke="currentColor" strokeWidth={1.5} fill="none" strokeOpacity={0.25}
         animate={{ pathLength: [0, 1, 1, 0] }}
         transition={{ duration: 3.5, repeat: Infinity, times: [0, 0.28, 0.78, 1], delay: 0.44 }}
       />
@@ -61,7 +61,7 @@ export function BrandIcon() {
   ] as const;
 
   return (
-    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true" className="text-navy dark:text-white">
       {RAYS.map(([x1, y1, x2, y2], i) => (
         <motion.line key={i}
           x1={x1} y1={y1} x2={x2} y2={y2}
@@ -84,7 +84,7 @@ export function BrandIcon() {
 // ─────────────────────────────────────────────────────────
 export function OperationsIcon() {
   return (
-    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true" className="text-navy dark:text-white">
       {/* translate(22,22) centres the rotation origin reliably in SVG */}
       <g transform="translate(22,22)">
         <motion.g
@@ -100,7 +100,7 @@ export function OperationsIcon() {
       </g>
       {/* Static inner ring */}
       <circle cx={22} cy={22} r={8}
-        stroke="#0D1B3E" strokeWidth={1.5} strokeOpacity={0.18}
+        stroke="currentColor" strokeWidth={1.5} strokeOpacity={0.18}
         fill="none"
       />
       {/* Centre pulse */}
@@ -118,7 +118,7 @@ export function OperationsIcon() {
 // ─────────────────────────────────────────────────────────
 export function SourcingIcon() {
   return (
-    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true" className="text-navy dark:text-white">
       {/* Lens */}
       <motion.circle cx={17} cy={17} r={12}
         stroke="#E8006A" strokeWidth={2} fill="none"
@@ -133,13 +133,13 @@ export function SourcingIcon() {
       />
       {/* Inner crosshair — vertical */}
       <motion.line x1={17} y1={9} x2={17} y2={25}
-        stroke="#0D1B3E" strokeWidth={1} strokeLinecap="round" strokeOpacity={0.3}
+        stroke="currentColor" strokeWidth={1} strokeLinecap="round" strokeOpacity={0.3}
         animate={{ pathLength: [0, 0, 1, 1, 0] }}
         transition={{ duration: 2.8, repeat: Infinity, times: [0, 0.34, 0.5, 0.85, 1] }}
       />
       {/* Inner crosshair — horizontal */}
       <motion.line x1={9} y1={17} x2={25} y2={17}
-        stroke="#0D1B3E" strokeWidth={1} strokeLinecap="round" strokeOpacity={0.3}
+        stroke="currentColor" strokeWidth={1} strokeLinecap="round" strokeOpacity={0.3}
         animate={{ pathLength: [0, 0, 1, 1, 0] }}
         transition={{ duration: 2.8, repeat: Infinity, times: [0, 0.34, 0.5, 0.85, 1] }}
       />
@@ -155,17 +155,17 @@ export function LogisticsIcon() {
   const VERTICES = [[22, 6], [38, 36], [6, 36]] as const;
 
   return (
-    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true" className="text-navy dark:text-white">
       {/* Static route */}
       <path d="M 22 6 L 38 36 L 6 36 Z"
-        stroke="#0D1B3E" strokeWidth={1.5}
+        stroke="currentColor" strokeWidth={1.5}
         strokeLinecap="round" strokeLinejoin="round"
         fill="none" strokeOpacity={0.15}
       />
       {/* Location pins — staggered pulse */}
       {VERTICES.map(([cx, cy], i) => (
         <motion.circle key={i} cx={cx} cy={cy} r={3}
-          fill="#0D1B3E"
+          fill="currentColor"
           animate={{ scale: [1, 1.7, 1], opacity: [0.2, 0.5, 0.2] }}
           transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.8 }}
         />
@@ -192,10 +192,10 @@ export function CampaignsIcon() {
   const BASE_Y = 42;
 
   return (
-    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true" className="text-navy dark:text-white">
       {BARS.map(({ x, maxH, delay }, i) => (
         <g key={i}>
-          <rect x={x} y={BASE_Y - maxH} width={8} height={maxH} rx={2} fill="#0D1B3E" fillOpacity={0.08} />
+          <rect x={x} y={BASE_Y - maxH} width={8} height={maxH} rx={2} fill="currentColor" fillOpacity={0.08} />
           <motion.rect
             x={x} width={8} rx={2} fill="#E8006A"
             animate={{
@@ -206,7 +206,7 @@ export function CampaignsIcon() {
           />
         </g>
       ))}
-      <line x1={3} y1={BASE_Y} x2={41} y2={BASE_Y} stroke="#0D1B3E" strokeWidth={1.5} strokeOpacity={0.18} strokeLinecap="round" />
+      <line x1={3} y1={BASE_Y} x2={41} y2={BASE_Y} stroke="currentColor" strokeWidth={1.5} strokeOpacity={0.18} strokeLinecap="round" />
     </svg>
   );
 }

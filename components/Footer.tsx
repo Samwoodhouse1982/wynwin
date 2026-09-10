@@ -19,7 +19,7 @@ export default function Footer() {
               className="w-1/2 h-auto"
             />
             <p className="text-white/60 text-sm leading-relaxed">
-              Whatever You Need,<br />Whenever It&apos;s Needed.
+              {BRAND.tagline}
             </p>
           </div>
 
@@ -82,9 +82,9 @@ export default function Footer() {
             <ul className="space-y-2">
               {[
                 { label: 'Home', href: '/' },
-                { label: 'What We Do', href: '/what-we-do' },
-                { label: 'Who We Are', href: '/who-we-are' },
-                { label: 'Get In Touch', href: '/get-in-touch' },
+                { label: 'What we do', href: '/what-we-do' },
+                { label: 'Who we are', href: '/who-we-are' },
+                { label: 'Get in touch', href: '/get-in-touch' },
                 { label: 'Privacy Policy', href: '/privacy' },
                 { label: 'Cookie Policy', href: '/cookies' },
               ].map((link) => (

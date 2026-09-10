@@ -6,14 +6,14 @@ import { motion } from 'framer-motion';
 // Three paths converge through a central mint node, dots travel along them
 export function BottleneckIcon() {
   const lineStyle = {
-    stroke: '#0D1B3E' as const,
+    stroke: 'currentColor' as const,
     strokeOpacity: 0.18,
     strokeWidth: 1.5,
     strokeLinecap: 'round' as const,
   };
 
   return (
-    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true" className="text-navy dark:text-white">
       {/* Converging lines */}
       <line x1={4} y1={10} x2={21} y2={24} {...lineStyle} />
       <line x1={4} y1={24} x2={21} y2={24} {...lineStyle} />
@@ -54,11 +54,11 @@ export function BottleneckIcon() {
 // Pink circle slides out from behind left circle to create Venn overlap
 export function TeamIcon() {
   return (
-    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true" className="text-navy dark:text-white">
       {/* Left circle — client team, static */}
       <circle
         cx={16} cy={24} r={12}
-        stroke="#0D1B3E" strokeWidth={1.5} strokeOpacity={0.2}
+        stroke="currentColor" strokeWidth={1.5} strokeOpacity={0.2}
         fill="none"
       />
 
@@ -89,11 +89,11 @@ export function TeamIcon() {
 // Mint arc draws itself around a circle, pink checkmark appears inside
 export function SpeedIcon() {
   return (
-    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true" className="text-navy dark:text-white">
       {/* Track ring */}
       <circle
         cx={24} cy={24} r={18}
-        stroke="#0D1B3E" strokeWidth={1.5} strokeOpacity={0.12}
+        stroke="currentColor" strokeWidth={1.5} strokeOpacity={0.12}
         fill="none"
       />
 

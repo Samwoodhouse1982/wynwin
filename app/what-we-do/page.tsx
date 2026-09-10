@@ -4,7 +4,6 @@ import ServicesNav from '@/components/ServicesNav';
 import ServicesOverview from '@/components/ServicesOverview';
 import PageHero from '@/components/PageHero';
 import HowWeWork from '@/components/HowWeWork';
-import PreFooterCta from '@/components/PreFooterCta';
 import Reveal, { RevealItem } from '@/components/Reveal';
 import { FullContactForm } from '@/components/ContactForm';
 import { SERVICES, REGULATED_MARKETS, META } from '@/lib/constants';
@@ -16,7 +15,7 @@ export const metadata: Metadata = {
     title: META.whatWeDo.title,
     description: META.whatWeDo.description,
     url: `${META.siteUrl}/what-we-do`,
-    images: [{ url: '/opengraph-image', width: 1200, height: 630 }],
+    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: META.ogAlt }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -104,8 +103,9 @@ export default function WhatWeDoPage() {
 
       <HowWeWork />
 
-      {/* Contact CTA */}
-      <section className="bg-navy py-20 lg:py-28">
+      {/* Contact CTA — id lets the per-pillar CTAs point here instead of
+          sending the visitor to another page with the same form on it. */}
+      <section id="contact" className="bg-navy py-20 lg:py-28 scroll-mt-36 border-t border-white/10">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
             <Reveal direction="left">
@@ -126,8 +126,6 @@ export default function WhatWeDoPage() {
           </div>
         </div>
       </section>
-
-      <PreFooterCta />
     </>
   );
 }

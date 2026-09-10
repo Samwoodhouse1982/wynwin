@@ -67,11 +67,13 @@ html {
   border-radius: 3px;
 }
 
-/* Dark mode — direct overrides (outside @layer, guaranteed to win) */
-.dark .bg-cream { background-color: #1a2f5e; }
-.dark .bg-offwhite { background-color: #1a2f5e; }
-.dark section.bg-white,
-.dark div.bg-white:not(input):not(textarea) { background-color: #0d1b3e; }
+/* Dark mode — direct overrides (outside @layer, guaranteed to win).
+   The background overrides that used to live here (.dark .bg-cream,
+   .dark section.bg-white, …) have been removed: they outranked every
+   per-element `dark:bg-*` class, so the surfaces components asked for never
+   rendered and adjacent sections collapsed into one another. Each section now
+   declares its own dark surface and the bands alternate navy / navy-light.
+   The text, border and input rules below are still useful shorthands. */
 .dark .text-navy { color: #f8f6f2; }
 .dark .text-navy\/50 { color: rgba(248,246,242,0.5); }
 .dark .text-navy\/55 { color: rgba(248,246,242,0.55); }

@@ -5,7 +5,7 @@ import PageHero from '@/components/PageHero';
 import HowWeWork from '@/components/HowWeWork';
 import PreFooterCta from '@/components/PreFooterCta';
 import Reveal, { RevealItem } from '@/components/Reveal';
-import { ABOUT, META } from '@/lib/constants';
+import { ABOUT, CTA, META } from '@/lib/constants';
 
 export const metadata: Metadata = {
   title: META.whoWeAre.title,
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     title: META.whoWeAre.title,
     description: META.whoWeAre.description,
     url: `${META.siteUrl}/who-we-are`,
-    images: [{ url: '/opengraph-image', width: 1200, height: 630 }],
+    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: META.ogAlt }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -39,7 +39,7 @@ export default function WhoWeArePage() {
       <PageHero eyebrow="About us" headline={ABOUT.headline} />
 
       {/* About copy */}
-      <section className="bg-white dark:bg-navy py-20 lg:py-28">
+      <section className="bg-white dark:bg-navy-light py-20 lg:py-28">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           {/* Full-width copy + CTA */}
           <div className="max-w-3xl mb-16 lg:mb-20">
@@ -55,7 +55,7 @@ export default function WhoWeArePage() {
                     href="/get-in-touch"
                     className="inline-flex items-center gap-2 px-7 py-3.5 bg-pink text-white font-semibold rounded-full hover:bg-pink-dark transition-colors duration-200"
                   >
-                    Work with us
+                    {CTA.primary}
                   </Link>
                 </div>
               </RevealItem>
@@ -82,7 +82,7 @@ export default function WhoWeArePage() {
       </section>
 
       {/* Founder */}
-      <section className="bg-cream dark:bg-navy-light py-16 lg:py-20">
+      <section className="bg-cream dark:bg-navy py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <Reveal direction="up">
             <div className="flex flex-col sm:flex-row sm:items-center gap-8">

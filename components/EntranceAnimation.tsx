@@ -83,24 +83,32 @@ function wait(ms: number): Promise<void> {
   return new Promise((r) => setTimeout(r, ms));
 }
 
-// ─── Diamond generator ────────────────────────────────────────────────────────
-function spawnDiamonds(container: HTMLDivElement) {
-  for (let i = 0; i < 20; i++) {
-    const d = document.createElement('div');
-    d.className = styles.diamond;
-    const size = 25 + Math.random() * 70;
-    Object.assign(d.style, {
-      width:            `${size}px`,
-      height:           `${size}px`,
-      left:             `${Math.random() * 110 - 5}%`,
-      bottom:           `-${size}px`,
-      animationDuration:`${9 + Math.random() * 14}s`,
-      animationDelay:   `${Math.random() * 14}s`,
-      borderColor:      `rgba(255,255,255,${0.04 + Math.random() * 0.08})`,
-    });
-    container.appendChild(d);
-  }
-}
+// ─── Sequence timing ──────────────────────────────────────────────────────────
+// Every phase duration lives here so the total is knowable, and HomePageClient
+// derives its fail-safe from ENTRANCE_TOTAL_MS. Previously the two were written
+// independently: the sequence needed ~7.2s but the fail-safe fired at 6s, so it
+// tore the stage down mid-pulse and the door-split finale never played at all.
+// The whole ident is now budgeted under four seconds — this is a site that
+// promises services for busy people.
+const T = {
+  trace:      1600,
+  dotsFade:    200,
+  beforeBar:    80,
+  pulseUp:     140,
+  pulseDown:   140,
+  barSettle:   160,
+  afterBar:     80,
+  logoOut:     500,
+  barExpand:   650,
+  beforeDoor:  100,
+  door:        450,
+} as const;
+
+/** Full wall-clock length of the entrance, used to set the fail-safe. */
+export const ENTRANCE_TOTAL_MS =
+  T.trace + T.dotsFade + T.beforeBar +
+  T.pulseUp + T.pulseDown + T.barSettle + T.afterBar +
+  Math.max(T.logoOut, T.barExpand) + T.beforeDoor + T.door;
 
 // ─── Component ────────────────────────────────────────────────────────────────
 interface EntranceAnimationProps {
@@ -109,7 +117,6 @@ interface EntranceAnimationProps {
 }
 
 export default function EntranceAnimation({ onComplete }: EntranceAnimationProps) {
-  const diamondsRef  = useRef<HTMLDivElement>(null);
   const logoWrapRef  = useRef<HTMLDivElement>(null);
   const subpathRefs  = useRef<(SVGPathElement | null)[]>([]);
   const dot1Ref      = useRef<SVGCircleElement>(null);
@@ -217,8 +224,8 @@ export default function EntranceAnimation({ onComplete }: EntranceAnimationProps
       }
     };
 
-    // Gentle ease for a smooth, unhurried trace; both runs reach full at r = 1.
-    await tween(4500, (r) => {
+    // Gentle ease, but brisk; both runs reach full at r = 1.
+    await tween(T.trace, (r) => {
       const e = easeInOutSine(r);
       drawForward(e * lenForward);
       drawBackward(e * lenBackward);
@@ -227,7 +234,7 @@ export default function EntranceAnimation({ onComplete }: EntranceAnimationProps
     drawBackward(lenBackward);
 
     // Dots fade out
-    await tween(300, (r) => {
+    await tween(T.dotsFade, (r) => {
       const v = String(1 - easeOut(r));
       d1.setAttribute('opacity', v);
       d2.setAttribute('opacity', v);
@@ -235,27 +242,29 @@ export default function EntranceAnimation({ onComplete }: EntranceAnimationProps
   }, []);
 
   // ── Phase 2: Bar pulses ─────────────────────────────────────────────────────
+  // One pulse, not three — the anticipation only works if the payoff arrives.
   const phase2 = useCallback(async (barEl: SVGPathElement) => {
-    for (let i = 0; i < 3; i++) {
-      await tween(150, (r) => {
-        barEl.setAttribute('opacity', String(easeOut(r) * 0.95));
-      });
-      await tween(150, (r) => {
-        barEl.setAttribute('opacity', String(0.95 - easeIn(r) * 0.85));
-      });
-      if (i < 2) await wait(40);
-    }
-    await tween(180, (r) => {
+    await tween(T.pulseUp, (r) => {
+      barEl.setAttribute('opacity', String(easeOut(r) * 0.95));
+    });
+    await tween(T.pulseDown, (r) => {
+      barEl.setAttribute('opacity', String(0.95 - easeIn(r) * 0.85));
+    });
+    await tween(T.barSettle, (r) => {
       barEl.setAttribute('opacity', String(0.1 + easeOut(r) * 0.9));
     });
-    await wait(120);
+    await wait(T.afterBar);
   }, []);
 
   // ── Phase 3+4: Expand bar → split reveal ───────────────────────────────────
   const phase3and4 = useCallback(async (barEl: SVGPathElement) => {
-    const svg   = svgRef.current!;
-    const wrap  = logoWrapRef.current!;
-    const stage = stageRef.current!;
+    const svg   = svgRef.current;
+    const wrap  = logoWrapRef.current;
+    const stage = stageRef.current;
+    // An early unmount (fail-safe firing, a route change) nulls these mid-run.
+    // Without this guard the async chain threw on a null ref and rejected
+    // silently, so the door was never built.
+    if (!svg || !wrap || !stage) return;
 
     const svgRect = svg.getBoundingClientRect();
     const vw = window.innerWidth;
@@ -318,18 +327,18 @@ export default function EntranceAnimation({ onComplete }: EntranceAnimationProps
 
     // Logo slides up and fades; bar expands simultaneously
     await Promise.all([
-      tween(600, (r) => {
+      tween(T.logoOut, (r) => {
         const p = easeIn(r);
         wrap.style.opacity   = String(1 - p);
         wrap.style.transform = `translateY(${p * -40}px)`;
         barEl.setAttribute('opacity', String(1 - p));
       }),
-      tween(900, (r) => {
+      tween(T.barExpand, (r) => {
         setFill(easeInOut(r) * big);
       }),
     ]);
 
-    await wait(150);
+    await wait(T.beforeDoor);
 
     // Build split panels — huge parallelogram strips from the seam line
     const panelPoints = (signN: number, slide: number): string => {
@@ -358,7 +367,7 @@ export default function EntranceAnimation({ onComplete }: EntranceAnimationProps
     onComplete?.();
 
     // Door opens — quick, snappy split
-    await tween(500, (r) => {
+    await tween(T.door, (r) => {
       const s = easeInOut(r) * big;
       panelA.setAttribute('points', panelPoints(-1, s));
       panelB.setAttribute('points', panelPoints( 1, s));
@@ -370,14 +379,12 @@ export default function EntranceAnimation({ onComplete }: EntranceAnimationProps
 
   // ── Run sequence ────────────────────────────────────────────────────────────
   useEffect(() => {
-    if (!diamondsRef.current) return;
-    spawnDiamonds(diamondsRef.current);
-
-    const svg = svgRef.current!;
+    const svg = svgRef.current;
+    if (!svg) return;
 
     const run = async () => {
       await phase1();
-      await wait(100);
+      await wait(T.beforeBar);
 
       // Create bar glow element (path 6 filled, glowing)
       const barEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -398,9 +405,6 @@ export default function EntranceAnimation({ onComplete }: EntranceAnimationProps
 
   return (
     <div ref={stageRef} className={styles.stage}>
-      {/* Floating diamond background */}
-      <div ref={diamondsRef} className={styles.diamonds} />
-
       {/* Logo */}
       <div className={styles.logoWrap}>
         <div ref={logoWrapRef} className={styles.logoInner}>

@@ -5,7 +5,6 @@ import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import CookieBanner from '@/components/CookieBanner';
-import { Analytics } from '@vercel/analytics/next';
 import { META } from '@/lib/constants';
 
 // Unbounded — display / headings
@@ -36,7 +35,6 @@ export const metadata: Metadata = {
     description: META.home.description,
     url: META.siteUrl,
     siteName: META.siteName,
-    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'WYN WIN — Services for busy people.' }],
     type: 'website',
     locale: 'en_GB',
   },
@@ -44,7 +42,6 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: META.home.title,
     description: META.home.description,
-    images: ['/opengraph-image'],
   },
   robots: {
     index: true,
@@ -68,9 +65,10 @@ export default function RootLayout({
           <Nav />
           <main className="flex-1 pt-16 lg:pt-20">{children}</main>
           <Footer />
+          {/* CookieBanner also loads the analytics scripts, but only after
+              explicit consent — see components/CookieBanner.tsx. */}
           <CookieBanner />
         </ThemeProvider>
-        <Analytics />
       </body>
     </html>
   );

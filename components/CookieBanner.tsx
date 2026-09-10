@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Script from 'next/script';
 import Link from 'next/link';
+import { Analytics } from '@vercel/analytics/next';
 
 const CONSENT_KEY = 'wynwin_cookie_consent';
 const GA_ID = 'G-BNH3Q60D6T';
@@ -43,9 +44,12 @@ export default function CookieBanner() {
 
   return (
     <>
-      {/* Load GA only after explicit consent */}
+      {/* Load analytics only after explicit consent. Vercel Web Analytics is
+          cookieless, but the Cookie Policy tells visitors analytics runs only
+          with consent, so it is gated here too and the page keeps its promise. */}
       {consent === 'accepted' && (
         <>
+          <Analytics />
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
             strategy="afterInteractive"

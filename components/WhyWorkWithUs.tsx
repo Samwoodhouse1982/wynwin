@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { motion, type Variants } from 'framer-motion';
 import { DiamondAccent } from '@/components/DiamondGraphic';
-import { HOME } from '@/lib/constants';
+import { CTA, HOME } from '@/lib/constants';
 
 const container: Variants = {
   hidden: {},
@@ -25,7 +25,7 @@ export default function WhyWorkWithUs({ background = 'white' }: Props) {
     ? 'bg-navy text-white'
     : background === 'cream'
     ? 'bg-cream dark:bg-navy-light text-navy dark:text-white'
-    : 'bg-white dark:bg-navy text-navy dark:text-white';
+    : 'bg-white dark:bg-navy-light text-navy dark:text-white';
 
   return (
     <section className={`${bgClass} py-20 lg:py-28`}>
@@ -101,7 +101,7 @@ export default function WhyWorkWithUs({ background = 'white' }: Props) {
                 : 'bg-navy dark:bg-pink text-white hover:bg-navy-light dark:hover:bg-pink-dark'
             }`}
           >
-            Work with us →
+            {CTA.primary} →
           </Link>
         </motion.div>
       </div>

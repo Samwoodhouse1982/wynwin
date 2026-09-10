@@ -12,6 +12,10 @@ export const BRAND = {
   emailHref: 'mailto:hello@wynwin.co.uk',
   linkedin: 'https://www.linkedin.com/company/wyn-win',
   whatsapp: 'https://wa.me/447307176143',
+  // Single source of truth for the response-time promise. It appears beside
+  // both form buttons, in both success states, on the contact page and in the
+  // Get In Touch meta description — change it here only.
+  responsePromise: 'We reply within one working day — usually the same day.',
   legal: {
     company: 'WYN WIN Services Ltd',
     companyNumber: '16356334',
@@ -23,12 +27,24 @@ export const BRAND = {
     'You agree to receive emails from WYN WIN and consent to WYN WIN storing your contact details. You can unsubscribe at any time by clicking the link at the bottom of our emails.',
 } as const;
 
+// The logo links home and the footer keeps a Home link, so 'Home' is not
+// repeated here. The desktop bar filters out /get-in-touch because the pink
+// button already points there (the mobile drawer does the same).
 export const NAV_LINKS = [
-  { label: 'Home', href: '/' },
-  { label: 'What We Do', href: '/what-we-do' },
-  { label: 'Who We Are', href: '/who-we-are' },
-  { label: 'Get In Touch', href: '/get-in-touch' },
+  { label: 'What we do', href: '/what-we-do' },
+  { label: 'Who we are', href: '/who-we-are' },
+  { label: 'Get in touch', href: '/get-in-touch' },
 ] as const;
+
+// One label per action, used everywhere:
+//   primary   — every in-content conversion button
+//   secondary — every exploration link
+// The nav item and footer link say 'Get in touch' because they name the page.
+export const CTA = {
+  primary: 'Work with us',
+  secondary: 'See what we do',
+  contactPage: 'Get in touch',
+} as const;
 
 // ============================================================
 // HOME PAGE
@@ -36,17 +52,18 @@ export const NAV_LINKS = [
 
 export const HOME = {
   hero: {
-    headline: 'Services for busy people.',
-    body: 'Your marketing team is pulled in too many directions. We take on the tasks they don\'t have time for, so they stay focused on what only they can do. Your business runs smoother, scales faster, and delivers better results.',
-    tagline: 'WYN WIN: Whatever You Need, Whenever It\'s Needed.',
+    // The category ('marketing') lives in the H1 itself so the largest type on
+    // the site says what the business does. The eyebrow carries BRAND.tagline.
+    headline: 'Marketing services for busy people.',
+    body: 'Your marketing team is pulled in too many directions. We take on the execution they don\'t have time for.',
     ctas: [
-      { label: 'What We Do', href: '/what-we-do', variant: 'outline' as const },
       { label: 'Work with us', href: '/get-in-touch', variant: 'primary' as const },
+      { label: 'See what we do', href: '/what-we-do', variant: 'outline' as const },
     ],
   },
   valueProp: {
     headline: 'The missing link between strategy and execution.',
-    body: 'Every marketing team has tasks that need doing but keep getting bumped. Execution work that\'s too important to ignore but too time-consuming to fit in. That\'s the gap we fill.\n\nFrom last-minute requests to ongoing support, we step in, get up to speed fast, and deliver. No hand-holding, no lengthy briefs. Just results.',
+    body: 'Every marketing team has tasks that need doing but keep getting bumped. Execution work that\'s too important to ignore but too time-consuming to fit in. That\'s the gap we fill.\n\nFrom last-minute requests to ongoing support, we step in, get up to speed fast, and deliver. No hand-holding, no lengthy briefs. Just results. Your business runs smoother, scales faster, and delivers better results.',
   },
   whyUs: [
     { number: '01', label: 'Responsive, reliable, and adaptable' },
@@ -401,24 +418,32 @@ export const REGULATED_MARKETS = {
 export const META = {
   siteName: 'WYN WIN',
   siteUrl: 'https://wynwin.co.uk',
+  // Every route shares the one generated social card, so the alt describes the
+  // card rather than the page. The root route gets this automatically from the
+  // `alt` export in app/opengraph-image.tsx; child routes replace the parent's
+  // openGraph object, so they have to name the image (and this alt) themselves.
+  ogAlt: 'WYN WIN — Marketing services for busy people.',
+  // Only `home.title` carries the brand — it is the metadata default. The other
+  // three are run through the '%s | WYN WIN' template in app/layout.tsx, so a
+  // suffix here would render twice in the browser tab.
   home: {
-    title: 'Marketing Execution Services for Busy Teams | WYN WIN',
+    title: 'Marketing services for busy people | WYN WIN',
     description:
-      'WYN WIN is an outsourced execution partner for marketing teams. We handle logistics, events, campaigns, procurement, operations, and brand. Whatever you need, whenever you need it.',
+      'WYN WIN is an outsourced execution partner for marketing teams. We handle logistics, events, campaigns, procurement, operations, and brand. Whatever you need, whenever it\'s needed.',
   },
   whatWeDo: {
-    title: 'What We Do | WYN WIN',
+    title: 'Marketing services: strategy, brand, campaigns, operations and logistics',
     description:
       'WYN WIN\'s five service pillars cover strategy, brand, campaigns, operations, and logistics. Including PR, email marketing, SEO, sales enablement, ABM, and regulated device marketing.',
   },
   whoWeAre: {
-    title: 'Who We Are | WYN WIN',
+    title: 'About Sam Woodhouse, founder',
     description:
       'WYN WIN was founded to fill the gap between marketing strategy and execution. Learn about our experience, approach, and why clients trust us.',
   },
   getInTouch: {
-    title: 'Get In Touch | WYN WIN',
+    title: 'Get in touch',
     description:
-      'Contact WYN WIN for marketing operations, events, campaigns, logistics, and fractional marketing support. We respond the same day.',
+      'Contact WYN WIN for marketing operations, events, campaigns, logistics, and fractional marketing support. We reply within one working day.',
   },
 } as const;

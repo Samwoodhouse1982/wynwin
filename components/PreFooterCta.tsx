@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight, Phone } from 'lucide-react';
-import { BRAND } from '@/lib/constants';
+import { BRAND, CTA } from '@/lib/constants';
 
 export default function PreFooterCta() {
   return (
@@ -47,7 +47,7 @@ export default function PreFooterCta() {
               href="/get-in-touch"
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white text-pink font-bold rounded-full hover:bg-cream transition-colors duration-200"
             >
-              Get In Touch
+              {CTA.primary}
               <ArrowRight size={16} />
             </Link>
             <a

@@ -16,7 +16,7 @@ const card: Variants = {
 
 export default function TestimonialsSection() {
   return (
-    <section className="bg-cream dark:bg-navy py-20 lg:py-28">
+    <section className="bg-cream dark:bg-navy-light py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
