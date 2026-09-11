@@ -6,8 +6,8 @@ import CookieSettingsLink from '@/components/CookieSettingsLink';
 
 // The footer is where someone who has read to the bottom expects a map of the
 // site, so it lists the service pillars rather than repeating the header.
-// 'Home' is omitted — the logo above already does that job.
 const COMPANY_LINKS = [
+  { label: 'Home', href: '/' },
   { label: 'Who we are', href: '/who-we-are' },
   { label: 'Get in touch', href: '/get-in-touch' },
   { label: 'Privacy Policy', href: '/privacy' },

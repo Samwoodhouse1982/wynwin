@@ -62,9 +62,9 @@ const contactLinks = [
 
 export default function GetInTouchPage() {
   return (
-    <section className="bg-navy min-h-[calc(100vh-64px)] lg:min-h-[calc(100vh-80px)] py-14 sm:py-20 lg:py-28">
+    <section className="bg-cream dark:bg-navy min-h-[calc(100vh-64px)] lg:min-h-[calc(100vh-80px)] py-14 sm:py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16">
           {/* Left — info */}
           <div className="lg:col-span-2">
             <Reveal stagger>
@@ -74,12 +74,12 @@ export default function GetInTouchPage() {
                 </p>
               </RevealItem>
               <RevealItem>
-                <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+                <h1 className="text-4xl md:text-5xl font-bold text-navy dark:text-white mb-4 leading-tight">
                   Let&apos;s get things done.
                 </h1>
               </RevealItem>
               <RevealItem>
-                <p className="text-white/60 leading-relaxed mb-10">
+                <p className="text-navy/60 dark:text-white/60 leading-relaxed mb-10">
                   Tell us what you need — a quick question or a full brief.{' '}
                   {BRAND.responsePromise}
                 </p>
@@ -97,10 +97,10 @@ export default function GetInTouchPage() {
                       {link.icon}
                     </div>
                     <div>
-                      <p className="text-xs text-white/60 uppercase tracking-wider mb-0.5">
+                      <p className="text-xs text-navy/60 dark:text-white/60 uppercase tracking-wider mb-0.5">
                         {link.label}
                       </p>
-                      <p className="text-white font-medium group-hover:text-pink transition-colors duration-200">
+                      <p className="text-navy dark:text-white font-medium group-hover:text-pink transition-colors duration-200">
                         {link.value}
                       </p>
                     </div>
@@ -112,9 +112,9 @@ export default function GetInTouchPage() {
 
           {/* Right — form */}
           <Reveal direction="right" delay={0.2} className="lg:col-span-3">
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-8 lg:p-10">
-              <h2 className="text-xl font-bold text-white mb-8">Send us a message</h2>
-              <FullContactForm onDark />
+            <div className="bg-white dark:bg-white/5 border border-navy/10 dark:border-white/10 rounded-2xl p-5 sm:p-8 lg:p-10 shadow-sm dark:shadow-none">
+              <h2 className="text-xl font-bold text-navy dark:text-white mb-8">Send us a message</h2>
+              <FullContactForm />
             </div>
           </Reveal>
         </div>

@@ -120,19 +120,19 @@ export default function HomePageClient() {
         <WhyWorkWithUs background="white" />
 
         {/* Services Preview */}
-        <section className="bg-navy py-14 sm:py-20 lg:py-28 relative overflow-hidden">
+        <section className="bg-cream dark:bg-navy py-14 sm:py-20 lg:py-28 relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="mb-12">
               <Reveal stagger>
                 <RevealItem>
-                  <p className="text-white/50 font-semibold text-sm uppercase tracking-widest flex items-center gap-2 mb-4">
+                  <p className="text-navy/50 dark:text-white/50 font-semibold text-sm uppercase tracking-widest flex items-center gap-2 mb-4">
                     <SlashMark />
                     What we do
                   </p>
                 </RevealItem>
                 <RevealItem>
                   <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-                    <h2 className="text-3xl md:text-4xl font-bold text-white max-w-md">
+                    <h2 className="text-3xl md:text-4xl font-bold text-navy dark:text-white max-w-md">
                       What we cover.
                     </h2>
                     <Link
@@ -160,7 +160,7 @@ export default function HomePageClient() {
             {/* The specialism is the sharpest differentiator on the site and
                 previously had nothing pointing at it from anywhere. */}
             <Reveal>
-              <p className="mt-10 text-white/60 text-sm">
+              <p className="mt-10 text-navy/60 dark:text-white/60 text-sm">
                 Working in a regulated market?{' '}
                 <Link
                   href="/what-we-do#regulated"
@@ -178,7 +178,7 @@ export default function HomePageClient() {
         {/* Inline contact form — the page's single closing ask. The pink
             PreFooterCta band used to sit directly beneath this with the same
             headline; it now runs only on pages that have no inline form. */}
-        <section className="bg-white dark:bg-navy py-14 sm:py-20 lg:py-28 dark:border-t dark:border-white/10">
+        <section className="bg-cream dark:bg-navy py-14 sm:py-20 lg:py-28 dark:border-t dark:border-white/10">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
               <Reveal direction="left">
@@ -207,7 +207,7 @@ export default function HomePageClient() {
                 </div>
               </Reveal>
               <Reveal direction="right" delay={0.15}>
-                <div className="bg-cream dark:bg-navy rounded-2xl p-5 sm:p-8 shadow-sm">
+                <div className="bg-white dark:bg-navy-light rounded-2xl p-5 sm:p-8 shadow-sm">
                   <SimpleContactForm />
                 </div>
               </Reveal>

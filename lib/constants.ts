@@ -27,10 +27,10 @@ export const BRAND = {
     'You agree to receive emails from WYN WIN and consent to WYN WIN storing your contact details. You can unsubscribe at any time by clicking the link at the bottom of our emails.',
 } as const;
 
-// The logo links home and the footer keeps a Home link, so 'Home' is not
-// repeated here. The desktop bar filters out /get-in-touch because the pink
-// button already points there (the mobile drawer does the same).
+// The desktop bar filters out /get-in-touch because the pink button already
+// points there (the mobile drawer does the same).
 export const NAV_LINKS = [
+  { label: 'Home', href: '/' },
   { label: 'What we do', href: '/what-we-do' },
   { label: 'Who we are', href: '/who-we-are' },
   { label: 'Get in touch', href: '/get-in-touch' },

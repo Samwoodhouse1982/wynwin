@@ -164,24 +164,24 @@ export default function WhatWeDoPage() {
 
       {/* Contact CTA — id lets the per-pillar CTAs point here instead of
           sending the visitor to another page with the same form on it. */}
-      <section id="contact" className="bg-navy py-14 sm:py-20 lg:py-28 scroll-mt-36 border-t border-white/10">
+      <section id="contact" className="bg-cream dark:bg-navy-light py-14 sm:py-20 lg:py-28 scroll-mt-36">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
             <Reveal direction="left">
-              <p className="text-white/50 font-semibold text-sm uppercase tracking-widest flex items-center gap-2 mb-4">
+              <p className="text-navy/50 dark:text-white/50 font-semibold text-sm uppercase tracking-widest flex items-center gap-2 mb-4">
                 <SlashMark />
                 Contact us
               </p>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-navy dark:text-white mb-4">
                 Tell us what you need.
               </h2>
-              <p className="text-white/60 leading-relaxed">
+              <p className="text-navy/60 dark:text-white/60 leading-relaxed">
                 Whether it&apos;s an urgent request or a longer-term project, we&apos;re ready to help.
                 Get in touch and we&apos;ll respond fast.
               </p>
             </Reveal>
             <Reveal direction="right" delay={0.15}>
-              <FullContactForm onDark />
+              <FullContactForm />
             </Reveal>
           </div>
         </div>

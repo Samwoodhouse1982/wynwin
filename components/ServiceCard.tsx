@@ -26,23 +26,23 @@ export default function ServiceCard({ title, body, href, index = 0 }: ServiceCar
     >
       <Link
         href={href}
-        className="group block bg-white/5 hover:bg-white/10 border border-white/10 hover:border-pink/50 rounded-2xl p-6 transition-all duration-300 h-full overflow-hidden"
+        className="group block bg-white dark:bg-white/5 hover:bg-white dark:hover:bg-white/10 border border-navy/10 dark:border-white/10 hover:border-pink/50 rounded-2xl p-6 shadow-sm dark:shadow-none hover:shadow-md dark:hover:shadow-none transition-all duration-300 h-full overflow-hidden"
       >
         <div className="flex flex-col h-full gap-4">
           {/* Animated top accent line */}
-          <div className="relative h-0.5 bg-white/10 overflow-hidden rounded-full">
+          <div className="relative h-0.5 bg-navy/10 dark:bg-white/10 overflow-hidden rounded-full">
             {/* Touch gets the full accent at rest; pointers get the sweep. */}
             <div className="absolute inset-y-0 left-0 bg-pink w-full [@media(hover:hover)]:w-[20%] [@media(hover:hover)]:group-hover:w-full transition-all duration-300 ease-out" />
           </div>
 
-          <h3 className="text-lg font-bold text-white leading-snug group-hover:text-pink transition-colors duration-200">
+          <h3 className="text-lg font-bold text-navy dark:text-white leading-snug group-hover:text-pink transition-colors duration-200">
             {title}
           </h3>
 
-          <p className="text-white/50 text-sm leading-relaxed flex-1">{body}</p>
+          <p className="text-navy/60 dark:text-white/50 text-sm leading-relaxed flex-1">{body}</p>
 
           <div className="flex items-center gap-2 text-pink text-sm font-semibold group-hover:gap-3 transition-all duration-200">
-            Find Out More
+            Explore
             {/* whileHover here only fired with the cursor on the arrow itself,
                 so it was dead code layered over the parent's group-hover. */}
             <ArrowRight
