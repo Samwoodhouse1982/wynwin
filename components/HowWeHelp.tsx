@@ -4,12 +4,13 @@ import { motion, type Variants } from 'framer-motion';
 import { DiamondAccent } from '@/components/DiamondGraphic';
 import { BottleneckIcon, TeamIcon, SpeedIcon } from '@/components/HowWeHelpIcons';
 import { HOME } from '@/lib/constants';
+import { DUR, EASE_OUT, STAGGER } from '@/lib/motion';
 
 const ICONS = [BottleneckIcon, TeamIcon, SpeedIcon];
 
 const container: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.12 } },
+  show: { transition: { staggerChildren: STAGGER } },
 };
 
 const card: Variants = {
@@ -17,7 +18,7 @@ const card: Variants = {
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6 },
+    transition: { duration: DUR.base, ease: EASE_OUT },
   },
 };
 
@@ -29,7 +30,7 @@ export default function HowWeHelp() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: DUR.base, ease: EASE_OUT }}
           className="mb-12 space-y-3"
         >
           <p className="text-pink font-semibold text-sm uppercase tracking-widest flex items-center gap-2">
@@ -64,7 +65,7 @@ export default function HowWeHelp() {
                   initial={{ scale: 0, rotate: -20 }}
                   whileInView={{ scale: 1, rotate: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.45, delay: i * 0.12 + 0.3 }}
+                  transition={{ duration: DUR.base, delay: i * STAGGER + 0.3, ease: EASE_OUT }}
                 >
                   <Icon />
                 </motion.div>

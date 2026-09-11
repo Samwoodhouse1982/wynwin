@@ -3,15 +3,16 @@
 import { motion, type Variants } from 'framer-motion';
 import { DiamondAccent } from '@/components/DiamondGraphic';
 import { TESTIMONIALS } from '@/lib/constants';
+import { DUR, EASE_OUT, STAGGER } from '@/lib/motion';
 
 const container: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.15 } },
+  show: { transition: { staggerChildren: STAGGER } },
 };
 
 const card: Variants = {
   hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+  show: { opacity: 1, y: 0, transition: { duration: DUR.base, ease: EASE_OUT } },
 };
 
 export default function TestimonialsSection() {
@@ -22,7 +23,7 @@ export default function TestimonialsSection() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: DUR.base, ease: EASE_OUT }}
           className="space-y-4 mb-14"
         >
           <p className="text-pink font-semibold text-sm uppercase tracking-widest flex items-center gap-2">

@@ -6,10 +6,11 @@ import { ArrowRight } from 'lucide-react';
 import HeroServiceShowcase from '@/components/HeroServiceShowcase';
 import { SunFlare } from '@/components/SunFlare';
 import { BRAND, HOME } from '@/lib/constants';
+import { DUR, EASE_OUT, STAGGER } from '@/lib/motion';
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7 } },
+  show: { opacity: 1, y: 0, transition: { duration: DUR.slow, ease: EASE_OUT } },
 };
 
 export default function HeroSection({ ready = false }: { ready?: boolean }) {
@@ -44,7 +45,7 @@ export default function HeroSection({ ready = false }: { ready?: boolean }) {
           <motion.div
             initial="hidden"
             animate={ready ? 'show' : 'hidden'}
-            variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12 } } }}
+            variants={{ hidden: {}, show: { transition: { staggerChildren: STAGGER } } }}
           >
             <motion.p
               variants={fadeUp}

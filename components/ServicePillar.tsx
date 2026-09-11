@@ -5,6 +5,7 @@ import { motion, type Variants } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { SERVICE_ICON_MAP } from '@/components/ServiceSectionIcons';
 import { setEnquiryTopic } from '@/lib/enquiry';
+import { DUR, EASE_OUT, STAGGER } from '@/lib/motion';
 
 interface Service {
   name: string;
@@ -20,12 +21,12 @@ interface ServicePillarProps {
 
 const cardVariants: Variants = {
   hidden: { opacity: 0, y: 28 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  show: { opacity: 1, y: 0, transition: { duration: DUR.base, ease: EASE_OUT } },
 };
 
 const cardContainer: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.1 } },
+  show: { transition: { staggerChildren: STAGGER } },
 };
 
 export default function ServicePillar({ id, title, services, index }: ServicePillarProps) {
@@ -42,7 +43,7 @@ export default function ServicePillar({ id, title, services, index }: ServicePil
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: DUR.base, ease: EASE_OUT }}
           className="mb-12"
         >
           <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-3">
@@ -60,7 +61,7 @@ export default function ServicePillar({ id, title, services, index }: ServicePil
                 initial={{ width: 0 }}
                 whileInView={{ width: '100%' }}
                 viewport={{ once: true, margin: '-80px' }}
-                transition={{ duration: 0.8, delay: 0.3 }}
+                transition={{ duration: DUR.slow, delay: 0.3, ease: EASE_OUT }}
               />
             </div>
           </div>
@@ -96,7 +97,7 @@ export default function ServicePillar({ id, title, services, index }: ServicePil
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          transition={{ duration: DUR.base, delay: 0.3, ease: EASE_OUT }}
           className="mt-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-navy/10 dark:border-white/10 pt-8"
         >
           <p className="text-navy/50 dark:text-white/70 text-sm">Need help with {title.toLowerCase()}?</p>

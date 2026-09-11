@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight, Phone } from 'lucide-react';
 import { BRAND, CTA } from '@/lib/constants';
+import { DUR, EASE_OUT } from '@/lib/motion';
 
 export default function PreFooterCta() {
   return (
@@ -23,7 +24,7 @@ export default function PreFooterCta() {
             initial={{ opacity: 0, x: -24 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: DUR.base, ease: EASE_OUT }}
           >
             <p className="text-white/70 text-sm font-semibold uppercase tracking-widest mb-2">
               Whatever You Need
@@ -40,7 +41,7 @@ export default function PreFooterCta() {
             initial={{ opacity: 0, x: 24 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.6, delay: 0.15 }}
+            transition={{ duration: DUR.base, delay: 0.15, ease: EASE_OUT }}
             className="flex flex-col sm:flex-row gap-4 flex-shrink-0"
           >
             <Link

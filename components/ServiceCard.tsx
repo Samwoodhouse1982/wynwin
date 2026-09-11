@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import { DUR, EASE_OUT, STAGGER } from '@/lib/motion';
 
 interface ServiceCardProps {
   title: string;
@@ -17,10 +18,10 @@ export default function ServiceCard({ title, body, href, index = 0 }: ServiceCar
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
+      transition={{ duration: DUR.base, delay: index * STAGGER, ease: EASE_OUT }}
       // This one IS a link, so it keeps the lift — and now acknowledges a press,
       // which is the only feedback a touch device ever gets.
-      whileHover={{ y: -4, transition: { duration: 0.2 } }}
+      whileHover={{ y: -4, transition: { duration: DUR.fast } }}
       whileTap={{ scale: 0.98 }}
     >
       <Link

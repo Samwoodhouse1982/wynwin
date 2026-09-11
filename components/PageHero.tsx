@@ -2,15 +2,16 @@
 
 import { motion, type Variants } from 'framer-motion';
 import { SunFlare } from '@/components/SunFlare';
+import { DUR, EASE_OUT, STAGGER } from '@/lib/motion';
 
 const item: Variants = {
   hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7 } },
+  show: { opacity: 1, y: 0, transition: { duration: DUR.slow, ease: EASE_OUT } },
 };
 
 const container: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.12 } },
+  show: { transition: { staggerChildren: STAGGER } },
 };
 
 interface PageHeroProps {

@@ -2,6 +2,7 @@
 
 import { motion, type Variants } from 'framer-motion';
 import { DiamondAccent } from '@/components/DiamondGraphic';
+import { DUR, EASE_OUT, STAGGER } from '@/lib/motion';
 
 const steps = [
   {
@@ -23,12 +24,12 @@ const steps = [
 
 const container: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.2 } },
+  show: { transition: { staggerChildren: STAGGER } },
 };
 
 const item: Variants = {
   hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+  show: { opacity: 1, y: 0, transition: { duration: DUR.base, ease: EASE_OUT } },
 };
 
 export default function HowWeWork() {
@@ -39,7 +40,7 @@ export default function HowWeWork() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: DUR.base, ease: EASE_OUT }}
           className="space-y-4 mb-14"
         >
           <p className="text-pink font-semibold text-sm uppercase tracking-widest flex items-center gap-2">
@@ -65,7 +66,7 @@ export default function HowWeWork() {
               initial={{ width: 0 }}
               whileInView={{ width: '100%' }}
               viewport={{ once: true }}
-              transition={{ duration: 1.2, delay: 0.4, ease: 'easeOut' }}
+              transition={{ duration: DUR.slow, delay: 0.4, ease: EASE_OUT }}
             />
           </div>
 
@@ -77,7 +78,7 @@ export default function HowWeWork() {
                   initial={{ width: 0 }}
                   whileInView={{ width: '100%' }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.7, delay: i * 0.2 + 0.3 }}
+                  transition={{ duration: DUR.base, delay: i * STAGGER + 0.3, ease: EASE_OUT }}
                 />
               </div>
               <div className="hidden md:block h-0.5 mb-6" />

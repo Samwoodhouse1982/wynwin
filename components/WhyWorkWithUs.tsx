@@ -4,15 +4,16 @@ import Link from 'next/link';
 import { motion, type Variants } from 'framer-motion';
 import { DiamondAccent } from '@/components/DiamondGraphic';
 import { CTA, HOME } from '@/lib/constants';
+import { DUR, EASE_OUT, STAGGER } from '@/lib/motion';
 
 const container: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.2 } },
+  show: { transition: { staggerChildren: STAGGER } },
 };
 
 const pillar: Variants = {
   hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7 } },
+  show: { opacity: 1, y: 0, transition: { duration: DUR.base, ease: EASE_OUT } },
 };
 
 interface Props {
@@ -34,7 +35,7 @@ export default function WhyWorkWithUs({ background = 'white' }: Props) {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: DUR.base, ease: EASE_OUT }}
           className="space-y-4 mb-14"
         >
           <p className="text-pink font-semibold text-sm uppercase tracking-widest flex items-center gap-2">
@@ -68,7 +69,7 @@ export default function WhyWorkWithUs({ background = 'white' }: Props) {
                   initial={{ width: 0 }}
                   whileInView={{ width: '100%' }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.7, delay: i * 0.2 + 0.3 }}
+                  transition={{ duration: DUR.base, delay: i * STAGGER + 0.3, ease: EASE_OUT }}
                 />
               </div>
 
@@ -77,7 +78,7 @@ export default function WhyWorkWithUs({ background = 'white' }: Props) {
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.2 + 0.2 }}
+                transition={{ duration: DUR.base, delay: i * STAGGER + 0.2, ease: EASE_OUT }}
               >
                 {item.number}
               </motion.span>
@@ -91,7 +92,7 @@ export default function WhyWorkWithUs({ background = 'white' }: Props) {
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.5, delay: 0.5 }}
+          transition={{ duration: DUR.base, delay: 0.5, ease: EASE_OUT }}
           className="mt-14"
         >
           <Link

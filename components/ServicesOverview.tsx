@@ -5,15 +5,16 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { SERVICES } from '@/lib/constants';
 import { SERVICE_ICON_MAP } from '@/components/ServiceSectionIcons';
+import { DUR, EASE_OUT, STAGGER } from '@/lib/motion';
 
 const container = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.08 } },
+  show: { transition: { staggerChildren: STAGGER } },
 };
 
 const card = {
   hidden: { opacity: 0, y: 16 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.45 } },
+  show: { opacity: 1, y: 0, transition: { duration: DUR.base, ease: EASE_OUT } },
 };
 
 export default function ServicesOverview() {
@@ -25,7 +26,7 @@ export default function ServicesOverview() {
           initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.4 }}
+          transition={{ duration: DUR.base, ease: EASE_OUT }}
         >
           At a glance
         </motion.p>
