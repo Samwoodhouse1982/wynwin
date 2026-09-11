@@ -5,6 +5,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { SERVICES as SERVICE_DATA } from '@/lib/constants';
 
+// The five pillars, their short tab labels and their hero chips all come
+// from the catalogue. This component used to keep its own hand-typed copy,
+// which is why the same pillar appeared in three different spellings.
+const PILLARS = SERVICE_DATA.pillars;
+
 // Counted from the catalogue rather than hard-coded, so the figure in the
 // footer link cannot go stale when a service is added or merged.
 const TOTAL_SERVICES = SERVICE_DATA.pillars.reduce(
@@ -12,61 +17,33 @@ const TOTAL_SERVICES = SERVICE_DATA.pillars.reduce(
   0,
 );
 
-const SERVICES = [
-  {
-    number: '01',
-    lines: ['Strategy &', 'Intelligence'],
-    chips: ['Go-to-Market', 'Market Research', 'Competitor Intel', 'Segmentation', 'Awards', 'Sales Enablement', 'ABM', 'Product Marketing', 'Regulated Markets', 'Health Economics'],
-  },
-  {
-    number: '02',
-    lines: ['Brand &', 'Creative'],
-    chips: ['PR & Media', 'Thought Leadership', 'Influencers', 'Case Studies', 'Content', 'Brand Research', 'Web Design & Dev'],
-  },
-  {
-    number: '03',
-    lines: ['Projects &', 'Campaigns'],
-    chips: ['Campaigns', 'Email Marketing', 'SEO', 'Social Media', 'Paid Media', 'Events', 'Launches', 'Internal Comms', 'Reporting'],
-  },
-  {
-    number: '04',
-    lines: ['Operations &', 'Management'],
-    chips: ['Assets', 'MarTech', 'Fulfilment', 'Data Compliance', 'Fractional Experts'],
-  },
-  {
-    number: '05',
-    lines: ['Logistics &', 'Procurement'],
-    chips: ['Venues', 'Print & Merch', 'Storage', 'Purchasing'],
-  },
-] as const;
-
 // Time on screen scales with how much there is to read — ten chips took the
 // same 3.6s as four, which was not long enough to scan the longest set.
 const tickFor = (chipCount: number) => 3000 + chipCount * 250;
 
 // The chip area is pinned to the tallest set so the card stops growing and
 // shrinking by a row in the reader's peripheral vision every few seconds.
-const MAX_CHIPS = Math.max(...SERVICES.map((s) => s.chips.length));
+const MAX_CHIPS = Math.max(...PILLARS.map((p) => p.chips.length));
 
 export default function HeroServiceShowcase({ ready = false }: { ready?: boolean }) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const [key, setKey] = useState(0); // forces progress bar to restart
 
-  const tick = tickFor(SERVICES[active].chips.length);
+  const tick = tickFor(PILLARS[active].chips.length);
 
   useEffect(() => {
     if (paused) return;
     // Don't auto-advance for visitors who prefer reduced motion.
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
     const t = setTimeout(() => {
-      setActive((i) => (i + 1) % SERVICES.length);
+      setActive((i) => (i + 1) % PILLARS.length);
       setKey((k) => k + 1);
     }, tick);
     return () => clearTimeout(t);
   }, [paused, active, tick]);
 
-  const s = SERVICES[active];
+  const s = PILLARS[active];
 
   return (
     <motion.div
@@ -109,7 +86,7 @@ export default function HeroServiceShowcase({ ready = false }: { ready?: boolean
 
           {/* Tab indicators + labels — top nav */}
           <div className="grid grid-cols-5 gap-2 mb-8">
-            {SERVICES.map((svc, i) => (
+            {PILLARS.map((svc, i) => (
               <button
                 key={i}
                 onClick={() => {
@@ -118,7 +95,7 @@ export default function HeroServiceShowcase({ ready = false }: { ready?: boolean
                   setPaused(false);
                 }}
                 className="group text-left"
-                aria-label={`View ${svc.lines.join(' ')}`}
+                aria-label={`View ${svc.title}`}
               >
                 <div
                   className={`h-0.5 rounded-full mb-1.5 transition-colors duration-300 ${
@@ -130,7 +107,7 @@ export default function HeroServiceShowcase({ ready = false }: { ready?: boolean
                     i === active ? 'text-pink' : 'text-white/60 group-hover:text-white/85'
                   }`}
                 >
-                  {svc.lines[0].replace(' &', '')}
+                  {svc.short}
                 </span>
               </button>
             ))}

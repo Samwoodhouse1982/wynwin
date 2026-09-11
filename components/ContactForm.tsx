@@ -4,8 +4,48 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Send, CheckCircle, AlertCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { BRAND } from '@/lib/constants';
+
+// Sending an enquiry is the one conversion on the site; it used to resolve with
+// a hard cut to two lines of text. Shared by both forms so the moment reads the
+// same wherever it happens.
+function SuccessState({ onDark = false }: { onDark?: boolean }) {
+  const heading = onDark ? 'text-white' : 'text-navy dark:text-white';
+  const body = onDark ? 'text-white/60' : 'text-navy/60 dark:text-white/60';
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      className="flex flex-col items-center gap-3 py-12 text-center"
+    >
+      <motion.div
+        initial={{ scale: 0.6, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.35, delay: 0.05, ease: [0.34, 1.56, 0.64, 1] }}
+      >
+        <CheckCircle className="text-mint" size={40} aria-hidden />
+      </motion.div>
+      <p className={`text-lg font-semibold ${heading}`}>Consider it done.</p>
+      <p className={`text-sm max-w-sm ${body}`}>{BRAND.responsePromise}</p>
+      <p className={`text-sm ${body}`}>
+        Need it sooner?{' '}
+        <a
+          href={BRAND.whatsapp}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-pink font-medium hover:underline"
+        >
+          Message us on WhatsApp
+        </a>
+        .
+      </p>
+    </motion.div>
+  );
+}
 
 // ── Web3Forms submission ───────────────────────────────────
 // Submissions go straight from the browser to Web3Forms (no backend). The
@@ -118,25 +158,7 @@ export function SimpleContactForm() {
   }
 
   if (status === 'success') {
-    return (
-      <div className="flex flex-col items-center gap-3 py-12 text-center">
-        <CheckCircle className="text-mint" size={40} aria-hidden />
-        <p className="text-lg font-semibold text-navy dark:text-white">Consider it done.</p>
-        <p className="text-navy/60 dark:text-white/60 text-sm max-w-sm">{BRAND.responsePromise}</p>
-        <p className="text-navy/60 dark:text-white/60 text-sm">
-          Need it sooner?{' '}
-          <a
-            href={BRAND.whatsapp}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-pink font-medium hover:underline"
-          >
-            Message us on WhatsApp
-          </a>
-          .
-        </p>
-      </div>
-    );
+    return <SuccessState />;
   }
 
   return (
@@ -207,11 +229,11 @@ export function SimpleContactForm() {
           className="inline-flex items-center justify-center gap-2 w-full sm:w-auto min-h-12 px-7 py-3.5 bg-pink text-white font-semibold rounded-full hover:bg-pink-dark active:scale-[0.97] transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {status === 'loading' ? 'Sending…' : 'Send message'}
-          <Send
-            size={15}
-            aria-hidden
-            className={status === 'loading' ? 'animate-pulse' : undefined}
-          />
+          {status === 'loading' ? (
+            <Loader2 size={15} aria-hidden className="animate-spin" />
+          ) : (
+            <Send size={15} aria-hidden />
+          )}
         </button>
         <p className="text-xs text-navy/50 dark:text-white/50">{BRAND.responsePromise}</p>
       </div>
@@ -260,29 +282,7 @@ export function FullContactForm({ onDark = false }: { onDark?: boolean }) {
   }
 
   if (status === 'success') {
-    return (
-      <div className="flex flex-col items-center gap-3 py-12 text-center">
-        <CheckCircle className="text-mint" size={40} aria-hidden />
-        <p className={`text-lg font-semibold ${onDark ? 'text-white' : 'text-navy'}`}>
-          Consider it done.
-        </p>
-        <p className={`text-sm max-w-sm ${onDark ? 'text-white/60' : 'text-navy/60'}`}>
-          {BRAND.responsePromise}
-        </p>
-        <p className={`text-sm ${onDark ? 'text-white/60' : 'text-navy/60'}`}>
-          Need it sooner?{' '}
-          <a
-            href={BRAND.whatsapp}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-pink font-medium hover:underline"
-          >
-            Message us on WhatsApp
-          </a>
-          .
-        </p>
-      </div>
-    );
+    return <SuccessState onDark />;
   }
 
   return (
@@ -370,11 +370,11 @@ export function FullContactForm({ onDark = false }: { onDark?: boolean }) {
           className="inline-flex items-center justify-center gap-2 w-full sm:w-auto min-h-12 px-7 py-3.5 bg-pink text-white font-semibold rounded-full hover:bg-pink-dark active:scale-[0.97] transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {status === 'loading' ? 'Sending…' : 'Send message'}
-          <Send
-            size={15}
-            aria-hidden
-            className={status === 'loading' ? 'animate-pulse' : undefined}
-          />
+          {status === 'loading' ? (
+            <Loader2 size={15} aria-hidden className="animate-spin" />
+          ) : (
+            <Send size={15} aria-hidden />
+          )}
         </button>
         <p className={`text-xs ${onDark ? 'text-white/50' : 'text-navy/50'}`}>
           {BRAND.responsePromise}

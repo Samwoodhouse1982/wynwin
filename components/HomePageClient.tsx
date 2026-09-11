@@ -9,10 +9,14 @@ import ServiceCard from '@/components/ServiceCard';
 import TestimonialsSection from '@/components/TestimonialsSection';
 import { SimpleContactForm } from '@/components/ContactForm';
 import Reveal, { RevealItem } from '@/components/Reveal';
-import EntranceAnimation, { ENTRANCE_TOTAL_MS } from '@/components/EntranceAnimation';
+import EntranceAnimation from '@/components/EntranceAnimation';
 import { BRAND, CTA, HOME } from '@/lib/constants';
-
-const STORAGE_KEY = 'wynwin_entrance_v1';
+import {
+  ENTRANCE_DONE_EVENT,
+  ENTRANCE_KEY,
+  ENTRANCE_TOTAL_MS,
+  entranceWillPlay,
+} from '@/lib/entrance';
 
 export default function HomePageClient() {
   const [showAnimation, setShowAnimation] = useState(false);
@@ -20,25 +24,22 @@ export default function HomePageClient() {
   const [heroReady, setHeroReady] = useState(false);
 
   const handleComplete = useCallback(() => {
-    localStorage.setItem(STORAGE_KEY, '1');
+    localStorage.setItem(ENTRANCE_KEY, '1');
     setShowAnimation(false);
     setAnimationDone(true);
     // No delay: onComplete fires as the door panels start moving, so the hero
     // stagger should already be running behind them. The old 500ms wait meant
     // the doors opened onto an empty stage that populated afterwards.
     setHeroReady(true);
+    // Tells the cookie banner it may come up now, rather than popping over the
+    // door reveal the instant the stage unmounts.
+    window.dispatchEvent(new Event(ENTRANCE_DONE_EVENT));
   }, []);
 
   useEffect(() => {
-    const mql = window.matchMedia?.('(prefers-reduced-motion: reduce)');
-    const prefersReduced = !!mql?.matches;
-    // A logo trace earns little on a phone, and that is where the audience is
-    // busiest and the connection slowest.
-    const isSmallScreen = window.matchMedia?.('(max-width: 639px)').matches ?? false;
-
-    // Skip the entrance for return visitors, small screens, and anyone who
-    // prefers reduced motion — reveal the page immediately.
-    if (prefersReduced || isSmallScreen || localStorage.getItem(STORAGE_KEY)) {
+    // Return visitors, phones and reduced-motion users go straight to the page.
+    // One predicate, shared with the cookie banner so they cannot disagree.
+    if (!entranceWillPlay()) {
       setAnimationDone(true);
       setHeroReady(true);
       return;

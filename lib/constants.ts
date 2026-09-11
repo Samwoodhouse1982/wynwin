@@ -124,7 +124,9 @@ export const SERVICES = {
   pillars: [
     {
       id: 'strategy',
-      title: 'Strategy and Intelligence',
+      title: 'Strategy and intelligence',
+      short: 'Strategy',
+      chips: ['Go-to-Market', 'Market Research', 'Competitor Intel', 'Segmentation', 'Awards', 'Sales Enablement', 'ABM', 'Product Marketing', 'Regulated Markets', 'Health Economics'],
       services: [
         {
           name: 'Go-to-Market Planning',
@@ -185,7 +187,9 @@ export const SERVICES = {
     },
     {
       id: 'brand',
-      title: 'Brand and Creative',
+      title: 'Brand and creative',
+      short: 'Brand',
+      chips: ['PR & Media', 'Thought Leadership', 'Influencers', 'Case Studies', 'Content', 'Brand Research', 'Web Design & Dev'],
       services: [
         {
           name: 'Sponsor, Influencer, and Partnership Acquisition',
@@ -226,7 +230,9 @@ export const SERVICES = {
     },
     {
       id: 'projects',
-      title: 'Projects and Campaigns',
+      title: 'Projects and campaigns',
+      short: 'Projects',
+      chips: ['Campaigns', 'Email Marketing', 'SEO', 'Social Media', 'Paid Media', 'Events', 'Launches', 'Internal Comms', 'Reporting'],
       services: [
         {
           name: 'Campaign Planning and Frameworks',
@@ -287,7 +293,9 @@ export const SERVICES = {
     },
     {
       id: 'operations',
-      title: 'Operations and Management',
+      title: 'Operations and management',
+      short: 'Operations',
+      chips: ['Assets', 'MarTech', 'Fulfilment', 'Data Compliance', 'Fractional Experts'],
       services: [
         {
           name: 'Asset Management and Audit',
@@ -318,7 +326,9 @@ export const SERVICES = {
     },
     {
       id: 'logistics',
-      title: 'Logistics and Procurement',
+      title: 'Logistics and procurement',
+      short: 'Logistics',
+      chips: ['Venues', 'Print & Merch', 'Storage', 'Purchasing'],
       services: [
         {
           name: 'Venue Search and Booking',

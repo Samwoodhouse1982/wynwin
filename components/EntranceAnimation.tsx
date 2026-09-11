@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 import styles from './EntranceAnimation.module.css';
+import { ENTRANCE_PHASES } from '@/lib/entrance';
 
 // ─── SVG path data ────────────────────────────────────────────────────────────
 //
@@ -84,31 +85,10 @@ function wait(ms: number): Promise<void> {
 }
 
 // ─── Sequence timing ──────────────────────────────────────────────────────────
-// Every phase duration lives here so the total is knowable, and HomePageClient
-// derives its fail-safe from ENTRANCE_TOTAL_MS. Previously the two were written
-// independently: the sequence needed ~7.2s but the fail-safe fired at 6s, so it
-// tore the stage down mid-pulse and the door-split finale never played at all.
-// The whole ident is now budgeted under four seconds — this is a site that
-// promises services for busy people.
-const T = {
-  trace:      1600,
-  dotsFade:    200,
-  beforeBar:    80,
-  pulseUp:     140,
-  pulseDown:   140,
-  barSettle:   160,
-  afterBar:     80,
-  logoOut:     500,
-  barExpand:   650,
-  beforeDoor:  100,
-  door:        450,
-} as const;
-
-/** Full wall-clock length of the entrance, used to set the fail-safe. */
-export const ENTRANCE_TOTAL_MS =
-  T.trace + T.dotsFade + T.beforeBar +
-  T.pulseUp + T.pulseDown + T.barSettle + T.afterBar +
-  Math.max(T.logoOut, T.barExpand) + T.beforeDoor + T.door;
+// The durations live in lib/entrance so that HomePageClient (which owns the
+// fail-safe) and CookieBanner (which must not cover the door reveal) can read
+// them without pulling this component into their bundles.
+const T = ENTRANCE_PHASES;
 
 // ─── Component ────────────────────────────────────────────────────────────────
 interface EntranceAnimationProps {
