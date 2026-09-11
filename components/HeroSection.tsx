@@ -5,7 +5,7 @@ import { motion, type Variants } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import HeroServiceShowcase from '@/components/HeroServiceShowcase';
 import { SunFlare } from '@/components/SunFlare';
-import { BRAND, HOME } from '@/lib/constants';
+import { BRAND, HOME, SERVICES } from '@/lib/constants';
 import { DUR, EASE_OUT, STAGGER } from '@/lib/motion';
 
 const fadeUp: Variants = {
@@ -92,6 +92,23 @@ export default function HeroSection({ ready = false }: { ready?: boolean }) {
                   )}
                 </Link>
               ))}
+            </motion.div>
+
+            {/* The showcase is hidden below lg, so on a phone the page said
+                nothing concrete about the services until roughly 2,500px down.
+                One scrollable row of pillar names, each a direct link. */}
+            <motion.div variants={fadeUp} className="lg:hidden -mx-6 mt-8 px-6">
+              <div className="flex gap-2 overflow-x-auto snap-x scrollbar-none pb-1">
+                {SERVICES.pillars.map((pillar) => (
+                  <Link
+                    key={pillar.id}
+                    href={`/what-we-do#${pillar.id}`}
+                    className="snap-start shrink-0 px-3.5 py-2 rounded-full border border-navy/20 dark:border-white/25 text-navy/80 dark:text-white/85 text-xs font-medium whitespace-nowrap active:scale-[0.97] transition-transform"
+                  >
+                    {pillar.short}
+                  </Link>
+                ))}
+              </div>
             </motion.div>
           </motion.div>
 

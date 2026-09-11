@@ -1,6 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 import type { ComponentType } from 'react';
 
 // ─────────────────────────────────────────────────────────
@@ -8,8 +9,15 @@ import type { ComponentType } from 'react';
 // Three target rings draw in from outside in, centre pulses
 // ─────────────────────────────────────────────────────────
 export function StrategyIcon() {
+  // Loops pause once the icon leaves the viewport. Ten of these run at
+  // once on What We Do; there is no reason for them to keep animating
+  // after the reader has scrolled past.
+  const ref = useRef<SVGSVGElement>(null);
+  const inView = useInView(ref, { margin: '80px' });
+  const loop = inView ? Infinity : 0;
+
   return (
-    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true" className="text-navy dark:text-white">
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true" ref={ref} className="text-navy dark:text-white">
       {/* Crosshair ticks */}
       <line x1={22} y1={2}  x2={22} y2={8}  stroke="currentColor" strokeWidth={1.5} strokeOpacity={0.18} strokeLinecap="round" />
       <line x1={22} y1={36} x2={22} y2={42} stroke="currentColor" strokeWidth={1.5} strokeOpacity={0.18} strokeLinecap="round" />
@@ -20,24 +28,24 @@ export function StrategyIcon() {
       <motion.circle cx={22} cy={22} r={17}
         stroke="#E8006A" strokeWidth={1.5} fill="none"
         animate={{ pathLength: [0, 1, 1, 0] }}
-        transition={{ duration: 3.5, repeat: Infinity, times: [0, 0.28, 0.78, 1] }}
+        transition={{ duration: 3.5, repeat: loop, times: [0, 0.28, 0.78, 1] }}
       />
       {/* Middle ring */}
       <motion.circle cx={22} cy={22} r={11}
         stroke="currentColor" strokeWidth={1.5} fill="none" strokeOpacity={0.25}
         animate={{ pathLength: [0, 1, 1, 0] }}
-        transition={{ duration: 3.5, repeat: Infinity, times: [0, 0.28, 0.78, 1], delay: 0.22 }}
+        transition={{ duration: 3.5, repeat: loop, times: [0, 0.28, 0.78, 1], delay: 0.22 }}
       />
       {/* Inner ring */}
       <motion.circle cx={22} cy={22} r={5}
         stroke="currentColor" strokeWidth={1.5} fill="none" strokeOpacity={0.25}
         animate={{ pathLength: [0, 1, 1, 0] }}
-        transition={{ duration: 3.5, repeat: Infinity, times: [0, 0.28, 0.78, 1], delay: 0.44 }}
+        transition={{ duration: 3.5, repeat: loop, times: [0, 0.28, 0.78, 1], delay: 0.44 }}
       />
       {/* Centre dot — appears last, then fades with everything */}
       <motion.circle cx={22} cy={22} r={2.5} fill="#E8006A"
         animate={{ scale: [0, 1.3, 1, 1, 0] }}
-        transition={{ duration: 3.5, repeat: Infinity, times: [0, 0.52, 0.62, 0.78, 1] }}
+        transition={{ duration: 3.5, repeat: loop, times: [0, 0.52, 0.62, 0.78, 1] }}
       />
     </svg>
   );
@@ -48,6 +56,13 @@ export function StrategyIcon() {
 // 8 sparkle rays burst from centre, staggered
 // ─────────────────────────────────────────────────────────
 export function BrandIcon() {
+  // Loops pause once the icon leaves the viewport. Ten of these run at
+  // once on What We Do; there is no reason for them to keep animating
+  // after the reader has scrolled past.
+  const ref = useRef<SVGSVGElement>(null);
+  const inView = useInView(ref, { margin: '80px' });
+  const loop = inView ? Infinity : 0;
+
   // [x1, y1, x2, y2] — inner point → outer point, centre (22,22), inner r=8, outer r=17
   const RAYS = [
     [30, 22, 39, 22],   //   0° right
@@ -61,18 +76,18 @@ export function BrandIcon() {
   ] as const;
 
   return (
-    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true" className="text-navy dark:text-white">
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true" ref={ref} className="text-navy dark:text-white">
       {RAYS.map(([x1, y1, x2, y2], i) => (
         <motion.line key={i}
           x1={x1} y1={y1} x2={x2} y2={y2}
           stroke="#E8006A" strokeWidth={2} strokeLinecap="round"
           animate={{ pathLength: [0, 1, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity, delay: i * 0.1 }}
+          transition={{ duration: 1.8, repeat: loop, delay: i * 0.1 }}
         />
       ))}
       <motion.circle cx={22} cy={22} r={4} fill="#E8006A"
         animate={{ scale: [0.7, 1.4, 0.7] }}
-        transition={{ duration: 1.8, repeat: Infinity }}
+        transition={{ duration: 1.8, repeat: loop }}
       />
     </svg>
   );
@@ -83,13 +98,20 @@ export function BrandIcon() {
 // Dashed gear ring rotates, centre dot pulses
 // ─────────────────────────────────────────────────────────
 export function OperationsIcon() {
+  // Loops pause once the icon leaves the viewport. Ten of these run at
+  // once on What We Do; there is no reason for them to keep animating
+  // after the reader has scrolled past.
+  const ref = useRef<SVGSVGElement>(null);
+  const inView = useInView(ref, { margin: '80px' });
+  const loop = inView ? Infinity : 0;
+
   return (
-    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true" className="text-navy dark:text-white">
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true" ref={ref} className="text-navy dark:text-white">
       {/* translate(22,22) centres the rotation origin reliably in SVG */}
       <g transform="translate(22,22)">
         <motion.g
           animate={{ rotate: 360 }}
-          transition={{ duration: 5, repeat: Infinity, ease: 'linear' }}
+          transition={{ duration: 5, repeat: loop, ease: 'linear' }}
         >
           <circle cx={0} cy={0} r={16}
             stroke="#E8006A" strokeWidth={3}
@@ -106,7 +128,7 @@ export function OperationsIcon() {
       {/* Centre pulse */}
       <motion.circle cx={22} cy={22} r={2.5} fill="#E8006A"
         animate={{ scale: [1, 1.5, 1] }}
-        transition={{ duration: 2, repeat: Infinity }}
+        transition={{ duration: 2, repeat: loop }}
       />
     </svg>
   );
@@ -117,31 +139,38 @@ export function OperationsIcon() {
 // Magnifying glass draws in; inner crosshair reveals
 // ─────────────────────────────────────────────────────────
 export function SourcingIcon() {
+  // Loops pause once the icon leaves the viewport. Ten of these run at
+  // once on What We Do; there is no reason for them to keep animating
+  // after the reader has scrolled past.
+  const ref = useRef<SVGSVGElement>(null);
+  const inView = useInView(ref, { margin: '80px' });
+  const loop = inView ? Infinity : 0;
+
   return (
-    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true" className="text-navy dark:text-white">
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true" ref={ref} className="text-navy dark:text-white">
       {/* Lens */}
       <motion.circle cx={17} cy={17} r={12}
         stroke="#E8006A" strokeWidth={2} fill="none"
         animate={{ pathLength: [0, 1, 1, 1, 0] }}
-        transition={{ duration: 2.8, repeat: Infinity, times: [0, 0.28, 0.6, 0.85, 1] }}
+        transition={{ duration: 2.8, repeat: loop, times: [0, 0.28, 0.6, 0.85, 1] }}
       />
       {/* Handle */}
       <motion.line x1={26} y1={26} x2={38} y2={38}
         stroke="#E8006A" strokeWidth={2.5} strokeLinecap="round"
         animate={{ pathLength: [0, 0, 1, 1, 0] }}
-        transition={{ duration: 2.8, repeat: Infinity, times: [0, 0.22, 0.42, 0.85, 1] }}
+        transition={{ duration: 2.8, repeat: loop, times: [0, 0.22, 0.42, 0.85, 1] }}
       />
       {/* Inner crosshair — vertical */}
       <motion.line x1={17} y1={9} x2={17} y2={25}
         stroke="currentColor" strokeWidth={1} strokeLinecap="round" strokeOpacity={0.3}
         animate={{ pathLength: [0, 0, 1, 1, 0] }}
-        transition={{ duration: 2.8, repeat: Infinity, times: [0, 0.34, 0.5, 0.85, 1] }}
+        transition={{ duration: 2.8, repeat: loop, times: [0, 0.34, 0.5, 0.85, 1] }}
       />
       {/* Inner crosshair — horizontal */}
       <motion.line x1={9} y1={17} x2={25} y2={17}
         stroke="currentColor" strokeWidth={1} strokeLinecap="round" strokeOpacity={0.3}
         animate={{ pathLength: [0, 0, 1, 1, 0] }}
-        transition={{ duration: 2.8, repeat: Infinity, times: [0, 0.34, 0.5, 0.85, 1] }}
+        transition={{ duration: 2.8, repeat: loop, times: [0, 0.34, 0.5, 0.85, 1] }}
       />
     </svg>
   );
@@ -152,10 +181,17 @@ export function SourcingIcon() {
 // Pink dot travels a triangular route between locations
 // ─────────────────────────────────────────────────────────
 export function LogisticsIcon() {
+  // Loops pause once the icon leaves the viewport. Ten of these run at
+  // once on What We Do; there is no reason for them to keep animating
+  // after the reader has scrolled past.
+  const ref = useRef<SVGSVGElement>(null);
+  const inView = useInView(ref, { margin: '80px' });
+  const loop = inView ? Infinity : 0;
+
   const VERTICES = [[22, 6], [38, 36], [6, 36]] as const;
 
   return (
-    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true" className="text-navy dark:text-white">
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true" ref={ref} className="text-navy dark:text-white">
       {/* Static route */}
       <path d="M 22 6 L 38 36 L 6 36 Z"
         stroke="currentColor" strokeWidth={1.5}
@@ -167,13 +203,13 @@ export function LogisticsIcon() {
         <motion.circle key={i} cx={cx} cy={cy} r={3}
           fill="currentColor"
           animate={{ scale: [1, 1.7, 1], opacity: [0.2, 0.5, 0.2] }}
-          transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.8 }}
+          transition={{ duration: 2.4, repeat: loop, delay: i * 0.8 }}
         />
       ))}
       {/* Travelling dot */}
       <motion.circle r={3.5} fill="#E8006A"
         animate={{ cx: [22, 38, 6, 22], cy: [6, 36, 36, 6] }}
-        transition={{ duration: 2.4, repeat: Infinity, times: [0, 0.33, 0.67, 1] }}
+        transition={{ duration: 2.4, repeat: loop, times: [0, 0.33, 0.67, 1] }}
       />
     </svg>
   );
@@ -184,6 +220,13 @@ export function LogisticsIcon() {
 // Three bars rise sequentially like a campaign build-up
 // ─────────────────────────────────────────────────────────
 export function CampaignsIcon() {
+  // Loops pause once the icon leaves the viewport. Ten of these run at
+  // once on What We Do; there is no reason for them to keep animating
+  // after the reader has scrolled past.
+  const ref = useRef<SVGSVGElement>(null);
+  const inView = useInView(ref, { margin: '80px' });
+  const loop = inView ? Infinity : 0;
+
   const BARS = [
     { x: 7,  maxH: 16, delay: 0 },
     { x: 19, maxH: 26, delay: 0.28 },
@@ -192,7 +235,7 @@ export function CampaignsIcon() {
   const BASE_Y = 42;
 
   return (
-    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true" className="text-navy dark:text-white">
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true" ref={ref} className="text-navy dark:text-white">
       {BARS.map(({ x, maxH, delay }, i) => (
         <g key={i}>
           <rect x={x} y={BASE_Y - maxH} width={8} height={maxH} rx={2} fill="currentColor" fillOpacity={0.08} />
@@ -202,7 +245,7 @@ export function CampaignsIcon() {
               height: [0, maxH, maxH, 0],
               y: [BASE_Y, BASE_Y - maxH, BASE_Y - maxH, BASE_Y],
             }}
-            transition={{ duration: 3.2, repeat: Infinity, delay, times: [0, 0.32, 0.72, 1] }}
+            transition={{ duration: 3.2, repeat: loop, delay, times: [0, 0.32, 0.72, 1] }}
           />
         </g>
       ))}

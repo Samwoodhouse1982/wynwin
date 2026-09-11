@@ -7,10 +7,12 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 import CookieBanner from '@/components/CookieBanner';
 import { META } from '@/lib/constants';
 
-// Unbounded — display / headings
+// Unbounded — display / headings. Only bold is ever used (h1, h2 and the
+// 01–05 numerals all set font-bold), so the other five weights were five font
+// files downloaded for nothing.
 const display = Unbounded({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800', '900'],
+  weight: ['700'],
   variable: '--font-unbounded',
   display: 'swap',
 });

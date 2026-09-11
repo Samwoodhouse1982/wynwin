@@ -134,7 +134,7 @@ export const SERVICES = {
       id: 'strategy',
       title: 'Strategy and intelligence',
       short: 'Strategy',
-      chips: ['Go-to-Market', 'Market Research', 'Competitor Intel', 'Segmentation', 'Awards', 'Sales Enablement', 'ABM', 'Product Marketing', 'Regulated Markets', 'Health Economics'],
+      chips: ['Go-to-Market', 'Market Research', 'Competitor Intel', 'Sales Enablement', 'ABM', 'Product Marketing', 'Regulated Markets', 'Health Economics'],
       services: [
         {
           name: 'Go-to-Market Planning',
@@ -142,24 +142,14 @@ export const SERVICES = {
             'Market entry strategy, launch sequencing, channel selection, positioning, and value proposition development.',
         },
         {
-          name: 'Market Research',
+          name: 'Market and Audience Research',
           detail:
-            'Primary and secondary research, qualitative and quantitative studies, customer insight programmes, survey design and analysis, focus groups, and desk research to inform strategy and decision-making.',
-        },
-        {
-          name: 'Audience Research and Segmentation',
-          detail:
-            'Persona development, audience profiling, segmentation modelling, and market sizing to sharpen targeting and messaging.',
+            'Primary and secondary research, qualitative and quantitative studies, customer insight programmes, survey design and analysis, and focus groups. Persona development, audience profiling, segmentation modelling, and market sizing to sharpen targeting and messaging.',
         },
         {
           name: 'Competitive Intelligence',
           detail:
             'Ongoing competitor monitoring, market mapping, benchmarking, pricing analysis, and whitespace identification.',
-        },
-        {
-          name: 'Awards',
-          detail:
-            'Awards strategy, category research and selection, entry writing, submission management, and post-award amplification.',
         },
         {
           name: 'Commercial Support',
@@ -197,7 +187,7 @@ export const SERVICES = {
       id: 'brand',
       title: 'Brand and creative',
       short: 'Brand',
-      chips: ['PR & Media', 'Thought Leadership', 'Influencers', 'Case Studies', 'Content', 'Brand Research', 'Web Design & Dev'],
+      chips: ['PR & Media', 'Thought Leadership', 'Awards', 'Influencers', 'Case Studies', 'Content', 'Brand Research', 'Web Design & Dev'],
       services: [
         {
           name: 'Sponsor, Influencer, and Partnership Acquisition',
@@ -205,7 +195,7 @@ export const SERVICES = {
             'Managing brand collaborations, ethical and brand alignment review, shortlisting, outreach, recruitment, and contracting.',
         },
         {
-          name: 'Brand and Audience Research',
+          name: 'Brand Perception and Mystery Shopping',
           detail:
             'Anonymised user feedback, real-world mystery and secret shopper programmes, and brand sentiment analysis.',
         },
@@ -218,6 +208,11 @@ export const SERVICES = {
           name: 'PR and Media Relations',
           detail:
             'Press release writing and distribution, journalist and analyst outreach, media list management, reactive media handling, coverage tracking, and spokesperson briefing.',
+        },
+        {
+          name: 'Awards',
+          detail:
+            'Awards strategy, category research and selection, entry writing, submission management, and post-award amplification.',
         },
         {
           name: 'Thought Leadership and Executive Content',
@@ -308,12 +303,7 @@ export const SERVICES = {
         {
           name: 'Asset Management and Audit',
           detail:
-            'Managing, storing, and maintaining assets; secure disposal and donation; optimising physical or digital marketing assets.',
-        },
-        {
-          name: 'Workspace Organisation',
-          detail:
-            'Decluttering, systematising, sorting, cataloguing, and functional setup of storage spaces.',
+            'Managing, storing, and maintaining physical and digital marketing assets. Decluttering, cataloguing, and functional setup of storage spaces. Sustainable resale, donation, or secure disposal of old and depreciating stock.',
         },
         {
           name: 'Mailing Fulfilment and Distribution',
@@ -357,11 +347,6 @@ export const SERVICES = {
           name: 'Purchase of Materials',
           detail:
             'Rapid advance purchase and delivery of goods: tech, promo, and marketing materials from reliable providers.',
-        },
-        {
-          name: 'Asset Lifecycle Management',
-          detail:
-            'Sustainable management of stock and materials; resale, donation, or disposal of old or depreciating assets.',
         },
       ],
     },

@@ -5,9 +5,31 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
+import { track } from '@vercel/analytics';
 import { Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { BRAND } from '@/lib/constants';
 import { ENQUIRY_TOPIC_EVENT } from '@/lib/enquiry';
+
+// Nothing recorded which page or button produced an enquiry, so there was no
+// way to tell what was working — or to judge whether this refresh helped.
+// Vercel's track() is a no-op unless the Analytics component is mounted, and
+// gtag only exists once analytics consent has been given, so both calls
+// respect the cookie banner without needing to check it.
+declare global {
+  interface Window {
+    gtag?: (command: string, event: string, params?: Record<string, unknown>) => void;
+  }
+}
+
+function recordEnquiry(source: string, topic?: string | null) {
+  const detail = topic ? { source, topic } : { source };
+  try {
+    track('enquiry', detail);
+    window.gtag?.('event', 'generate_lead', detail);
+  } catch {
+    // Measurement must never break the thing being measured.
+  }
+}
 
 // Sending an enquiry is the one conversion on the site; it used to resolve with
 // a hard cut to two lines of text. Shared by both forms so the moment reads the
@@ -129,7 +151,7 @@ function Field({
 
 // ── Simple Form (Home page) ─────────────────────────────────
 
-export function SimpleContactForm() {
+export function SimpleContactForm({ source = 'home-inline' }: { source?: string }) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const {
     register,
@@ -151,6 +173,7 @@ export function SimpleContactForm() {
         message: data.message,
         consent: data.consent ? 'Yes — accepted the Privacy Policy' : 'Not given',
       });
+      recordEnquiry(source);
       setStatus('success');
       reset();
     } catch {
@@ -244,7 +267,10 @@ export function SimpleContactForm() {
 
 // ── Full Form (What We Do + Get In Touch) ──────────────────
 
-export function FullContactForm({ onDark = false }: { onDark?: boolean }) {
+export function FullContactForm({
+  onDark = false,
+  source = 'contact-page',
+}: { onDark?: boolean; source?: string }) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   // Set when the visitor arrives from a service pillar's button, so the enquiry
   // that lands in the inbox says which service prompted it.
@@ -292,6 +318,7 @@ export function FullContactForm({ onDark = false }: { onDark?: boolean }) {
       fields.message = data.message;
       fields.consent = data.consent ? 'Yes — accepted the Privacy Policy' : 'Not given';
       await sendToWeb3Forms(fields);
+      recordEnquiry(source, topic);
       setStatus('success');
       reset();
     } catch {
