@@ -2,30 +2,10 @@
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: #1B2033;
+  /* Follows the theme, so the doors open onto the hero's own ground with no
+     colour jump on the first frame a new visitor sees. */
+  background: var(--background);
   overflow: hidden;
-}
-
-/* Floating diamond background */
-.diamonds {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.diamond {
-  position: absolute;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  transform: rotate(45deg);
-  animation: floatUp linear infinite;
-}
-
-@keyframes floatUp {
-  0%   { transform: rotate(45deg) translateY(0);       opacity: 0; }
-  10%  { opacity: 1; }
-  90%  { opacity: 1; }
-  100% { transform: rotate(45deg) translateY(-130vh);   opacity: 0; }
 }
 
 /* Logo wrapper */

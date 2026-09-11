@@ -3,6 +3,13 @@
 import { useState, useEffect } from 'react';
 import Script from 'next/script';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Analytics } from '@vercel/analytics/next';
+import {
+  ENTRANCE_DONE_EVENT,
+  ENTRANCE_TOTAL_MS,
+  entranceWillPlay,
+} from '@/lib/entrance';
 
 const CONSENT_KEY = 'wynwin_cookie_consent';
 const GA_ID = 'G-BNH3Q60D6T';
@@ -10,6 +17,10 @@ const GA_ID = 'G-BNH3Q60D6T';
 export default function CookieBanner() {
   const [consent, setConsent] = useState<'accepted' | 'declined' | null>(null);
   const [visible, setVisible] = useState(false);
+  // On a first visit the entrance stage sits at z-100 and the banner at z-50,
+  // so the banner used to appear in a single frame the moment the stage
+  // unmounted — landing right on top of the door reveal.
+  const [waitingForEntrance, setWaitingForEntrance] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem(CONSENT_KEY);
@@ -17,10 +28,28 @@ export default function CookieBanner() {
       setConsent('accepted');
     } else if (stored === 'declined') {
       setConsent('declined');
+    } else if (entranceWillPlay()) {
+      setWaitingForEntrance(true);
     } else {
       setVisible(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (!waitingForEntrance) return;
+    const reveal = () => {
+      setWaitingForEntrance(false);
+      setVisible(true);
+    };
+    window.addEventListener(ENTRANCE_DONE_EVENT, reveal);
+    // Fall back in case the entrance never reports completion, so consent is
+    // never withheld from someone who needs to give or refuse it.
+    const fallback = setTimeout(reveal, ENTRANCE_TOTAL_MS + 2500);
+    return () => {
+      window.removeEventListener(ENTRANCE_DONE_EVENT, reveal);
+      clearTimeout(fallback);
+    };
+  }, [waitingForEntrance]);
 
   // Allow re-opening the banner from a "Cookie Settings" control elsewhere.
   useEffect(() => {
@@ -43,9 +72,12 @@ export default function CookieBanner() {
 
   return (
     <>
-      {/* Load GA only after explicit consent */}
+      {/* Load analytics only after explicit consent. Vercel Web Analytics is
+          cookieless, but the Cookie Policy tells visitors analytics runs only
+          with consent, so it is gated here too and the page keeps its promise. */}
       {consent === 'accepted' && (
         <>
+          <Analytics />
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
             strategy="afterInteractive"
@@ -61,34 +93,44 @@ export default function CookieBanner() {
         </>
       )}
 
-      {/* Consent banner */}
-      {visible && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-navy border-t border-white/10 shadow-xl">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <p className="text-white/70 text-sm leading-relaxed max-w-2xl">
-              We use analytics cookies to understand how visitors use this site. See our{' '}
-              <Link href="/cookies" className="text-pink hover:underline">
-                Cookie Policy
-              </Link>{' '}
-              for details. You can change your preference at any time.
-            </p>
-            <div className="flex gap-3 flex-shrink-0">
-              <button
-                onClick={decline}
-                className="px-5 py-2 text-sm font-medium text-white/60 hover:text-white border border-white/20 hover:border-white/40 rounded-full transition-colors duration-200"
-              >
-                Decline
-              </button>
-              <button
-                onClick={accept}
-                className="px-5 py-2 text-sm font-semibold bg-pink text-white rounded-full hover:bg-pink-dark transition-colors duration-200"
-              >
-                Accept
-              </button>
+      {/* Consent banner. Slides up rather than appearing in one frame, and on a
+          phone it is one short line plus two 44px buttons instead of a block
+          that covered the lower third of the hero. */}
+      <AnimatePresence>
+        {visible && (
+          <motion.div
+            initial={{ y: 24, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 24, opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed bottom-0 left-0 right-0 z-50 bg-navy border-t border-white/10 shadow-xl"
+          >
+            <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4 sm:py-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
+              <p className="text-white/70 text-sm leading-relaxed max-w-2xl">
+                We use analytics cookies to see how the site is used.{' '}
+                <Link href="/cookies" className="text-pink hover:underline">
+                  Cookie Policy
+                </Link>
+                .
+              </p>
+              <div className="flex gap-3 flex-shrink-0">
+                <button
+                  onClick={decline}
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center min-h-11 px-5 text-sm font-medium text-white/60 hover:text-white border border-white/20 hover:border-white/40 rounded-full active:scale-[0.97] transition-all duration-200"
+                >
+                  Decline
+                </button>
+                <button
+                  onClick={accept}
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center min-h-11 px-5 text-sm font-semibold bg-pink text-white rounded-full hover:bg-pink-dark active:scale-[0.97] transition-all duration-200"
+                >
+                  Accept
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

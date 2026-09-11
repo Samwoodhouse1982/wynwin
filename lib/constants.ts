@@ -12,6 +12,10 @@ export const BRAND = {
   emailHref: 'mailto:hello@wynwin.co.uk',
   linkedin: 'https://www.linkedin.com/company/wyn-win',
   whatsapp: 'https://wa.me/447307176143',
+  // Single source of truth for the response-time promise. It appears beside
+  // both form buttons, in both success states, on the contact page and in the
+  // Get In Touch meta description — change it here only.
+  responsePromise: 'We reply within one working day — usually the same day.',
   legal: {
     company: 'WYN WIN Services Ltd',
     companyNumber: '16356334',
@@ -23,6 +27,8 @@ export const BRAND = {
     'You agree to receive emails from WYN WIN and consent to WYN WIN storing your contact details. You can unsubscribe at any time by clicking the link at the bottom of our emails.',
 } as const;
 
+// The desktop bar filters out /get-in-touch because the pink button already
+// points there (the mobile drawer does the same).
 // ── /roi-calculators publication state ──────────────────────
 // The ROI calculators page is currently HIDDEN: it is live at its URL and can
 // be shared by direct link for campaigns, but it is kept out of search and off
@@ -38,14 +44,24 @@ export const BRAND = {
 // surface from external links. The noindex tag is what actually hides it.
 export const ROI_PAGE_PUBLISHED: boolean = false;
 
-// TBC: Sam to decide whether /roi-calculators goes in the main nav once the page
-// is published. Defaulting to not adding it.
+// TBC: Sam to decide whether /roi-calculators goes in the main nav once the
+// page is published. Defaulting to not adding it.
 export const NAV_LINKS = [
   { label: 'Home', href: '/' },
-  { label: 'What We Do', href: '/what-we-do' },
-  { label: 'Who We Are', href: '/who-we-are' },
-  { label: 'Get In Touch', href: '/get-in-touch' },
+  { label: 'What we do', href: '/what-we-do' },
+  { label: 'Who we are', href: '/who-we-are' },
+  { label: 'Get in touch', href: '/get-in-touch' },
 ] as const;
+
+// One label per action, used everywhere:
+//   primary   — every in-content conversion button
+//   secondary — every exploration link
+// The nav item and footer link say 'Get in touch' because they name the page.
+export const CTA = {
+  primary: 'Work with us',
+  secondary: 'See what we do',
+  contactPage: 'Get in touch',
+} as const;
 
 // ============================================================
 // HOME PAGE
@@ -53,17 +69,18 @@ export const NAV_LINKS = [
 
 export const HOME = {
   hero: {
-    headline: 'Services for busy people.',
-    body: 'Your marketing team is pulled in too many directions. We take on the tasks they don\'t have time for, so they stay focused on what only they can do. Your business runs smoother, scales faster, and delivers better results.',
-    tagline: 'WYN WIN: Whatever You Need, Whenever It\'s Needed.',
+    // The category ('marketing') lives in the H1 itself so the largest type on
+    // the site says what the business does. The eyebrow carries BRAND.tagline.
+    headline: 'Marketing services for busy people.',
+    body: 'Your marketing team is pulled in too many directions. We take on the execution they don\'t have time for.',
     ctas: [
-      { label: 'What We Do', href: '/what-we-do', variant: 'outline' as const },
       { label: 'Work with us', href: '/get-in-touch', variant: 'primary' as const },
+      { label: 'See what we do', href: '/what-we-do', variant: 'outline' as const },
     ],
   },
   valueProp: {
     headline: 'The missing link between strategy and execution.',
-    body: 'Every marketing team has tasks that need doing but keep getting bumped. Execution work that\'s too important to ignore but too time-consuming to fit in. That\'s the gap we fill.\n\nFrom last-minute requests to ongoing support, we step in, get up to speed fast, and deliver. No hand-holding, no lengthy briefs. Just results.',
+    body: 'Every marketing team has tasks that need doing but keep getting bumped. Execution work that\'s too important to ignore but too time-consuming to fit in. That\'s the gap we fill.\n\nFrom last-minute requests to ongoing support, we step in, get up to speed fast, and deliver. No hand-holding, no lengthy briefs. Just results. Your business runs smoother, scales faster, and delivers better results.',
   },
   whyUs: [
     { number: '01', label: 'Responsive, reliable, and adaptable' },
@@ -84,30 +101,32 @@ export const HOME = {
       body: 'Last-minute request? Ongoing programme? We flex to fit. Expert support, zero overhead, no long-term commitment required.',
     },
   ],
+  // Five cards across leaves roughly 160px of text width each, so these are
+  // kept to a dozen words. The full list lives on What We Do.
   servicesPreview: [
     {
       title: 'Strategy and intelligence',
-      body: 'Go-to-market planning, market research, competitive intelligence, sales enablement, ABM, product marketing, regulated device marketing, and health economic analysis.',
+      body: 'Go-to-market planning, market and competitor research, sales enablement, regulated device marketing.',
       href: '/what-we-do#strategy',
     },
     {
       title: 'Brand and creative',
-      body: 'Brand management, content development, PR and media relations, thought leadership, influencer and partnership acquisition, client success stories, and website development.',
+      body: 'Brand management, content, PR and media relations, thought leadership, websites.',
       href: '/what-we-do#brand',
     },
     {
       title: 'Projects and campaigns',
-      body: 'Campaign planning and execution, email marketing, SEO, content and social, paid media, events, product launches, internal comms, and performance reporting.',
+      body: 'Campaign planning and execution, email, SEO, paid media, events, product launches.',
       href: '/what-we-do#projects',
     },
     {
       title: 'Operations and management',
-      body: 'Asset handling, workspace organisation, mailing fulfilment, distribution, martech deployment, and marketing data compliance.',
+      body: 'Asset handling, mailing fulfilment, martech deployment, marketing data compliance.',
       href: '/what-we-do#operations',
     },
     {
       title: 'Logistics and procurement',
-      body: 'Venue booking, print and materials, branded merch, storage, delivery, advance purchasing, and asset lifecycle management.',
+      body: 'Venue booking, print and materials, branded merch, storage and delivery.',
       href: '/what-we-do#logistics',
     },
   ],
@@ -119,10 +138,20 @@ export const HOME = {
 
 export const SERVICES = {
   intro: 'Our range reflects two things: hands-on marketing expertise built across disciplines over 18 years, and a trusted network of specialist suppliers we call on when a brief needs it. Whatever we take on, we own end to end. Delivered on time and on budget.',
+  // Entry points for a visitor who recognises their own situation faster than
+  // they recognise a service category. Each drops them at the right section.
+  scenarios: [
+    { text: 'A launch is coming and the team is flat out', href: '#projects' },
+    { text: 'An exhibition needs running end to end', href: '#logistics' },
+    { text: 'A regulated product needs claims-safe marketing', href: '#regulated' },
+    { text: 'You need senior cover for a few days a month', href: '#operations' },
+  ],
   pillars: [
     {
       id: 'strategy',
-      title: 'Strategy and Intelligence',
+      title: 'Strategy and intelligence',
+      short: 'Strategy',
+      chips: ['Go-to-Market', 'Market Research', 'Competitor Intel', 'Sales Enablement', 'ABM', 'Product Marketing', 'Regulated Markets', 'Health Economics'],
       services: [
         {
           name: 'Go-to-Market Planning',
@@ -130,24 +159,14 @@ export const SERVICES = {
             'Market entry strategy, launch sequencing, channel selection, positioning, and value proposition development.',
         },
         {
-          name: 'Market Research',
+          name: 'Market and Audience Research',
           detail:
-            'Primary and secondary research, qualitative and quantitative studies, customer insight programmes, survey design and analysis, focus groups, and desk research to inform strategy and decision-making.',
-        },
-        {
-          name: 'Audience Research and Segmentation',
-          detail:
-            'Persona development, audience profiling, segmentation modelling, and market sizing to sharpen targeting and messaging.',
+            'Primary and secondary research, qualitative and quantitative studies, customer insight programmes, survey design and analysis, and focus groups. Persona development, audience profiling, segmentation modelling, and market sizing to sharpen targeting and messaging.',
         },
         {
           name: 'Competitive Intelligence',
           detail:
             'Ongoing competitor monitoring, market mapping, benchmarking, pricing analysis, and whitespace identification.',
-        },
-        {
-          name: 'Awards',
-          detail:
-            'Awards strategy, category research and selection, entry writing, submission management, and post-award amplification.',
         },
         {
           name: 'Commercial Support',
@@ -178,7 +197,8 @@ export const SERVICES = {
           name: 'ROI and Health Economic Analysis',
           detail:
             'Economic modelling to quantify the value of healthcare products and interventions. Cost-effectiveness analysis, budget impact models, payer value propositions, and support for NICE and reimbursement submissions to build the commercial and clinical case for adoption.',
-          // Hidden until the page is published — see ROI_PAGE_PUBLISHED above.
+          // Shown only once the ROI calculators page is published — see
+          // ROI_PAGE_PUBLISHED above.
           link: ROI_PAGE_PUBLISHED
             ? { label: 'ROI calculators for healthtech', href: '/roi-calculators' }
             : undefined,
@@ -187,7 +207,9 @@ export const SERVICES = {
     },
     {
       id: 'brand',
-      title: 'Brand and Creative',
+      title: 'Brand and creative',
+      short: 'Brand',
+      chips: ['PR & Media', 'Thought Leadership', 'Awards', 'Influencers', 'Case Studies', 'Content', 'Brand Research', 'Web Design & Dev'],
       services: [
         {
           name: 'Sponsor, Influencer, and Partnership Acquisition',
@@ -195,7 +217,7 @@ export const SERVICES = {
             'Managing brand collaborations, ethical and brand alignment review, shortlisting, outreach, recruitment, and contracting.',
         },
         {
-          name: 'Brand and Audience Research',
+          name: 'Brand Perception and Mystery Shopping',
           detail:
             'Anonymised user feedback, real-world mystery and secret shopper programmes, and brand sentiment analysis.',
         },
@@ -208,6 +230,11 @@ export const SERVICES = {
           name: 'PR and Media Relations',
           detail:
             'Press release writing and distribution, journalist and analyst outreach, media list management, reactive media handling, coverage tracking, and spokesperson briefing.',
+        },
+        {
+          name: 'Awards',
+          detail:
+            'Awards strategy, category research and selection, entry writing, submission management, and post-award amplification.',
         },
         {
           name: 'Thought Leadership and Executive Content',
@@ -228,7 +255,9 @@ export const SERVICES = {
     },
     {
       id: 'projects',
-      title: 'Projects and Campaigns',
+      title: 'Projects and campaigns',
+      short: 'Projects',
+      chips: ['Campaigns', 'Email Marketing', 'SEO', 'Social Media', 'Paid Media', 'Events', 'Launches', 'Internal Comms', 'Reporting'],
       services: [
         {
           name: 'Campaign Planning and Frameworks',
@@ -289,17 +318,14 @@ export const SERVICES = {
     },
     {
       id: 'operations',
-      title: 'Operations and Management',
+      title: 'Operations and management',
+      short: 'Operations',
+      chips: ['Assets', 'MarTech', 'Fulfilment', 'Data Compliance', 'Fractional Experts'],
       services: [
         {
           name: 'Asset Management and Audit',
           detail:
-            'Managing, storing, and maintaining assets; secure disposal and donation; optimising physical or digital marketing assets.',
-        },
-        {
-          name: 'Workspace Organisation',
-          detail:
-            'Decluttering, systematising, sorting, cataloguing, and functional setup of storage spaces.',
+            'Managing, storing, and maintaining physical and digital marketing assets. Decluttering, cataloguing, and functional setup of storage spaces. Sustainable resale, donation, or secure disposal of old and depreciating stock.',
         },
         {
           name: 'Mailing Fulfilment and Distribution',
@@ -320,7 +346,9 @@ export const SERVICES = {
     },
     {
       id: 'logistics',
-      title: 'Logistics and Procurement',
+      title: 'Logistics and procurement',
+      short: 'Logistics',
+      chips: ['Venues', 'Print & Merch', 'Storage', 'Purchasing'],
       services: [
         {
           name: 'Venue Search and Booking',
@@ -341,11 +369,6 @@ export const SERVICES = {
           name: 'Purchase of Materials',
           detail:
             'Rapid advance purchase and delivery of goods: tech, promo, and marketing materials from reliable providers.',
-        },
-        {
-          name: 'Asset Lifecycle Management',
-          detail:
-            'Sustainable management of stock and materials; resale, donation, or disposal of old or depreciating assets.',
         },
       ],
     },
@@ -422,25 +445,33 @@ export const REGULATED_MARKETS = {
 export const META = {
   siteName: 'WYN WIN',
   siteUrl: 'https://wynwin.co.uk',
+  // Every route shares the one generated social card, so the alt describes the
+  // card rather than the page. The root route gets this automatically from the
+  // `alt` export in app/opengraph-image.tsx; child routes replace the parent's
+  // openGraph object, so they have to name the image (and this alt) themselves.
+  ogAlt: 'WYN WIN — Marketing services for busy people.',
+  // Only `home.title` carries the brand — it is the metadata default. The other
+  // three are run through the '%s | WYN WIN' template in app/layout.tsx, so a
+  // suffix here would render twice in the browser tab.
   home: {
-    title: 'Marketing Execution Services for Busy Teams | WYN WIN',
+    title: 'Marketing services for busy people | WYN WIN',
     description:
-      'WYN WIN is an outsourced execution partner for marketing teams. We handle logistics, events, campaigns, procurement, operations, and brand. Whatever you need, whenever you need it.',
+      'WYN WIN is an outsourced execution partner for marketing teams. We handle logistics, events, campaigns, procurement, operations, and brand. Whatever you need, whenever it\'s needed.',
   },
   whatWeDo: {
-    title: 'What We Do | WYN WIN',
+    title: 'Marketing services: strategy, brand, campaigns, operations and logistics',
     description:
       'WYN WIN\'s five service pillars cover strategy, brand, campaigns, operations, and logistics. Including PR, email marketing, SEO, sales enablement, ABM, and regulated device marketing.',
   },
   whoWeAre: {
-    title: 'Who We Are | WYN WIN',
+    title: 'About Sam Woodhouse, founder',
     description:
       'WYN WIN was founded to fill the gap between marketing strategy and execution. Learn about our experience, approach, and why clients trust us.',
   },
   getInTouch: {
-    title: 'Get In Touch | WYN WIN',
+    title: 'Get in touch',
     description:
-      'Contact WYN WIN for marketing operations, events, campaigns, logistics, and fractional marketing support. We respond the same day.',
+      'Contact WYN WIN for marketing operations, events, campaigns, logistics, and fractional marketing support. We reply within one working day.',
   },
   roiCalculators: {
     title: 'ROI Calculators for Healthtech Companies | WYN WIN',

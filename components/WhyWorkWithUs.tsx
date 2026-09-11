@@ -2,17 +2,18 @@
 
 import Link from 'next/link';
 import { motion, type Variants } from 'framer-motion';
-import { DiamondAccent } from '@/components/DiamondGraphic';
-import { HOME } from '@/lib/constants';
+import { SlashMark } from '@/components/SlashMark';
+import { CTA, HOME } from '@/lib/constants';
+import { DUR, EASE_OUT, STAGGER } from '@/lib/motion';
 
 const container: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.2 } },
+  show: { transition: { staggerChildren: STAGGER } },
 };
 
 const pillar: Variants = {
   hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7 } },
+  show: { opacity: 1, y: 0, transition: { duration: DUR.base, ease: EASE_OUT } },
 };
 
 interface Props {
@@ -25,20 +26,24 @@ export default function WhyWorkWithUs({ background = 'white' }: Props) {
     ? 'bg-navy text-white'
     : background === 'cream'
     ? 'bg-cream dark:bg-navy-light text-navy dark:text-white'
-    : 'bg-white dark:bg-navy text-navy dark:text-white';
+    : 'bg-white dark:bg-navy-light text-navy dark:text-white';
 
   return (
-    <section className={`${bgClass} py-20 lg:py-28`}>
+    <section className={`${bgClass} py-14 sm:py-20 lg:py-28`}>
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: DUR.base, ease: EASE_OUT }}
           className="space-y-4 mb-14"
         >
-          <p className="text-pink font-semibold text-sm uppercase tracking-widest flex items-center gap-2">
-            <DiamondAccent />
+          <p
+            className={`font-semibold text-sm uppercase tracking-widest flex items-center gap-2 ${
+              isDark ? 'text-white/50' : 'text-navy/50 dark:text-white/50'
+            }`}
+          >
+            <SlashMark />
             Why work with us
           </p>
           <h2 className="text-3xl md:text-4xl font-bold max-w-lg">
@@ -57,7 +62,8 @@ export default function WhyWorkWithUs({ background = 'white' }: Props) {
             <motion.div
               key={item.number}
               variants={pillar}
-              whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+              // Was the only section that scaled on hover while its neighbours
+              // lifted; it is not clickable either, so it now does neither.
               className="group"
             >
               {/* Animated top line */}
@@ -67,16 +73,16 @@ export default function WhyWorkWithUs({ background = 'white' }: Props) {
                   initial={{ width: 0 }}
                   whileInView={{ width: '100%' }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.7, delay: i * 0.2 + 0.3 }}
+                  transition={{ duration: DUR.base, delay: i * STAGGER + 0.3, ease: EASE_OUT }}
                 />
               </div>
 
               <motion.span
-                className="block text-6xl font-bold text-pink/20 group-hover:text-pink/50 transition-colors duration-500 mb-4 leading-none"
+                className="block text-6xl font-display font-bold text-pink/50 [@media(hover:hover)]:text-pink/20 [@media(hover:hover)]:group-hover:text-pink/50 transition-colors duration-500 mb-4 leading-none"
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.2 + 0.2 }}
+                transition={{ duration: DUR.base, delay: i * STAGGER + 0.2, ease: EASE_OUT }}
               >
                 {item.number}
               </motion.span>
@@ -90,7 +96,7 @@ export default function WhyWorkWithUs({ background = 'white' }: Props) {
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.5, delay: 0.5 }}
+          transition={{ duration: DUR.base, delay: 0.5, ease: EASE_OUT }}
           className="mt-14"
         >
           <Link
@@ -101,7 +107,7 @@ export default function WhyWorkWithUs({ background = 'white' }: Props) {
                 : 'bg-navy dark:bg-pink text-white hover:bg-navy-light dark:hover:bg-pink-dark'
             }`}
           >
-            Work with us →
+            {CTA.primary} →
           </Link>
         </motion.div>
       </div>

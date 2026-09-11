@@ -1,32 +1,33 @@
 'use client';
 
 import { motion, type Variants } from 'framer-motion';
-import { DiamondAccent } from '@/components/DiamondGraphic';
+import { SlashMark } from '@/components/SlashMark';
 import { TESTIMONIALS } from '@/lib/constants';
+import { DUR, EASE_OUT, STAGGER } from '@/lib/motion';
 
 const container: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.15 } },
+  show: { transition: { staggerChildren: STAGGER } },
 };
 
 const card: Variants = {
   hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+  show: { opacity: 1, y: 0, transition: { duration: DUR.base, ease: EASE_OUT } },
 };
 
 export default function TestimonialsSection() {
   return (
-    <section className="bg-cream dark:bg-navy py-20 lg:py-28">
+    <section className="bg-white dark:bg-navy-light py-14 sm:py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: DUR.base, ease: EASE_OUT }}
           className="space-y-4 mb-14"
         >
-          <p className="text-pink font-semibold text-sm uppercase tracking-widest flex items-center gap-2">
-            <DiamondAccent />
+          <p className="text-navy/50 dark:text-white/50 font-semibold text-sm uppercase tracking-widest flex items-center gap-2">
+            <SlashMark />
             What clients say
           </p>
           <h2 className="text-3xl md:text-4xl font-bold text-navy dark:text-white max-w-lg">

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import { DUR, EASE_OUT, STAGGER } from '@/lib/motion';
 
 interface ServiceCardProps {
   title: string;
@@ -17,33 +18,38 @@ export default function ServiceCard({ title, body, href, index = 0 }: ServiceCar
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      whileHover={{ y: -6, transition: { duration: 0.2 } }}
+      transition={{ duration: DUR.base, delay: index * STAGGER, ease: EASE_OUT }}
+      // This one IS a link, so it keeps the lift — and now acknowledges a press,
+      // which is the only feedback a touch device ever gets.
+      whileHover={{ y: -4, transition: { duration: DUR.fast } }}
+      whileTap={{ scale: 0.98 }}
     >
       <Link
         href={href}
-        className="group block bg-white/5 hover:bg-white/10 border border-white/10 hover:border-pink/50 rounded-2xl p-8 transition-all duration-300 h-full overflow-hidden"
+        className="group block bg-white dark:bg-white/5 hover:bg-white dark:hover:bg-white/10 border border-navy/10 dark:border-white/10 hover:border-pink/50 rounded-2xl p-6 shadow-sm dark:shadow-none hover:shadow-md dark:hover:shadow-none transition-all duration-300 h-full overflow-hidden"
       >
         <div className="flex flex-col h-full gap-4">
           {/* Animated top accent line */}
-          <div className="relative h-0.5 bg-white/10 overflow-hidden rounded-full">
-            <div className="absolute inset-y-0 left-0 bg-pink w-[20%] group-hover:w-full transition-all duration-300 ease-out" />
+          <div className="relative h-0.5 bg-navy/10 dark:bg-white/10 overflow-hidden rounded-full">
+            {/* Touch gets the full accent at rest; pointers get the sweep. */}
+            <div className="absolute inset-y-0 left-0 bg-pink w-full [@media(hover:hover)]:w-[20%] [@media(hover:hover)]:group-hover:w-full transition-all duration-300 ease-out" />
           </div>
 
-          <h3 className="text-lg font-bold text-white leading-snug group-hover:text-pink transition-colors duration-200">
+          <h3 className="text-lg font-bold text-navy dark:text-white leading-snug group-hover:text-pink transition-colors duration-200">
             {title}
           </h3>
 
-          <p className="text-white/50 text-sm leading-relaxed flex-1">{body}</p>
+          <p className="text-navy/60 dark:text-white/50 text-sm leading-relaxed flex-1">{body}</p>
 
           <div className="flex items-center gap-2 text-pink text-sm font-semibold group-hover:gap-3 transition-all duration-200">
-            Find Out More
-            <motion.span
-              animate={{ x: 0 }}
-              whileHover={{ x: 4 }}
-            >
-              <ArrowRight size={14} />
-            </motion.span>
+            Explore
+            {/* whileHover here only fired with the cursor on the arrow itself,
+                so it was dead code layered over the parent's group-hover. */}
+            <ArrowRight
+              size={14}
+              aria-hidden
+              className="transition-transform duration-200 group-hover:translate-x-1"
+            />
           </div>
         </div>
       </Link>

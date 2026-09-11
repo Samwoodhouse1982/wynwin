@@ -20,11 +20,15 @@
 :root {
   --background: #F8F6F2;
   --foreground: #0D1B3E;
+  /* Hero grid lines. White is invisible on a light ground, so the hatch takes
+     its colour from the theme rather than being hard-coded per component. */
+  --grid-line: #0a1628;
 }
 
 .dark {
   --background: #0D1B3E;
   --foreground: #F8F6F2;
+  --grid-line: #ffffff;
 }
 
 @theme inline {
@@ -44,9 +48,27 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Syne on all headings automatically */
-h1, h2, h3, h4, h5, h6 {
+/* Unbounded (the display face) is scoped to h1 and h2, plus the 01–05 numerals
+   which opt in with `font-display`. It is a very wide face: at the 14–18px of a
+   card title it wrapped to two or three shouting lines, which read as loud and
+   crowded on the services pages — the opposite of the calm the copy promises.
+   h3 and below use the body face at semibold instead. */
+h1, h2 {
   font-family: var(--font-display);
+}
+
+h3, h4, h5, h6 {
+  font-family: var(--font-body);
+}
+
+/* Used by the sticky services sub-nav, which scrolls horizontally on phones.
+   The class was already applied there but had never been defined. */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }
 
 /* Custom scrollbar */
@@ -67,11 +89,13 @@ html {
   border-radius: 3px;
 }
 
-/* Dark mode — direct overrides (outside @layer, guaranteed to win) */
-.dark .bg-cream { background-color: #1a2f5e; }
-.dark .bg-offwhite { background-color: #1a2f5e; }
-.dark section.bg-white,
-.dark div.bg-white:not(input):not(textarea) { background-color: #0d1b3e; }
+/* Dark mode — direct overrides (outside @layer, guaranteed to win).
+   The background overrides that used to live here (.dark .bg-cream,
+   .dark section.bg-white, …) have been removed: they outranked every
+   per-element `dark:bg-*` class, so the surfaces components asked for never
+   rendered and adjacent sections collapsed into one another. Each section now
+   declares its own dark surface and the bands alternate navy / navy-light.
+   The text, border and input rules below are still useful shorthands. */
 .dark .text-navy { color: #f8f6f2; }
 .dark .text-navy\/50 { color: rgba(248,246,242,0.5); }
 .dark .text-navy\/55 { color: rgba(248,246,242,0.55); }

@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'WYN WIN — Services for busy people.';
+export const alt = 'WYN WIN — Marketing services for busy people.';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -21,12 +21,23 @@ export default function OgImage() {
           fontFamily: 'sans-serif',
         }}
       >
-        <div style={{ width: 56, height: 6, background: '#E8006A', borderRadius: 3, marginBottom: 48 }} />
+        {/* The logo's own slash — the diagonal through the I in WIN — rather
+            than a generic rule. */}
+        <div
+          style={{
+            width: 14,
+            height: 56,
+            background: '#E8006A',
+            borderRadius: 2,
+            marginBottom: 44,
+            transform: 'rotate(24deg)',
+          }}
+        />
         <div style={{ fontSize: 80, fontWeight: 900, color: 'white', letterSpacing: '-3px', marginBottom: 24, lineHeight: 1 }}>
           WYN WIN
         </div>
         <div style={{ fontSize: 30, color: 'rgba(255,255,255,0.65)', maxWidth: 680, lineHeight: 1.45 }}>
-          Services for busy people.
+          Marketing services for busy people.
         </div>
         <div style={{ marginTop: 64, fontSize: 22, color: '#E8006A', fontWeight: 700, letterSpacing: '0.5px' }}>
           wynwin.co.uk

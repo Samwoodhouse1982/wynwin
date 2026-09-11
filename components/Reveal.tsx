@@ -1,37 +1,22 @@
 'use client';
 
-import { motion, type Variants } from 'framer-motion';
+import { motion } from 'framer-motion';
+import {
+  DIRECTION_VARIANTS,
+  DUR,
+  EASE_OUT,
+  staggerContainer,
+  VIEWPORT,
+} from '@/lib/motion';
 
-const variants: Record<string, Variants> = {
-  up: {
-    hidden: { opacity: 0, y: 32 },
-    show: { opacity: 1, y: 0 },
-  },
-  left: {
-    hidden: { opacity: 0, x: -32 },
-    show: { opacity: 1, x: 0 },
-  },
-  right: {
-    hidden: { opacity: 0, x: 32 },
-    show: { opacity: 1, x: 0 },
-  },
-  none: {
-    hidden: { opacity: 0 },
-    show: { opacity: 1 },
-  },
-};
-
-const staggerContainer: Variants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.1 } },
-};
+type Direction = 'up' | 'left' | 'right' | 'none';
 
 interface RevealProps {
   children: React.ReactNode;
   className?: string;
   delay?: number;
   duration?: number;
-  direction?: 'up' | 'left' | 'right' | 'none';
+  direction?: Direction;
   stagger?: boolean;
   once?: boolean;
 }
@@ -40,10 +25,10 @@ export default function Reveal({
   children,
   className,
   delay = 0,
-  duration = 0.6,
+  duration = DUR.base,
   direction = 'up',
   stagger = false,
-  once = true,
+  once = VIEWPORT.once,
 }: RevealProps) {
   if (stagger) {
     return (
@@ -52,7 +37,7 @@ export default function Reveal({
         variants={staggerContainer}
         initial="hidden"
         whileInView="show"
-        viewport={{ once, margin: '-80px' }}
+        viewport={{ once, margin: VIEWPORT.margin }}
       >
         {children}
       </motion.div>
@@ -62,11 +47,11 @@ export default function Reveal({
   return (
     <motion.div
       className={className}
-      variants={variants[direction]}
+      variants={DIRECTION_VARIANTS[direction]}
       initial="hidden"
       whileInView="show"
-      viewport={{ once, margin: '-80px' }}
-      transition={{ duration, delay }}
+      viewport={{ once, margin: VIEWPORT.margin }}
+      transition={{ duration, delay, ease: EASE_OUT }}
     >
       {children}
     </motion.div>
@@ -78,18 +63,18 @@ export function RevealItem({
   children,
   className,
   direction = 'up',
-  duration = 0.6,
+  duration = DUR.base,
 }: {
   children: React.ReactNode;
   className?: string;
-  direction?: 'up' | 'left' | 'right' | 'none';
+  direction?: Direction;
   duration?: number;
 }) {
   return (
     <motion.div
       className={className}
-      variants={variants[direction]}
-      transition={{ duration }}
+      variants={DIRECTION_VARIANTS[direction]}
+      transition={{ duration, ease: EASE_OUT }}
     >
       {children}
     </motion.div>

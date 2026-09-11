@@ -1,15 +1,16 @@
 'use client';
 
 import { motion, type Variants } from 'framer-motion';
-import { DiamondAccent } from '@/components/DiamondGraphic';
+import { SlashMark } from '@/components/SlashMark';
 import { BottleneckIcon, TeamIcon, SpeedIcon } from '@/components/HowWeHelpIcons';
 import { HOME } from '@/lib/constants';
+import { DUR, EASE_OUT, STAGGER } from '@/lib/motion';
 
 const ICONS = [BottleneckIcon, TeamIcon, SpeedIcon];
 
 const container: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.12 } },
+  show: { transition: { staggerChildren: STAGGER } },
 };
 
 const card: Variants = {
@@ -17,23 +18,23 @@ const card: Variants = {
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6 },
+    transition: { duration: DUR.base, ease: EASE_OUT },
   },
 };
 
 export default function HowWeHelp() {
   return (
-    <section className="bg-cream dark:bg-navy py-20 lg:py-28">
+    <section className="bg-cream dark:bg-navy py-14 sm:py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: DUR.base, ease: EASE_OUT }}
           className="mb-12 space-y-3"
         >
-          <p className="text-pink font-semibold text-sm uppercase tracking-widest flex items-center gap-2">
-            <DiamondAccent speed={12} />
+          <p className="text-navy/50 dark:text-white/50 font-semibold text-sm uppercase tracking-widest flex items-center gap-2">
+            <SlashMark />
             How we help
           </p>
           <h2 className="text-3xl md:text-4xl font-bold text-navy dark:text-white max-w-xl">
@@ -54,15 +55,17 @@ export default function HowWeHelp() {
               <motion.div
                 key={i}
                 variants={card}
-                whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className="bg-white dark:bg-white/5 border border-navy/8 dark:border-white/10 hover:border-pink/40 rounded-2xl p-8 transition-colors duration-300 cursor-default"
+                // No lift: these cards are not clickable, and a card that rises
+                // under the cursor promises an affordance the page does not have.
+                // They warm their border and fill instead.
+                className="bg-white dark:bg-white/5 border border-navy/8 dark:border-white/10 hover:border-pink/40 hover:bg-cream dark:hover:bg-white/10 rounded-2xl p-8 transition-colors duration-300 cursor-default"
               >
                 <motion.div
                   className="mb-5"
                   initial={{ scale: 0, rotate: -20 }}
                   whileInView={{ scale: 1, rotate: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.45, delay: i * 0.12 + 0.3 }}
+                  transition={{ duration: DUR.base, delay: i * STAGGER + 0.3, ease: EASE_OUT }}
                 >
                   <Icon />
                 </motion.div>

@@ -7,13 +7,17 @@ import WhyWorkWithUs from '@/components/WhyWorkWithUs';
 import HowWeHelp from '@/components/HowWeHelp';
 import ServiceCard from '@/components/ServiceCard';
 import TestimonialsSection from '@/components/TestimonialsSection';
-import PreFooterCta from '@/components/PreFooterCta';
 import { SimpleContactForm } from '@/components/ContactForm';
 import Reveal, { RevealItem } from '@/components/Reveal';
 import EntranceAnimation from '@/components/EntranceAnimation';
-import { HOME } from '@/lib/constants';
-
-const STORAGE_KEY = 'wynwin_entrance_v1';
+import { SlashMark } from '@/components/SlashMark';
+import { BRAND, CTA, HOME } from '@/lib/constants';
+import {
+  ENTRANCE_DONE_EVENT,
+  ENTRANCE_KEY,
+  ENTRANCE_TOTAL_MS,
+  entranceWillPlay,
+} from '@/lib/entrance';
 
 export default function HomePageClient() {
   const [showAnimation, setShowAnimation] = useState(false);
@@ -21,20 +25,22 @@ export default function HomePageClient() {
   const [heroReady, setHeroReady] = useState(false);
 
   const handleComplete = useCallback(() => {
-    localStorage.setItem(STORAGE_KEY, '1');
+    localStorage.setItem(ENTRANCE_KEY, '1');
     setShowAnimation(false);
     setAnimationDone(true);
-    // Short delay so the hero stagger begins just as the doors finish clearing
-    setTimeout(() => setHeroReady(true), 500);
+    // No delay: onComplete fires as the door panels start moving, so the hero
+    // stagger should already be running behind them. The old 500ms wait meant
+    // the doors opened onto an empty stage that populated afterwards.
+    setHeroReady(true);
+    // Tells the cookie banner it may come up now, rather than popping over the
+    // door reveal the instant the stage unmounts.
+    window.dispatchEvent(new Event(ENTRANCE_DONE_EVENT));
   }, []);
 
   useEffect(() => {
-    const mql = window.matchMedia?.('(prefers-reduced-motion: reduce)');
-    const prefersReduced = !!mql?.matches;
-
-    // Skip the entrance for return visitors and anyone who prefers reduced
-    // motion — reveal the page immediately.
-    if (prefersReduced || localStorage.getItem(STORAGE_KEY)) {
+    // Return visitors, phones and reduced-motion users go straight to the page.
+    // One predicate, shared with the cookie banner so they cannot disagree.
+    if (!entranceWillPlay()) {
       setAnimationDone(true);
       setHeroReady(true);
       return;
@@ -42,9 +48,10 @@ export default function HomePageClient() {
 
     setShowAnimation(true);
 
-    // Fail-safe: if the entrance animation never reports completion (e.g. it
-    // throws), reveal the page anyway so content can't get stuck hidden.
-    const failsafe = setTimeout(handleComplete, 6000);
+    // Fail-safe: if the entrance never reports completion (e.g. it throws),
+    // reveal the page anyway. Derived from the sequence's own length so the
+    // two can never drift apart and cut the finale off again.
+    const failsafe = setTimeout(handleComplete, ENTRANCE_TOTAL_MS + 1500);
     return () => clearTimeout(failsafe);
   }, [handleComplete]);
 
@@ -65,13 +72,15 @@ export default function HomePageClient() {
       >
         <HeroSection ready={heroReady} />
 
-        {/* Value Proposition */}
-        <section className="bg-white dark:bg-navy py-20 lg:py-28">
+        {/* Value Proposition. Dark bands alternate navy / navy-light down the
+            page so sections stay distinguishable in dark mode. */}
+        <section className="bg-white dark:bg-navy-light py-14 sm:py-20 lg:py-28">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="max-w-3xl">
+            <div className="max-w-2xl">
               <Reveal stagger>
                 <RevealItem>
-                  <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-4">
+                  <p className="text-navy/50 dark:text-white/50 font-semibold text-sm uppercase tracking-widest flex items-center gap-2 mb-4">
+                    <SlashMark />
                     Our value
                   </p>
                 </RevealItem>
@@ -89,15 +98,15 @@ export default function HomePageClient() {
                   <div className="flex flex-wrap gap-4 pt-4">
                     <Link
                       href="/get-in-touch"
-                      className="inline-flex items-center gap-2 px-7 py-3.5 bg-pink text-white font-semibold rounded-full hover:bg-pink-dark transition-colors duration-200"
+                      className="inline-flex items-center gap-2 px-7 py-3.5 bg-pink text-white font-semibold rounded-full hover:bg-pink-dark active:scale-[0.97] transition-all duration-200"
                     >
-                      Get In Touch
+                      {CTA.primary}
                     </Link>
                     <Link
                       href="/what-we-do"
-                      className="inline-flex items-center gap-2 px-7 py-3.5 border border-navy/20 dark:border-white/20 text-navy dark:text-white font-semibold rounded-full hover:border-navy dark:hover:border-white/50 hover:bg-navy/5 dark:hover:bg-white/5 transition-colors duration-200"
+                      className="inline-flex items-center gap-2 px-7 py-3.5 border border-navy/20 dark:border-white/20 text-navy dark:text-white font-semibold rounded-full hover:border-navy dark:hover:border-white/50 hover:bg-navy/5 dark:hover:bg-white/5 active:scale-[0.97] transition-all duration-200"
                     >
-                      See What We Do
+                      {CTA.secondary}
                     </Link>
                   </div>
                 </RevealItem>
@@ -111,18 +120,19 @@ export default function HomePageClient() {
         <WhyWorkWithUs background="white" />
 
         {/* Services Preview */}
-        <section className="bg-navy py-20 lg:py-28 relative overflow-hidden">
+        <section className="bg-cream dark:bg-navy py-14 sm:py-20 lg:py-28 relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="mb-12">
               <Reveal stagger>
                 <RevealItem>
-                  <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-4">
+                  <p className="text-navy/50 dark:text-white/50 font-semibold text-sm uppercase tracking-widest flex items-center gap-2 mb-4">
+                    <SlashMark />
                     What we do
                   </p>
                 </RevealItem>
                 <RevealItem>
                   <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-                    <h2 className="text-3xl md:text-4xl font-bold text-white max-w-md">
+                    <h2 className="text-3xl md:text-4xl font-bold text-navy dark:text-white max-w-md">
                       What we cover.
                     </h2>
                     <Link
@@ -135,7 +145,7 @@ export default function HomePageClient() {
                 </RevealItem>
               </Reveal>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
               {HOME.servicesPreview.map((service, i) => (
                 <ServiceCard
                   key={service.title}
@@ -147,49 +157,63 @@ export default function HomePageClient() {
               ))}
             </div>
 
+            {/* The specialism is the sharpest differentiator on the site and
+                previously had nothing pointing at it from anywhere. */}
+            <Reveal>
+              <p className="mt-10 text-navy/60 dark:text-white/60 text-sm">
+                Working in a regulated market?{' '}
+                <Link
+                  href="/what-we-do#regulated"
+                  className="text-pink font-semibold hover:underline"
+                >
+                  See how we handle MHRA, FDA and EU MDR →
+                </Link>
+              </p>
+            </Reveal>
           </div>
         </section>
 
         <TestimonialsSection />
 
-        {/* Inline Contact Form */}
-        <section className="bg-cream dark:bg-navy py-20 lg:py-28">
+        {/* Inline contact form — the page's single closing ask. The pink
+            PreFooterCta band used to sit directly beneath this with the same
+            headline; it now runs only on pages that have no inline form. */}
+        <section className="bg-cream dark:bg-navy py-14 sm:py-20 lg:py-28 dark:border-t dark:border-white/10">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
               <Reveal direction="left">
-                <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-4">
+                <p className="text-navy/50 dark:text-white/50 font-semibold text-sm uppercase tracking-widest flex items-center gap-2 mb-4">
+                  <SlashMark />
                   Get in touch
                 </p>
                 <h2 className="text-3xl md:text-4xl font-bold text-navy dark:text-white mb-4">
-                  Ready to get things done?
+                  Tell us what&apos;s stuck.
                 </h2>
-                <p className="text-navy/60 dark:text-white/60 leading-relaxed mb-6">
-                  Drop us a message and we&apos;ll come back to you fast, usually the same day.
+                <p className="text-navy/60 dark:text-white/60 leading-relaxed mb-6 max-w-2xl">
+                  A task, a deadline, a headache — anything works. {BRAND.responsePromise}
                 </p>
                 <div className="space-y-2 text-sm text-navy/60 dark:text-white/60">
                   <p>
                     Or reach us directly:{' '}
-                    <a href="tel:+447307176143" className="text-pink font-medium hover:underline">
-                      0730 717 6143
+                    <a href={BRAND.phoneHref} className="text-pink font-medium hover:underline">
+                      {BRAND.phone}
                     </a>
                   </p>
                   <p>
-                    <a href="mailto:hello@wynwin.co.uk" className="text-pink font-medium hover:underline">
-                      hello@wynwin.co.uk
+                    <a href={BRAND.emailHref} className="text-pink font-medium hover:underline">
+                      {BRAND.email}
                     </a>
                   </p>
                 </div>
               </Reveal>
               <Reveal direction="right" delay={0.15}>
-                <div className="bg-white dark:bg-navy-light rounded-2xl p-8 shadow-sm">
+                <div className="bg-white dark:bg-navy-light rounded-2xl p-5 sm:p-8 shadow-sm">
                   <SimpleContactForm />
                 </div>
               </Reveal>
             </div>
           </div>
         </section>
-
-        <PreFooterCta />
       </div>
 
       {/* Entrance animation — sits on top, removes itself when done */}

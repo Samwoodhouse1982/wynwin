@@ -1,12 +1,74 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Send, CheckCircle, AlertCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { track } from '@vercel/analytics';
+import { Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { BRAND } from '@/lib/constants';
-import { trackEvent } from '@/lib/analytics';
+import { ENQUIRY_TOPIC_EVENT } from '@/lib/enquiry';
+
+// Nothing recorded which page or button produced an enquiry, so there was no
+// way to tell what was working — or to judge whether this refresh helped.
+// Vercel's track() is a no-op unless the Analytics component is mounted, and
+// gtag only exists once analytics consent has been given, so both calls
+// respect the cookie banner without needing to check it.
+declare global {
+  interface Window {
+    gtag?: (command: string, event: string, params?: Record<string, unknown>) => void;
+  }
+}
+
+function recordEnquiry(source: string, topic?: string | null) {
+  const detail = topic ? { source, topic } : { source };
+  try {
+    track('enquiry', detail);
+    window.gtag?.('event', 'generate_lead', detail);
+  } catch {
+    // Measurement must never break the thing being measured.
+  }
+}
+
+// Sending an enquiry is the one conversion on the site; it used to resolve with
+// a hard cut to two lines of text. Shared by both forms so the moment reads the
+// same wherever it happens.
+function SuccessState({ onDark = false }: { onDark?: boolean }) {
+  const heading = onDark ? 'text-white' : 'text-navy dark:text-white';
+  const body = onDark ? 'text-white/60' : 'text-navy/60 dark:text-white/60';
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      className="flex flex-col items-center gap-3 py-12 text-center"
+    >
+      <motion.div
+        initial={{ scale: 0.6, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.35, delay: 0.05, ease: [0.34, 1.56, 0.64, 1] }}
+      >
+        <CheckCircle className="text-mint" size={40} aria-hidden />
+      </motion.div>
+      <p className={`text-lg font-semibold ${heading}`}>Consider it done.</p>
+      <p className={`text-sm max-w-sm ${body}`}>{BRAND.responsePromise}</p>
+      <p className={`text-sm ${body}`}>
+        Need it sooner?{' '}
+        <a
+          href={BRAND.whatsapp}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-pink font-medium hover:underline"
+        >
+          Message us on WhatsApp
+        </a>
+        .
+      </p>
+    </motion.div>
+  );
+}
 
 // ── Web3Forms submission ───────────────────────────────────
 // Submissions go straight from the browser to Web3Forms (no backend). The
@@ -27,21 +89,23 @@ async function sendToWeb3Forms(fields: Record<string, string>) {
 
 // ── Schemas ────────────────────────────────────────────────
 
+// Validation messages are written in the same voice as the rest of the site —
+// 'Required' and '10+ chars' were the only developer-speak on it.
 const simpleSchema = z.object({
-  firstName: z.string().min(1, 'Required'),
-  lastName: z.string().min(1, 'Required'),
-  email: z.string().email('Enter a valid email'),
-  message: z.string().min(10, 'Please say a little more (10+ chars)'),
+  firstName: z.string().min(1, 'We\'ll need your first name'),
+  lastName: z.string().min(1, 'And your last name'),
+  email: z.string().email('That email doesn\'t look right'),
+  message: z.string().min(10, 'Give us a line or two more so we can help'),
   consent: z.literal(true, { error: 'You must accept to continue' }),
   _gotcha: z.string().max(0).optional(),
 });
 
 const fullSchema = z.object({
-  name: z.string().min(1, 'Required'),
-  email: z.string().email('Enter a valid email'),
+  name: z.string().min(1, 'We\'ll need your name'),
+  email: z.string().email('That email doesn\'t look right'),
   jobTitle: z.string().optional(),
-  company: z.string().min(1, 'Required'),
-  message: z.string().min(10, 'Please say a little more (10+ chars)'),
+  company: z.string().min(1, 'Which company are you with?'),
+  message: z.string().min(10, 'Give us a line or two more so we can help'),
   consent: z.literal(true, { error: 'You must accept to continue' }),
   _gotcha: z.string().max(0).optional(),
 });
@@ -51,8 +115,10 @@ type FullValues = z.infer<typeof fullSchema>;
 
 // ── Shared field styles ─────────────────────────────────────
 
+// text-base on phones (16px) — anything smaller makes iOS Safari zoom the
+// viewport on focus and leave the page zoomed. Unchanged from sm upwards.
 const inputClass =
-  'w-full px-4 py-3 rounded-xl border border-navy/20 dark:border-white/20 bg-white dark:bg-navy-light text-navy dark:text-white placeholder:text-navy/40 dark:placeholder:text-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-pink/40 focus:border-pink transition-all duration-200';
+  'w-full px-4 py-3 rounded-xl border border-navy/20 dark:border-white/20 bg-white dark:bg-navy-light text-navy dark:text-white placeholder:text-navy/40 dark:placeholder:text-white/40 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-pink/40 focus:border-pink transition-all duration-200';
 const labelClass = 'block text-sm font-medium text-navy dark:text-white mb-1.5';
 const errorClass = 'mt-1 text-xs text-red-500';
 
@@ -85,7 +151,7 @@ function Field({
 
 // ── Simple Form (Home page) ─────────────────────────────────
 
-export function SimpleContactForm() {
+export function SimpleContactForm({ source = 'home-inline' }: { source?: string }) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const {
     register,
@@ -107,6 +173,7 @@ export function SimpleContactForm() {
         message: data.message,
         consent: data.consent ? 'Yes — accepted the Privacy Policy' : 'Not given',
       });
+      recordEnquiry(source);
       setStatus('success');
       reset();
     } catch {
@@ -115,13 +182,7 @@ export function SimpleContactForm() {
   }
 
   if (status === 'success') {
-    return (
-      <div className="flex flex-col items-center gap-3 py-12 text-center">
-        <CheckCircle className="text-mint" size={40} />
-        <p className="text-lg font-semibold text-navy dark:text-white">Thanks for getting in touch!</p>
-        <p className="text-navy/60 dark:text-white/60 text-sm">We&apos;ll be back with you shortly.</p>
-      </div>
-    );
+    return <SuccessState />;
   }
 
   return (
@@ -131,23 +192,30 @@ export function SimpleContactForm() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <Field label="First name" error={errors.firstName?.message} required>
-          <input {...register('firstName')} className={inputClass} placeholder="Jane" />
+          <input {...register('firstName')} autoComplete="given-name" className={inputClass} placeholder="Jane" />
         </Field>
         <Field label="Last name" error={errors.lastName?.message} required>
-          <input {...register('lastName')} className={inputClass} placeholder="Smith" />
+          <input {...register('lastName')} autoComplete="family-name" className={inputClass} placeholder="Smith" />
         </Field>
       </div>
 
       <Field label="Email" error={errors.email?.message} required>
-        <input {...register('email')} type="email" className={inputClass} placeholder="jane@company.com" />
+        <input
+          {...register('email')}
+          type="email"
+          autoComplete="email"
+          inputMode="email"
+          className={inputClass}
+          placeholder="jane@company.com"
+        />
       </Field>
 
-      <Field label="Message" error={errors.message?.message} required>
+      <Field label="What do you need?" error={errors.message?.message} required>
         <textarea
           {...register('message')}
           rows={4}
           className={`${inputClass} resize-none`}
-          placeholder="Tell us what you need…"
+          placeholder="A task, a deadline, a headache — anything works."
         />
       </Field>
 
@@ -178,14 +246,21 @@ export function SimpleContactForm() {
         </div>
       )}
 
-      <button
-        type="submit"
-        disabled={status === 'loading'}
-        className="inline-flex items-center gap-2 px-7 py-3.5 bg-pink text-white font-semibold rounded-full hover:bg-pink-dark transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
-      >
-        {status === 'loading' ? 'Sending…' : 'Send'}
-        <Send size={15} />
-      </button>
+      <div className="space-y-3">
+        <button
+          type="submit"
+          disabled={status === 'loading'}
+          className="inline-flex items-center justify-center gap-2 w-full sm:w-auto min-h-12 px-7 py-3.5 bg-pink text-white font-semibold rounded-full hover:bg-pink-dark active:scale-[0.97] transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          {status === 'loading' ? 'Sending…' : 'Send message'}
+          {status === 'loading' ? (
+            <Loader2 size={15} aria-hidden className="animate-spin" />
+          ) : (
+            <Send size={15} aria-hidden />
+          )}
+        </button>
+        <p className="text-xs text-navy/50 dark:text-white/50">{BRAND.responsePromise}</p>
+      </div>
     </form>
   );
 }
@@ -194,28 +269,37 @@ export function SimpleContactForm() {
 
 export function FullContactForm({
   onDark = false,
-  source,
-  messagePlaceholder,
-}: {
-  onDark?: boolean;
-  // Tags the enquiry with the page it came from (e.g. 'roi-calculators') so
-  // submissions can be identified in the inbox. Web3Forms passes any extra
-  // field straight through to the notification email.
-  source?: string;
-  messagePlaceholder?: string;
-}) {
+  source = 'contact-page',
+  messagePlaceholder = "What needs doing, by when, and what's getting in the way?",
+}: { onDark?: boolean; source?: string; messagePlaceholder?: string }) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  // Set when the visitor arrives from a service pillar's button, so the enquiry
+  // that lands in the inbox says which service prompted it.
+  const [topic, setTopic] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<FullValues>({ resolver: zodResolver(fullSchema) });
+
+  useEffect(() => {
+    const onTopic = (event: Event) => {
+      const next = (event as CustomEvent<string>).detail;
+      if (!next) return;
+      setTopic(next);
+      // Start the message for them rather than handing over a blank box.
+      setValue('message', `I need help with ${next.toLowerCase()} — `);
+    };
+    window.addEventListener(ENQUIRY_TOPIC_EVENT, onTopic);
+    return () => window.removeEventListener(ENQUIRY_TOPIC_EVENT, onTopic);
+  }, [setValue]);
 
   const fieldBg = onDark
     ? 'bg-white/10 border-white/20 text-white placeholder:text-white/40 focus:border-pink focus:ring-pink/30'
     : '';
-  const resolvedInputClass = onDark ? `w-full px-4 py-3 rounded-xl border ${fieldBg} text-sm focus:outline-none focus:ring-2 transition-all duration-200` : inputClass;
+  const resolvedInputClass = onDark ? `w-full px-4 py-3 rounded-xl border ${fieldBg} text-base sm:text-sm focus:outline-none focus:ring-2 transition-all duration-200` : inputClass;
   const resolvedLabelClass = onDark ? 'block text-sm font-medium text-white mb-1.5' : labelClass;
   const consentClass = onDark ? 'text-white/60' : 'text-navy/60';
 
@@ -224,20 +308,21 @@ export function FullContactForm({
     setStatus('loading');
     try {
       const fields: Record<string, string> = {
-        subject: `New enquiry from ${data.name}${data.company ? ` (${data.company})` : ''}${
-          source ? ` [${source}]` : ''
-        }`,
+        subject: `New enquiry${topic ? `: ${topic}` : ''} from ${data.name}${data.company ? ` (${data.company})` : ''}`,
         from_name: data.name || 'WYNWIN website',
         name: data.name,
         email: data.email,
       };
+      if (topic) fields.topic = topic;
+      // Also sent to the inbox, not just to analytics, so an enquiry can be
+      // traced back to the page that produced it.
+      fields.source = source;
       if (data.jobTitle) fields.job_title = data.jobTitle;
       fields.company = data.company;
       fields.message = data.message;
       fields.consent = data.consent ? 'Yes — accepted the Privacy Policy' : 'Not given';
-      if (source) fields.source = source;
       await sendToWeb3Forms(fields);
-      trackEvent('form_submission', source ? { source } : undefined);
+      recordEnquiry(source, topic);
       setStatus('success');
       reset();
     } catch {
@@ -246,17 +331,7 @@ export function FullContactForm({
   }
 
   if (status === 'success') {
-    return (
-      <div className="flex flex-col items-center gap-3 py-12 text-center">
-        <CheckCircle className="text-mint" size={40} />
-        <p className={`text-lg font-semibold ${onDark ? 'text-white' : 'text-navy'}`}>
-          Thanks, we&apos;ll be in touch soon.
-        </p>
-        <p className={`text-sm ${onDark ? 'text-white/60' : 'text-navy/60'}`}>
-          Expect a reply within one business day.
-        </p>
-      </div>
-    );
+    return <SuccessState onDark />;
   }
 
   return (
@@ -266,21 +341,39 @@ export function FullContactForm({
       <Field label="Name" error={errors.name?.message} required labelClassName={resolvedLabelClass}>
         <input
           {...register('name')}
+          autoComplete="name"
           className={resolvedInputClass}
           placeholder="Jane Smith"
         />
       </Field>
 
       <Field label="Email" error={errors.email?.message} required labelClassName={resolvedLabelClass}>
-        <input {...register('email')} type="email" className={resolvedInputClass} placeholder="jane@company.com" />
+        <input
+          {...register('email')}
+          type="email"
+          autoComplete="email"
+          inputMode="email"
+          className={resolvedInputClass}
+          placeholder="jane@company.com"
+        />
       </Field>
 
       <Field label="Job title" error={errors.jobTitle?.message} labelClassName={resolvedLabelClass}>
-        <input {...register('jobTitle')} className={resolvedInputClass} placeholder="Marketing Manager" />
+        <input
+          {...register('jobTitle')}
+          autoComplete="organization-title"
+          className={resolvedInputClass}
+          placeholder="Marketing Manager"
+        />
       </Field>
 
       <Field label="Company name" error={errors.company?.message} required labelClassName={resolvedLabelClass}>
-        <input {...register('company')} className={resolvedInputClass} placeholder="Acme Ltd" />
+        <input
+          {...register('company')}
+          autoComplete="organization"
+          className={resolvedInputClass}
+          placeholder="Acme Ltd"
+        />
       </Field>
 
       <Field label="What do you need?" error={errors.message?.message} required labelClassName={resolvedLabelClass}>
@@ -288,7 +381,7 @@ export function FullContactForm({
           {...register('message')}
           rows={5}
           className={`${resolvedInputClass} resize-none`}
-          placeholder={messagePlaceholder ?? 'Tell us about your project, timeline, or challenge…'}
+          placeholder={messagePlaceholder}
         />
       </Field>
 
@@ -319,14 +412,23 @@ export function FullContactForm({
         </div>
       )}
 
-      <button
-        type="submit"
-        disabled={status === 'loading'}
-        className="inline-flex items-center gap-2 px-7 py-3.5 bg-pink text-white font-semibold rounded-full hover:bg-pink-dark transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
-      >
-        {status === 'loading' ? 'Sending…' : 'Submit'}
-        <Send size={15} />
-      </button>
+      <div className="space-y-3">
+        <button
+          type="submit"
+          disabled={status === 'loading'}
+          className="inline-flex items-center justify-center gap-2 w-full sm:w-auto min-h-12 px-7 py-3.5 bg-pink text-white font-semibold rounded-full hover:bg-pink-dark active:scale-[0.97] transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          {status === 'loading' ? 'Sending…' : 'Send message'}
+          {status === 'loading' ? (
+            <Loader2 size={15} aria-hidden className="animate-spin" />
+          ) : (
+            <Send size={15} aria-hidden />
+          )}
+        </button>
+        <p className={`text-xs ${onDark ? 'text-white/50' : 'text-navy/50'}`}>
+          {BRAND.responsePromise}
+        </p>
+      </div>
     </form>
   );
 }

@@ -1,9 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { motion, type Variants } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 import { SERVICE_ICON_MAP } from '@/components/ServiceSectionIcons';
+import { setEnquiryTopic } from '@/lib/enquiry';
+import { DUR, EASE_OUT, STAGGER } from '@/lib/motion';
 
 interface Service {
   name: string;
@@ -21,16 +24,28 @@ interface ServicePillarProps {
 
 const cardVariants: Variants = {
   hidden: { opacity: 0, y: 28 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  show: { opacity: 1, y: 0, transition: { duration: DUR.base, ease: EASE_OUT } },
 };
 
 const cardContainer: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.1 } },
+  show: { transition: { staggerChildren: STAGGER } },
 };
 
 export default function ServicePillar({ id, title, services, index }: ServicePillarProps) {
   const isEven = index % 2 === 0;
+
+  // On a phone this page ran well past 8,000px, with every service name buried
+  // under its own paragraph. The names stay visible and scannable; the detail
+  // opens on tap. Above sm the detail is always shown and the toggle is gone.
+  const [open, setOpen] = useState<Set<string>>(new Set());
+  const toggle = (name: string) =>
+    setOpen((prev) => {
+      const next = new Set(prev);
+      if (next.has(name)) next.delete(name);
+      else next.add(name);
+      return next;
+    });
 
   return (
     <section
@@ -43,10 +58,10 @@ export default function ServicePillar({ id, title, services, index }: ServicePil
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: DUR.base, ease: EASE_OUT }}
           className="mb-12"
         >
-          <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-3">
+          <p className="text-navy/40 dark:text-white/40 font-display font-bold text-sm tracking-widest mb-3">
             0{index + 1}
           </p>
           <div className="flex items-center gap-4">
@@ -61,7 +76,7 @@ export default function ServicePillar({ id, title, services, index }: ServicePil
                 initial={{ width: 0 }}
                 whileInView={{ width: '100%' }}
                 viewport={{ once: true, margin: '-80px' }}
-                transition={{ duration: 0.8, delay: 0.3 }}
+                transition={{ duration: DUR.slow, delay: 0.3, ease: EASE_OUT }}
               />
             </div>
           </div>
@@ -75,45 +90,87 @@ export default function ServicePillar({ id, title, services, index }: ServicePil
           whileInView="show"
           viewport={{ once: true, margin: '-40px' }}
         >
-          {services.map((service) => (
-            <motion.div
-              key={service.name}
-              variants={cardVariants}
-              whileHover={{ y: -4, transition: { duration: 0.2 } }}
-              className="bg-navy/5 dark:bg-white/5 hover:bg-navy/10 dark:hover:bg-white/10 rounded-2xl p-7 transition-colors duration-200 cursor-default"
-            >
-              <div className="flex items-start gap-3">
-                <div className="mt-[9px] w-1.5 h-1.5 rounded-full bg-pink flex-shrink-0" />
-                <div>
-                  <h3 className="font-bold text-navy dark:text-white mb-2 leading-snug">{service.name}</h3>
-                  <p className="text-navy/60 dark:text-white/70 text-sm leading-relaxed">{service.detail}</p>
-                  {service.link && (
-                    <Link
-                      href={service.link.href}
-                      className="inline-flex items-center gap-2 mt-3 text-pink text-sm font-semibold hover:gap-3 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink rounded-sm"
+          {services.map((service, i) => {
+            const detailId = `${id}-service-${i}`;
+            const isOpen = open.has(service.name);
+            return (
+              <motion.div
+                key={service.name}
+                variants={cardVariants}
+                // Inert card — tint only, no transform (see HowWeHelp).
+                className="bg-navy/5 dark:bg-white/5 hover:bg-navy/10 dark:hover:bg-white/10 rounded-2xl p-5 sm:p-7 transition-colors duration-200"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="mt-[9px] w-1.5 h-1.5 rounded-full bg-navy/30 dark:bg-white/30 flex-shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start gap-2">
+                      <h3 className="font-bold text-navy dark:text-white leading-snug flex-1">
+                        {service.name}
+                      </h3>
+                      {/* Phones only. `sm:hidden` is display:none, which also
+                          takes the control out of the accessibility tree, so
+                          aria-expanded can never contradict a detail that is
+                          permanently visible on wider screens. */}
+                      <button
+                        type="button"
+                        onClick={() => toggle(service.name)}
+                        aria-expanded={isOpen}
+                        aria-controls={detailId}
+                        aria-label={`${isOpen ? 'Hide' : 'Show'} details for ${service.name}`}
+                        className="sm:hidden -mt-2 -mr-2 w-11 h-11 flex items-center justify-center text-navy/50 dark:text-white/50 shrink-0"
+                      >
+                        <ChevronDown
+                          size={18}
+                          aria-hidden
+                          className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+                        />
+                      </button>
+                    </div>
+                    <div
+                      id={detailId}
+                      className={`${isOpen ? 'block' : 'hidden'} sm:block`}
                     >
-                      {service.link.label} <ArrowRight size={14} aria-hidden />
-                    </Link>
-                  )}
+                      <p className="text-navy/60 dark:text-white/70 text-sm leading-relaxed mt-2">
+                        {service.detail}
+                      </p>
+                      {service.link && (
+                        <Link
+                          href={service.link.href}
+                          className="inline-flex items-center gap-2 mt-3 text-pink text-sm font-semibold hover:gap-3 transition-all duration-200"
+                        >
+                          {service.link.label} <ArrowRight size={14} aria-hidden />
+                        </Link>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </motion.div>
         {/* Per-pillar CTA */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="mt-10 flex items-center justify-between border-t border-navy/10 dark:border-white/10 pt-8"
+          transition={{ duration: DUR.base, delay: 0.3, ease: EASE_OUT }}
+          className="mt-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-navy/10 dark:border-white/10 pt-8"
         >
           <p className="text-navy/50 dark:text-white/70 text-sm">Need help with {title.toLowerCase()}?</p>
+          {/* Points at the form already further down this page rather than
+              sending the visitor somewhere else to meet the same five fields,
+              and carries the pillar through so they need not re-explain it. */}
           <Link
-            href="/get-in-touch"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-pink text-white font-semibold text-sm rounded-full hover:bg-pink-dark transition-colors duration-200"
+            href="#contact"
+            onClick={() => setEnquiryTopic(title)}
+            className="group inline-flex items-center justify-center gap-2 w-full sm:w-auto min-h-11 px-5 py-2.5 bg-pink text-white font-semibold text-sm rounded-full hover:bg-pink-dark active:scale-[0.97] transition-all duration-200"
           >
-            Get in touch <ArrowRight size={14} />
+            Ask about {title.toLowerCase()}
+            <ArrowRight
+              size={14}
+              aria-hidden
+              className="transition-transform duration-200 group-hover:translate-x-1"
+            />
           </Link>
         </motion.div>
       </div>

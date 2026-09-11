@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Sun, Moon } from 'lucide-react';
+import { Menu, X, Sun, Moon, Phone, Mail, MessageCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { NAV_LINKS } from '@/lib/constants';
+import { BRAND, CTA, NAV_LINKS } from '@/lib/constants';
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
@@ -55,6 +55,16 @@ export default function Nav() {
     return () => window.removeEventListener('keydown', onKey);
   }, [open]);
 
+  // Stop the page scrolling behind the open drawer.
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [open]);
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -77,8 +87,10 @@ export default function Nav() {
         </Link>
 
         {/* Desktop links */}
+        {/* The pink button already points at /get-in-touch, so it is filtered
+            out here to avoid two identical adjacent controls. */}
         <ul className="hidden md:flex items-center gap-8">
-          {NAV_LINKS.map((link) => (
+          {NAV_LINKS.filter((link) => link.href !== '/get-in-touch').map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
@@ -106,27 +118,29 @@ export default function Nav() {
           </button>
           <Link
             href="/get-in-touch"
-            className="inline-flex items-center px-5 py-2.5 bg-pink text-white text-sm font-semibold rounded-full hover:bg-pink-dark transition-colors duration-200"
+            className="inline-flex items-center px-5 py-2.5 bg-pink text-white text-sm font-semibold rounded-full hover:bg-pink-dark active:scale-[0.97] transition-all duration-200"
           >
-            Get In Touch
+            {CTA.contactPage}
           </Link>
         </div>
 
         {/* Mobile toggle */}
-        <div className="md:hidden flex items-center gap-1">
+        {/* Comfortable 44px targets, and enough space between them that reaching
+            for the menu cannot flip the theme by accident. */}
+        <div className="md:hidden flex items-center gap-2">
           <button
             onClick={toggleTheme}
             aria-label="Toggle dark mode"
-            className="text-white/70 hover:text-white p-2 transition-colors"
+            className="text-white/70 hover:text-white inline-flex items-center justify-center w-11 h-11 transition-colors"
           >
-            {mounted ? (isDark ? <Sun size={18} /> : <Moon size={18} />) : <Moon size={18} />}
+            {mounted ? (isDark ? <Sun size={18} aria-hidden /> : <Moon size={18} aria-hidden />) : <Moon size={18} aria-hidden />}
           </button>
           <button
             onClick={() => setOpen(!open)}
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
             aria-controls="mobile-menu"
-            className="text-white p-2 -mr-2"
+            className="text-white inline-flex items-center justify-center w-11 h-11 -mr-2"
           >
             {open ? <X size={22} aria-hidden /> : <Menu size={22} aria-hidden />}
           </button>
@@ -134,6 +148,24 @@ export default function Nav() {
       </nav>
 
       {/* Mobile drawer */}
+      <AnimatePresence>
+        {open && (
+          <motion.button
+            key="mobile-scrim"
+            type="button"
+            aria-label="Close menu"
+            onClick={() => setOpen(false)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            // The drawer was a dropdown over a page that stayed live behind it,
+            // and tapping outside did nothing.
+            className="md:hidden fixed inset-0 top-16 z-40 bg-navy/60 backdrop-blur-[2px] cursor-default"
+          />
+        )}
+      </AnimatePresence>
+
       <AnimatePresence>
         {open && (
           <motion.div
@@ -159,10 +191,35 @@ export default function Nav() {
             ))}
             <Link
               href="/get-in-touch"
-              className="mt-2 inline-flex items-center justify-center px-5 py-3 bg-pink text-white font-semibold rounded-full"
+              className="mt-2 inline-flex items-center justify-center px-5 py-3 bg-pink text-white font-semibold rounded-full active:scale-[0.97] transition-transform duration-200"
             >
-              Get In Touch
+              {CTA.contactPage}
             </Link>
+
+            {/* Fastest routes, one tap away — 'whenever it's needed' should not
+                mean 'open a form on another page'. */}
+            <div className="flex items-center gap-2 pt-1">
+              <a
+                href={BRAND.phoneHref}
+                className="flex-1 inline-flex items-center justify-center gap-2 min-h-11 px-3 border border-white/20 rounded-full text-white/80 hover:text-white hover:border-white/40 text-sm transition-colors"
+              >
+                <Phone size={15} aria-hidden /> Call
+              </a>
+              <a
+                href={BRAND.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 inline-flex items-center justify-center gap-2 min-h-11 px-3 border border-white/20 rounded-full text-white/80 hover:text-white hover:border-white/40 text-sm transition-colors"
+              >
+                <MessageCircle size={15} aria-hidden /> WhatsApp
+              </a>
+              <a
+                href={BRAND.emailHref}
+                className="flex-1 inline-flex items-center justify-center gap-2 min-h-11 px-3 border border-white/20 rounded-full text-white/80 hover:text-white hover:border-white/40 text-sm transition-colors"
+              >
+                <Mail size={15} aria-hidden /> Email
+              </a>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

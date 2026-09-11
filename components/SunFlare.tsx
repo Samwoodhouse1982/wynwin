@@ -1,6 +1,7 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 
 // Bloom core — anchored to top-right corner
 const CX = 492;
@@ -20,13 +21,22 @@ const RAYS = [
 export function SunFlare({ className = '' }: { className?: string }) {
   const { scrollY } = useScroll();
 
+  // Fifteen infinite loops animate geometry blurred at stdDeviation 65, and
+  // SVG gaussian blur is rasterised on the CPU — so this kept the main thread
+  // busy for the life of the page, including long after the hero had scrolled
+  // away. The loops now stop once the flare leaves the viewport and pick up
+  // again when it returns.
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { margin: '120px' });
+  const loop = inView ? Infinity : 0;
+
   // Glare circles drift downward as the user scrolls — as if the sun angle is shifting.
   // Two layers at different rates to create parallax depth.
   const ringsY  = useTransform(scrollY, [0, 600], [0, 80]);   // rings — slower
   const spotsY  = useTransform(scrollY, [0, 600], [0, 130]);  // spots — faster
 
   return (
-    <div className={`pointer-events-none select-none ${className}`} aria-hidden="true">
+    <div ref={ref} className={`pointer-events-none select-none ${className}`} aria-hidden="true">
       <svg viewBox="0 0 500 500" fill="none" className="w-full h-full">
         <defs>
           {/* Ray stroke — radial fade centred on the corner */}
@@ -92,7 +102,7 @@ export function SunFlare({ className = '' }: { className?: string }) {
           fill="url(#sf-grad-mid)"
           filter="url(#sf-f-wide)"
           animate={{ opacity: [0.42, 0.58, 0.42] }}
-          transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 16, repeat: loop, ease: 'easeInOut' }}
         />
 
         {/* ── Static: mid bloom ── */}
@@ -100,7 +110,7 @@ export function SunFlare({ className = '' }: { className?: string }) {
           fill="url(#sf-grad-hot)"
           filter="url(#sf-f-mid)"
           animate={{ opacity: [0.62, 0.82, 0.62] }}
-          transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+          transition={{ duration: 11, repeat: loop, ease: 'easeInOut', delay: 2 }}
         />
 
         {/* ── Static: inner bloom ── */}
@@ -108,7 +118,7 @@ export function SunFlare({ className = '' }: { className?: string }) {
           fill="url(#sf-grad-hot)"
           filter="url(#sf-f-tight)"
           animate={{ opacity: [0.78, 0.96, 0.78] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+          transition={{ duration: 8, repeat: loop, ease: 'easeInOut', delay: 1 }}
         />
 
         {/* ── Static: hair-line rays ── */}
@@ -121,7 +131,7 @@ export function SunFlare({ className = '' }: { className?: string }) {
             strokeLinecap="round"
             filter="url(#sf-f-ray)"
             animate={{ opacity: [...ray.o] }}
-            transition={{ duration: ray.dur, repeat: Infinity, ease: 'easeInOut', delay: ray.d }}
+            transition={{ duration: ray.dur, repeat: loop, ease: 'easeInOut', delay: ray.d }}
           />
         ))}
 
@@ -136,7 +146,7 @@ export function SunFlare({ className = '' }: { className?: string }) {
               cy: [110, 120, 136, 122, 110],
               opacity: [0.18, 0.32, 0.22, 0.30, 0.18],
             }}
-            transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
+            transition={{ duration: 22, repeat: loop, ease: 'easeInOut' }}
           />
           <motion.circle
             r={72}
@@ -147,7 +157,7 @@ export function SunFlare({ className = '' }: { className?: string }) {
               cy: [192, 204, 218, 204, 192],
               opacity: [0.10, 0.20, 0.14, 0.18, 0.10],
             }}
-            transition={{ duration: 26, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
+            transition={{ duration: 26, repeat: loop, ease: 'easeInOut', delay: 3 }}
           />
         </motion.g>
 
@@ -162,7 +172,7 @@ export function SunFlare({ className = '' }: { className?: string }) {
               cy: [130, 142, 158, 140, 130],
               opacity: [0.18, 0.30, 0.20, 0.28, 0.18],
             }}
-            transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+            transition={{ duration: 18, repeat: loop, ease: 'easeInOut', delay: 1 }}
           />
           <motion.circle
             r={28}
@@ -173,7 +183,7 @@ export function SunFlare({ className = '' }: { className?: string }) {
               cy: [210, 222, 238, 222, 210],
               opacity: [0.12, 0.22, 0.15, 0.20, 0.12],
             }}
-            transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut', delay: 5 }}
+            transition={{ duration: 20, repeat: loop, ease: 'easeInOut', delay: 5 }}
           />
         </motion.g>
 
@@ -182,7 +192,7 @@ export function SunFlare({ className = '' }: { className?: string }) {
           fill="url(#sf-grad-hot)"
           filter="url(#sf-f-core)"
           animate={{ opacity: [0.88, 1, 0.88] }}
-          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 6, repeat: loop, ease: 'easeInOut' }}
         />
       </svg>
     </div>

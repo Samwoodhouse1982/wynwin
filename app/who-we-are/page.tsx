@@ -5,7 +5,8 @@ import PageHero from '@/components/PageHero';
 import HowWeWork from '@/components/HowWeWork';
 import PreFooterCta from '@/components/PreFooterCta';
 import Reveal, { RevealItem } from '@/components/Reveal';
-import { ABOUT, META } from '@/lib/constants';
+import { ABOUT, CTA, META } from '@/lib/constants';
+import { SlashMark } from '@/components/SlashMark';
 
 export const metadata: Metadata = {
   title: META.whoWeAre.title,
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
     title: META.whoWeAre.title,
     description: META.whoWeAre.description,
     url: `${META.siteUrl}/who-we-are`,
-    images: [{ url: '/opengraph-image', width: 1200, height: 630 }],
+    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: META.ogAlt }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -28,7 +29,11 @@ const highlights = [
   { stat: 'Start-ups to enterprise', label: 'We\'ve worked with businesses of every size' },
   { stat: 'Rapid response', label: 'We move fast. No committee, no delays.' },
   { stat: 'Global reach', label: 'We\'ve delivered for clients and campaigns across the world' },
-  { stat: 'Regulated markets', label: 'Experienced working within highly regulated industries where precision and compliance matter' },
+  {
+    stat: 'Regulated markets',
+    label: 'Experienced working within highly regulated industries where precision and compliance matter',
+    href: '/what-we-do#regulated',
+  },
   { stat: 'Trusted network', label: 'Broad supplier relationships built over years' },
   { stat: 'Flexible billing', label: 'Invoicing to suit your project or budget' },
 ];
@@ -39,10 +44,10 @@ export default function WhoWeArePage() {
       <PageHero eyebrow="About us" headline={ABOUT.headline} />
 
       {/* About copy */}
-      <section className="bg-white dark:bg-navy py-20 lg:py-28">
+      <section className="bg-white dark:bg-navy-light py-14 sm:py-20 lg:py-28">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           {/* Full-width copy + CTA */}
-          <div className="max-w-3xl mb-16 lg:mb-20">
+          <div className="max-w-2xl mb-16 lg:mb-20">
             <Reveal stagger>
               {ABOUT.body.map((para, i) => (
                 <RevealItem key={i}>
@@ -55,7 +60,7 @@ export default function WhoWeArePage() {
                     href="/get-in-touch"
                     className="inline-flex items-center gap-2 px-7 py-3.5 bg-pink text-white font-semibold rounded-full hover:bg-pink-dark transition-colors duration-200"
                   >
-                    Work with us
+                    {CTA.primary}
                   </Link>
                 </div>
               </RevealItem>
@@ -70,10 +75,23 @@ export default function WhoWeArePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {highlights.map((item, i) => (
                 <RevealItem key={item.stat} direction={i % 3 === 0 ? 'left' : i % 3 === 2 ? 'right' : 'up'}>
-                  <div className="bg-white dark:bg-white/5 border border-navy/10 dark:border-white/10 hover:border-pink/40 rounded-2xl p-6 space-y-2 h-full shadow-sm hover:shadow-md transition-all duration-300">
-                    <p className="text-lg font-bold text-navy dark:text-white leading-snug">{item.stat}</p>
-                    <p className="text-sm text-navy/65 dark:text-white/65">{item.label}</p>
-                  </div>
+                  {/* Cream in light mode so the cards read as objects against
+                      the white section rather than floating on their own shadow. */}
+                  {item.href ? (
+                    <Link
+                      href={item.href}
+                      className="block bg-cream dark:bg-white/5 border border-navy/10 dark:border-white/10 hover:border-pink/40 rounded-2xl p-6 space-y-2 h-full shadow-sm hover:shadow-md hover:-translate-y-1 active:scale-[0.99] transition-all duration-200"
+                    >
+                      <p className="text-lg font-bold text-navy dark:text-white leading-snug">{item.stat}</p>
+                      <p className="text-sm text-navy/65 dark:text-white/65">{item.label}</p>
+                      <p className="text-sm font-semibold text-pink pt-1">See how we handle it →</p>
+                    </Link>
+                  ) : (
+                    <div className="bg-cream dark:bg-white/5 border border-navy/10 dark:border-white/10 rounded-2xl p-6 space-y-2 h-full shadow-sm transition-colors duration-200">
+                      <p className="text-lg font-bold text-navy dark:text-white leading-snug">{item.stat}</p>
+                      <p className="text-sm text-navy/65 dark:text-white/65">{item.label}</p>
+                    </div>
+                  )}
                 </RevealItem>
               ))}
             </div>
@@ -82,7 +100,7 @@ export default function WhoWeArePage() {
       </section>
 
       {/* Founder */}
-      <section className="bg-cream dark:bg-navy-light py-16 lg:py-20">
+      <section className="bg-cream dark:bg-navy py-12 sm:py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <Reveal direction="up">
             <div className="flex flex-col sm:flex-row sm:items-center gap-8">
@@ -94,7 +112,7 @@ export default function WhoWeArePage() {
                 className="rounded-full object-cover w-24 h-24 shrink-0 grayscale"
               />
               <div>
-                <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-3">Founder</p>
+                <p className="text-navy/50 dark:text-white/50 font-semibold text-sm uppercase tracking-widest flex items-center gap-2 mb-3"><SlashMark />Founder</p>
                 <h2 className="text-2xl font-bold text-navy dark:text-white mb-1">Sam Woodhouse</h2>
                 <p className="text-navy/60 dark:text-white/60 text-base mb-4">MD and Founder, WYN WIN</p>
                 <p className="text-navy/70 dark:text-white/70 text-base leading-relaxed mb-6 max-w-xl">

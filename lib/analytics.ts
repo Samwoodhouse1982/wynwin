@@ -1,17 +1,17 @@
 // ── Analytics events ────────────────────────────────────────
-// Thin wrapper over the Google Analytics tag the site already uses.
-// CookieBanner only injects the gtag script once the visitor has
-// accepted analytics cookies, so `window.gtag` is undefined without
-// consent and every call here is a no-op. No new tracking tools.
+// Mirrors recordEnquiry in components/ContactForm.tsx, for events that are not
+// enquiries. Vercel's track() is a no-op unless the Analytics component is
+// mounted, and gtag only exists once analytics consent has been given, so both
+// calls respect the cookie banner without needing to check it.
+//
+// Window.gtag is declared globally in components/ContactForm.tsx.
+import { track } from '@vercel/analytics';
 
-type GtagFn = (
-  command: 'event',
-  action: string,
-  params?: Record<string, string>,
-) => void;
-
-export function trackEvent(action: string, params?: Record<string, string>) {
-  if (typeof window === 'undefined') return;
-  const { gtag } = window as unknown as { gtag?: GtagFn };
-  if (typeof gtag === 'function') gtag('event', action, params);
+export function trackEvent(name: string, detail?: Record<string, string>) {
+  try {
+    track(name, detail);
+    window.gtag?.('event', name, detail);
+  } catch {
+    // Measurement must never break the thing being measured.
+  }
 }

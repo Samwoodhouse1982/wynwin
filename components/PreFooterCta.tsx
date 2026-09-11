@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight, Phone } from 'lucide-react';
-import { BRAND } from '@/lib/constants';
+import { BRAND, CTA } from '@/lib/constants';
+import { DUR, EASE_OUT } from '@/lib/motion';
 
 export default function PreFooterCta() {
   return (
@@ -17,13 +18,13 @@ export default function PreFooterCta() {
           backgroundSize: '18px 18px',
         }}
       />
-<div className="relative max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-20">
+<div className="relative max-w-7xl mx-auto px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
           <motion.div
             initial={{ opacity: 0, x: -24 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: DUR.base, ease: EASE_OUT }}
           >
             <p className="text-white/70 text-sm font-semibold uppercase tracking-widest mb-2">
               Whatever You Need
@@ -40,14 +41,14 @@ export default function PreFooterCta() {
             initial={{ opacity: 0, x: 24 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.6, delay: 0.15 }}
+            transition={{ duration: DUR.base, delay: 0.15, ease: EASE_OUT }}
             className="flex flex-col sm:flex-row gap-4 flex-shrink-0"
           >
             <Link
               href="/get-in-touch"
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white text-pink font-bold rounded-full hover:bg-cream transition-colors duration-200"
             >
-              Get In Touch
+              {CTA.primary}
               <ArrowRight size={16} />
             </Link>
             <a
