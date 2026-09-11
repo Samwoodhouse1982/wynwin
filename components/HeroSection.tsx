@@ -17,26 +17,26 @@ export default function HeroSection({ ready = false }: { ready?: boolean }) {
   const { headline, body, ctas } = HOME.hero;
 
   return (
-    <section className="relative bg-navy lg:min-h-[90vh] flex items-center overflow-hidden">
+    <section className="relative bg-cream dark:bg-navy lg:min-h-[90vh] flex items-center overflow-hidden">
       {/* Angled grid — static texture. It used to drift, but the translation ran
           parallel to one stripe family and snapped on every loop, at an opacity
           nobody could perceive. */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.04]">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.05] dark:opacity-[0.04]">
         <div
           className="absolute -inset-[120px]"
           style={{
             backgroundImage:
-              'repeating-linear-gradient(45deg,transparent,transparent 60px,#fff 60px,#fff 61px),repeating-linear-gradient(-45deg,transparent,transparent 60px,#fff 60px,#fff 61px)',
+              'repeating-linear-gradient(45deg,transparent,transparent 60px,var(--grid-line) 60px,var(--grid-line) 61px),repeating-linear-gradient(-45deg,transparent,transparent 60px,var(--grid-line) 60px,var(--grid-line) 61px)',
           }}
         />
       </div>
 
       {/* Pink glow blob — left */}
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-pink rounded-full opacity-10 blur-3xl translate-y-1/2 -translate-x-1/3 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-pink rounded-full opacity-[0.07] dark:opacity-10 blur-3xl translate-y-1/2 -translate-x-1/3 pointer-events-none" />
 
       {/* Sun flare — top right. Sized per breakpoint so the bloom does not land
           behind the eyebrow and headline on a phone. */}
-      <SunFlare className="absolute -top-24 -right-24 w-[420px] h-[420px] opacity-60 sm:w-[520px] sm:h-[520px] lg:top-0 lg:right-0 lg:w-[680px] lg:h-[680px] lg:opacity-85" />
+      <SunFlare className="absolute -top-24 -right-24 w-[420px] h-[420px] opacity-45 dark:opacity-60 sm:w-[520px] sm:h-[520px] lg:top-0 lg:right-0 lg:w-[680px] lg:h-[680px] lg:opacity-55 dark:lg:opacity-85" />
 
       <div className="relative w-full max-w-7xl mx-auto px-6 lg:px-8 py-20 lg:py-32">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_480px] gap-10 lg:gap-16 items-center">
@@ -56,14 +56,14 @@ export default function HeroSection({ ready = false }: { ready?: boolean }) {
 
             <motion.h1
               variants={fadeUp}
-              className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight tracking-tight mb-8"
+              className="text-4xl md:text-6xl lg:text-7xl font-bold text-navy dark:text-white leading-tight tracking-tight mb-8"
             >
               {headline}
             </motion.h1>
 
             <motion.p
               variants={fadeUp}
-              className="text-base md:text-xl text-white/70 leading-relaxed mb-10 max-w-xl"
+              className="text-base md:text-xl text-navy/70 dark:text-white/70 leading-relaxed mb-10 max-w-xl"
             >
               {body}
             </motion.p>
@@ -79,7 +79,7 @@ export default function HeroSection({ ready = false }: { ready?: boolean }) {
                   className={
                     cta.variant === 'primary'
                       ? 'group inline-flex items-center justify-center gap-2 w-full sm:w-auto px-7 py-3.5 bg-pink text-white font-semibold rounded-full hover:bg-pink-dark active:scale-[0.97] transition-all duration-200'
-                      : 'inline-flex items-center justify-center gap-2 w-full sm:w-auto px-7 py-3.5 border border-white/30 text-white font-semibold rounded-full hover:border-white hover:bg-white/5 active:scale-[0.97] transition-all duration-200'
+                      : 'inline-flex items-center justify-center gap-2 w-full sm:w-auto px-7 py-3.5 border border-navy/25 dark:border-white/30 text-navy dark:text-white font-semibold rounded-full hover:border-navy dark:hover:border-white hover:bg-navy/5 dark:hover:bg-white/5 active:scale-[0.97] transition-all duration-200'
                   }
                 >
                   {cta.label}

@@ -2,9 +2,9 @@
   position: fixed;
   inset: 0;
   z-index: 100;
-  /* Brand navy, so the doors open onto the hero's own ground with no colour
-     jump on the first frame a new visitor sees. */
-  background: #0D1B3E;
+  /* Follows the theme, so the doors open onto the hero's own ground with no
+     colour jump on the first frame a new visitor sees. */
+  background: var(--background);
   overflow: hidden;
 }
 

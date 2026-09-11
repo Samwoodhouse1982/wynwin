@@ -59,10 +59,10 @@ export default function HeroServiceShowcase({ ready = false }: { ready?: boolean
       onBlur={() => setPaused(false)}
     >
       {/* Outer card */}
-      <div className="border border-white/10 rounded-2xl overflow-hidden bg-white/[0.03]">
+      <div className="border border-navy/10 dark:border-white/10 rounded-2xl overflow-hidden bg-white dark:bg-white/[0.03] shadow-sm dark:shadow-none">
 
         {/* Top bar — service counter + pink progress line */}
-        <div className="relative h-0.5 bg-white/10">
+        <div className="relative h-0.5 bg-navy/10 dark:bg-white/10">
           <AnimatePresence>
             {!paused && (
               <motion.div
@@ -80,7 +80,7 @@ export default function HeroServiceShowcase({ ready = false }: { ready?: boolean
         <div className="p-8 lg:p-10">
           {/* Says what the card is. Without it the richest 'what do they do'
               content in the first viewport reads as decorative texture. */}
-          <p className="text-[11px] font-semibold uppercase tracking-widest text-white/60 mb-5">
+          <p className="text-[11px] font-semibold uppercase tracking-widest text-navy/50 dark:text-white/60 mb-5">
             What we can take off your plate
           </p>
 
@@ -99,12 +99,12 @@ export default function HeroServiceShowcase({ ready = false }: { ready?: boolean
               >
                 <div
                   className={`h-0.5 rounded-full mb-1.5 transition-colors duration-300 ${
-                    i === active ? 'bg-pink' : 'bg-white/15 group-hover:bg-white/30'
+                    i === active ? 'bg-pink' : 'bg-navy/15 dark:bg-white/15 group-hover:bg-navy/30 dark:group-hover:bg-white/30'
                   }`}
                 />
                 <span
                   className={`text-[11px] font-semibold uppercase tracking-wider leading-tight block transition-colors duration-300 ${
-                    i === active ? 'text-pink' : 'text-white/60 group-hover:text-white/85'
+                    i === active ? 'text-pink' : 'text-navy/60 dark:text-white/60 group-hover:text-navy dark:group-hover:text-white/85'
                   }`}
                 >
                   {svc.short}
@@ -135,7 +135,7 @@ export default function HeroServiceShowcase({ ready = false }: { ready?: boolean
                       hidden: { opacity: 0, y: 6 },
                       show: { opacity: 1, y: 0, transition: { duration: 0.25 } },
                     }}
-                    className="px-3 py-1 rounded-full border border-white/25 text-white/85 text-xs font-medium"
+                    className="px-3 py-1 rounded-full border border-navy/20 dark:border-white/25 text-navy/80 dark:text-white/85 text-xs font-medium"
                   >
                     {chip}
                   </motion.span>
@@ -148,7 +148,7 @@ export default function HeroServiceShowcase({ ready = false }: { ready?: boolean
         {/* Footer link */}
         <Link
           href="/what-we-do"
-          className="flex items-center justify-between px-8 lg:px-10 py-4 border-t border-white/10 text-pink hover:text-pink-dark text-xs font-semibold transition-colors group"
+          className="flex items-center justify-between px-8 lg:px-10 py-4 border-t border-navy/10 dark:border-white/10 text-pink hover:text-pink-dark text-xs font-semibold transition-colors group"
         >
           <span>See all {TOTAL_SERVICES} services</span>
           <span className="group-hover:translate-x-1 transition-transform duration-200">→</span>

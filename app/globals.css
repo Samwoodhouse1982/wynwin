@@ -20,11 +20,15 @@
 :root {
   --background: #F8F6F2;
   --foreground: #0D1B3E;
+  /* Hero grid lines. White is invisible on a light ground, so the hatch takes
+     its colour from the theme rather than being hard-coded per component. */
+  --grid-line: #0a1628;
 }
 
 .dark {
   --background: #0D1B3E;
   --foreground: #F8F6F2;
+  --grid-line: #ffffff;
 }
 
 @theme inline {
