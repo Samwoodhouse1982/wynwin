@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { META } from '@/lib/constants';
+import { META, ROI_PAGE_PUBLISHED } from '@/lib/constants';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = META.siteUrl;
@@ -8,10 +8,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: base, lastModified: now, changeFrequency: 'monthly', priority: 1 },
     { url: `${base}/what-we-do`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
-    { url: `${base}/roi-calculators`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${base}/who-we-are`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${base}/get-in-touch`, lastModified: now, changeFrequency: 'yearly', priority: 0.7 },
     { url: `${base}/privacy`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
     { url: `${base}/cookies`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
+    // Hidden landing page — listed only once published.
+    ...(ROI_PAGE_PUBLISHED
+      ? [
+          {
+            url: `${base}/roi-calculators`,
+            lastModified: now,
+            changeFrequency: 'monthly' as const,
+            priority: 0.9,
+          },
+        ]
+      : []),
   ];
 }

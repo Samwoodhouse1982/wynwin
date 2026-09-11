@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Phone, Mail } from 'lucide-react';
-import { BRAND } from '@/lib/constants';
+import { BRAND, ROI_PAGE_PUBLISHED } from '@/lib/constants';
 import CookieSettingsLink from '@/components/CookieSettingsLink';
 
 export default function Footer() {
@@ -83,7 +83,10 @@ export default function Footer() {
               {[
                 { label: 'Home', href: '/' },
                 { label: 'What We Do', href: '/what-we-do' },
-                { label: 'ROI Calculators', href: '/roi-calculators' },
+                // Hidden landing page — listed only once published.
+                ...(ROI_PAGE_PUBLISHED
+                  ? [{ label: 'ROI Calculators', href: '/roi-calculators' }]
+                  : []),
                 { label: 'Who We Are', href: '/who-we-are' },
                 { label: 'Get In Touch', href: '/get-in-touch' },
                 { label: 'Privacy Policy', href: '/privacy' },

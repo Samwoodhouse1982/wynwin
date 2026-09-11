@@ -23,8 +23,23 @@ export const BRAND = {
     'You agree to receive emails from WYN WIN and consent to WYN WIN storing your contact details. You can unsubscribe at any time by clicking the link at the bottom of our emails.',
 } as const;
 
-// TBC: Sam to decide whether /roi-calculators goes in the main nav. Defaulting
-// to not adding it — the page is reached from the footer and from What We Do.
+// ── /roi-calculators publication state ──────────────────────
+// The ROI calculators page is currently HIDDEN: it is live at its URL and can
+// be shared by direct link for campaigns, but it is kept out of search and off
+// the site's own navigation until the TBC items in ROI (further down this file)
+// are signed off — several of them name clients whose permission is pending.
+//
+// Flipping this to `true` publishes it in one move: it restores the
+// `index, follow` robots tag and the canonical on the page, the sitemap entry,
+// the footer link, and the link from What We Do. Nothing else needs changing.
+//
+// Note: the page is deliberately NOT disallowed in robots.txt. Blocking the
+// crawl would stop Google reading the noindex tag, and the URL could still
+// surface from external links. The noindex tag is what actually hides it.
+export const ROI_PAGE_PUBLISHED: boolean = false;
+
+// TBC: Sam to decide whether /roi-calculators goes in the main nav once the page
+// is published. Defaulting to not adding it.
 export const NAV_LINKS = [
   { label: 'Home', href: '/' },
   { label: 'What We Do', href: '/what-we-do' },
@@ -163,7 +178,10 @@ export const SERVICES = {
           name: 'ROI and Health Economic Analysis',
           detail:
             'Economic modelling to quantify the value of healthcare products and interventions. Cost-effectiveness analysis, budget impact models, payer value propositions, and support for NICE and reimbursement submissions to build the commercial and clinical case for adoption.',
-          link: { label: 'ROI calculators for healthtech', href: '/roi-calculators' },
+          // Hidden until the page is published — see ROI_PAGE_PUBLISHED above.
+          link: ROI_PAGE_PUBLISHED
+            ? { label: 'ROI calculators for healthtech', href: '/roi-calculators' }
+            : undefined,
         },
       ],
     },

@@ -7,7 +7,7 @@ import RoiFaqs from '@/components/RoiFaqs';
 import Reveal, { RevealItem } from '@/components/Reveal';
 import { FullContactForm } from '@/components/ContactForm';
 import { Eyebrow, FormatTag, MarketTag, TbcNote } from '@/components/RoiShared';
-import { BRAND, META, ROI } from '@/lib/constants';
+import { BRAND, META, ROI, ROI_PAGE_PUBLISHED } from '@/lib/constants';
 
 const PAGE_URL = `${META.siteUrl}/roi-calculators`;
 
@@ -17,11 +17,18 @@ export const metadata: Metadata = {
   // in the brand. (The other inner pages currently do double it up.)
   title: { absolute: META.roiCalculators.title },
   description: META.roiCalculators.description,
-  // Self-referencing canonical. This page is built for cold traffic from
+  // While the page is hidden it carries `noindex, nofollow`, so it stays out of
+  // search even though it is live and shareable by direct link. Publishing it
+  // (ROI_PAGE_PUBLISHED in lib/constants.ts) swaps in `index, follow` plus a
+  // self-referencing canonical — this page is built for cold traffic from
   // LinkedIn, outreach and events, so it will be linked with campaign
-  // parameters — the canonical keeps those variants consolidated.
-  alternates: { canonical: '/roi-calculators' },
-  robots: { index: true, follow: true },
+  // parameters, and the canonical keeps those variants consolidated. The
+  // canonical is withheld while noindex is set, to avoid sending search engines
+  // two conflicting signals about the same URL.
+  robots: ROI_PAGE_PUBLISHED
+    ? { index: true, follow: true }
+    : { index: false, follow: false },
+  ...(ROI_PAGE_PUBLISHED ? { alternates: { canonical: '/roi-calculators' } } : {}),
   openGraph: {
     title: META.roiCalculators.title,
     description: META.roiCalculators.description,
