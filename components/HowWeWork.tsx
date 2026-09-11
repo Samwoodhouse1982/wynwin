@@ -81,7 +81,10 @@ export default function HowWeWork() {
                 />
               </div>
               <div className="hidden md:block h-0.5 mb-6" />
-              <span className="block text-6xl font-bold text-white/10 group-hover:text-pink transition-colors duration-500 mb-4 leading-none">
+              {/* Touch devices never produce hover, so they used to get the
+                  white/10 resting state — numerals at roughly 1.4:1, i.e.
+                  invisible. Pointer devices keep the reveal. */}
+              <span className="block text-6xl font-display font-bold text-pink/50 [@media(hover:hover)]:text-white/10 [@media(hover:hover)]:group-hover:text-pink transition-colors duration-500 mb-4 leading-none">
                 {step.number}
               </span>
               <h3 className="text-lg font-bold text-white mb-3">{step.heading}</h3>

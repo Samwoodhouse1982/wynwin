@@ -4,17 +4,28 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { SERVICES } from '@/lib/constants';
 
+// Sections this bar indexes, in the order they appear on the page. The
+// regulated-markets block sits above the pillars and is the page's most
+// differentiated content, so it leads.
+const NAV_ITEMS = [
+  { id: 'regulated', title: 'Regulated markets' },
+  ...SERVICES.pillars.map((p) => ({ id: p.id, title: p.title as string })),
+];
+
 export default function ServicesNav() {
-  const [activeId, setActiveId] = useState<string>(SERVICES.pillars[0].id);
+  // Empty until a section heading has actually scrolled past the offset. It
+  // used to default to the first pillar, so the bar claimed you were reading
+  // Strategy while you were still on the intro.
+  const [activeId, setActiveId] = useState<string>('');
   const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const ids = SERVICES.pillars.map((p) => p.id);
+    const ids = NAV_ITEMS.map((item) => item.id);
 
     const handleScroll = () => {
       // Offset accounts for the main nav + ServicesNav sticky bar heights
       const offset = 150;
-      let current = ids[0];
+      let current = '';
       for (const id of ids) {
         const el = document.getElementById(id);
         if (el && el.getBoundingClientRect().top <= offset) {
@@ -45,7 +56,7 @@ export default function ServicesNav() {
           ref={navRef}
           className="flex gap-6 overflow-x-auto py-3 text-sm font-medium whitespace-nowrap scrollbar-none"
         >
-          {SERVICES.pillars.map((pillar) => {
+          {NAV_ITEMS.map((pillar) => {
             const isActive = activeId === pillar.id;
             return (
               <Link

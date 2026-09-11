@@ -74,7 +74,7 @@ export default function HomePageClient() {
             page so sections stay distinguishable in dark mode. */}
         <section className="bg-white dark:bg-navy-light py-20 lg:py-28">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="max-w-3xl">
+            <div className="max-w-2xl">
               <Reveal stagger>
                 <RevealItem>
                   <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-4">
@@ -141,7 +141,7 @@ export default function HomePageClient() {
                 </RevealItem>
               </Reveal>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
               {HOME.servicesPreview.map((service, i) => (
                 <ServiceCard
                   key={service.title}
@@ -153,6 +153,19 @@ export default function HomePageClient() {
               ))}
             </div>
 
+            {/* The specialism is the sharpest differentiator on the site and
+                previously had nothing pointing at it from anywhere. */}
+            <Reveal>
+              <p className="mt-10 text-white/60 text-sm">
+                Working in a regulated market?{' '}
+                <Link
+                  href="/what-we-do#regulated"
+                  className="text-pink font-semibold hover:underline"
+                >
+                  See how we handle MHRA, FDA and EU MDR →
+                </Link>
+              </p>
+            </Reveal>
           </div>
         </section>
 

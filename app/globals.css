@@ -44,9 +44,17 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Syne on all headings automatically */
-h1, h2, h3, h4, h5, h6 {
+/* Unbounded (the display face) is scoped to h1 and h2, plus the 01–05 numerals
+   which opt in with `font-display`. It is a very wide face: at the 14–18px of a
+   card title it wrapped to two or three shouting lines, which read as loud and
+   crowded on the services pages — the opposite of the calm the copy promises.
+   h3 and below use the body face at semibold instead. */
+h1, h2 {
   font-family: var(--font-display);
+}
+
+h3, h4, h5, h6 {
+  font-family: var(--font-body);
 }
 
 /* Custom scrollbar */

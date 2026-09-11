@@ -54,8 +54,10 @@ export default function HowWeHelp() {
               <motion.div
                 key={i}
                 variants={card}
-                whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className="bg-white dark:bg-white/5 border border-navy/8 dark:border-white/10 hover:border-pink/40 rounded-2xl p-8 transition-colors duration-300 cursor-default"
+                // No lift: these cards are not clickable, and a card that rises
+                // under the cursor promises an affordance the page does not have.
+                // They warm their border and fill instead.
+                className="bg-white dark:bg-white/5 border border-navy/8 dark:border-white/10 hover:border-pink/40 hover:bg-cream dark:hover:bg-white/10 rounded-2xl p-8 transition-colors duration-300 cursor-default"
               >
                 <motion.div
                   className="mb-5"

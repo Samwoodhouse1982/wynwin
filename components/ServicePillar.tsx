@@ -77,7 +77,7 @@ export default function ServicePillar({ id, title, services, index }: ServicePil
             <motion.div
               key={service.name}
               variants={cardVariants}
-              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              // Inert card — tint only, no transform (see HowWeHelp).
               className="bg-navy/5 dark:bg-white/5 hover:bg-navy/10 dark:hover:bg-white/10 rounded-2xl p-7 transition-colors duration-200 cursor-default"
             >
               <div className="flex items-start gap-3">

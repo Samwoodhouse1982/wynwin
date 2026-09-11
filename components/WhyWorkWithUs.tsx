@@ -57,7 +57,8 @@ export default function WhyWorkWithUs({ background = 'white' }: Props) {
             <motion.div
               key={item.number}
               variants={pillar}
-              whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+              // Was the only section that scaled on hover while its neighbours
+              // lifted; it is not clickable either, so it now does neither.
               className="group"
             >
               {/* Animated top line */}
@@ -72,7 +73,7 @@ export default function WhyWorkWithUs({ background = 'white' }: Props) {
               </div>
 
               <motion.span
-                className="block text-6xl font-bold text-pink/20 group-hover:text-pink/50 transition-colors duration-500 mb-4 leading-none"
+                className="block text-6xl font-display font-bold text-pink/50 [@media(hover:hover)]:text-pink/20 [@media(hover:hover)]:group-hover:text-pink/50 transition-colors duration-500 mb-4 leading-none"
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}

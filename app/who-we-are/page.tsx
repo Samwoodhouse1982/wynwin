@@ -28,7 +28,11 @@ const highlights = [
   { stat: 'Start-ups to enterprise', label: 'We\'ve worked with businesses of every size' },
   { stat: 'Rapid response', label: 'We move fast. No committee, no delays.' },
   { stat: 'Global reach', label: 'We\'ve delivered for clients and campaigns across the world' },
-  { stat: 'Regulated markets', label: 'Experienced working within highly regulated industries where precision and compliance matter' },
+  {
+    stat: 'Regulated markets',
+    label: 'Experienced working within highly regulated industries where precision and compliance matter',
+    href: '/what-we-do#regulated',
+  },
   { stat: 'Trusted network', label: 'Broad supplier relationships built over years' },
   { stat: 'Flexible billing', label: 'Invoicing to suit your project or budget' },
 ];
@@ -42,7 +46,7 @@ export default function WhoWeArePage() {
       <section className="bg-white dark:bg-navy-light py-20 lg:py-28">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           {/* Full-width copy + CTA */}
-          <div className="max-w-3xl mb-16 lg:mb-20">
+          <div className="max-w-2xl mb-16 lg:mb-20">
             <Reveal stagger>
               {ABOUT.body.map((para, i) => (
                 <RevealItem key={i}>
@@ -70,10 +74,23 @@ export default function WhoWeArePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {highlights.map((item, i) => (
                 <RevealItem key={item.stat} direction={i % 3 === 0 ? 'left' : i % 3 === 2 ? 'right' : 'up'}>
-                  <div className="bg-white dark:bg-white/5 border border-navy/10 dark:border-white/10 hover:border-pink/40 rounded-2xl p-6 space-y-2 h-full shadow-sm hover:shadow-md transition-all duration-300">
-                    <p className="text-lg font-bold text-navy dark:text-white leading-snug">{item.stat}</p>
-                    <p className="text-sm text-navy/65 dark:text-white/65">{item.label}</p>
-                  </div>
+                  {/* Cream in light mode so the cards read as objects against
+                      the white section rather than floating on their own shadow. */}
+                  {item.href ? (
+                    <Link
+                      href={item.href}
+                      className="block bg-cream dark:bg-white/5 border border-navy/10 dark:border-white/10 hover:border-pink/40 rounded-2xl p-6 space-y-2 h-full shadow-sm hover:shadow-md hover:-translate-y-1 active:scale-[0.99] transition-all duration-200"
+                    >
+                      <p className="text-lg font-bold text-navy dark:text-white leading-snug">{item.stat}</p>
+                      <p className="text-sm text-navy/65 dark:text-white/65">{item.label}</p>
+                      <p className="text-sm font-semibold text-pink pt-1">See how we handle it →</p>
+                    </Link>
+                  ) : (
+                    <div className="bg-cream dark:bg-white/5 border border-navy/10 dark:border-white/10 rounded-2xl p-6 space-y-2 h-full shadow-sm transition-colors duration-200">
+                      <p className="text-lg font-bold text-navy dark:text-white leading-snug">{item.stat}</p>
+                      <p className="text-sm text-navy/65 dark:text-white/65">{item.label}</p>
+                    </div>
+                  )}
                 </RevealItem>
               ))}
             </div>

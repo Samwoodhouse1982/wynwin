@@ -84,30 +84,32 @@ export const HOME = {
       body: 'Last-minute request? Ongoing programme? We flex to fit. Expert support, zero overhead, no long-term commitment required.',
     },
   ],
+  // Five cards across leaves roughly 160px of text width each, so these are
+  // kept to a dozen words. The full list lives on What We Do.
   servicesPreview: [
     {
       title: 'Strategy and intelligence',
-      body: 'Go-to-market planning, market research, competitive intelligence, sales enablement, ABM, product marketing, regulated device marketing, and health economic analysis.',
+      body: 'Go-to-market planning, market and competitor research, sales enablement, regulated device marketing.',
       href: '/what-we-do#strategy',
     },
     {
       title: 'Brand and creative',
-      body: 'Brand management, content development, PR and media relations, thought leadership, influencer and partnership acquisition, client success stories, and website development.',
+      body: 'Brand management, content, PR and media relations, thought leadership, websites.',
       href: '/what-we-do#brand',
     },
     {
       title: 'Projects and campaigns',
-      body: 'Campaign planning and execution, email marketing, SEO, content and social, paid media, events, product launches, internal comms, and performance reporting.',
+      body: 'Campaign planning and execution, email, SEO, paid media, events, product launches.',
       href: '/what-we-do#projects',
     },
     {
       title: 'Operations and management',
-      body: 'Asset handling, workspace organisation, mailing fulfilment, distribution, martech deployment, and marketing data compliance.',
+      body: 'Asset handling, mailing fulfilment, martech deployment, marketing data compliance.',
       href: '/what-we-do#operations',
     },
     {
       title: 'Logistics and procurement',
-      body: 'Venue booking, print and materials, branded merch, storage, delivery, advance purchasing, and asset lifecycle management.',
+      body: 'Venue booking, print and materials, branded merch, storage and delivery.',
       href: '/what-we-do#logistics',
     },
   ],
