@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
 import { Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { BRAND } from '@/lib/constants';
+import { ENQUIRY_TOPIC_EVENT } from '@/lib/enquiry';
 
 // Sending an enquiry is the one conversion on the site; it used to resolve with
 // a hard cut to two lines of text. Shared by both forms so the moment reads the
@@ -245,12 +246,28 @@ export function SimpleContactForm() {
 
 export function FullContactForm({ onDark = false }: { onDark?: boolean }) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  // Set when the visitor arrives from a service pillar's button, so the enquiry
+  // that lands in the inbox says which service prompted it.
+  const [topic, setTopic] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<FullValues>({ resolver: zodResolver(fullSchema) });
+
+  useEffect(() => {
+    const onTopic = (event: Event) => {
+      const next = (event as CustomEvent<string>).detail;
+      if (!next) return;
+      setTopic(next);
+      // Start the message for them rather than handing over a blank box.
+      setValue('message', `I need help with ${next.toLowerCase()} — `);
+    };
+    window.addEventListener(ENQUIRY_TOPIC_EVENT, onTopic);
+    return () => window.removeEventListener(ENQUIRY_TOPIC_EVENT, onTopic);
+  }, [setValue]);
 
   const fieldBg = onDark
     ? 'bg-white/10 border-white/20 text-white placeholder:text-white/40 focus:border-pink focus:ring-pink/30'
@@ -264,11 +281,12 @@ export function FullContactForm({ onDark = false }: { onDark?: boolean }) {
     setStatus('loading');
     try {
       const fields: Record<string, string> = {
-        subject: `New enquiry from ${data.name}${data.company ? ` (${data.company})` : ''}`,
+        subject: `New enquiry${topic ? `: ${topic}` : ''} from ${data.name}${data.company ? ` (${data.company})` : ''}`,
         from_name: data.name || 'WYNWIN website',
         name: data.name,
         email: data.email,
       };
+      if (topic) fields.topic = topic;
       if (data.jobTitle) fields.job_title = data.jobTitle;
       fields.company = data.company;
       fields.message = data.message;

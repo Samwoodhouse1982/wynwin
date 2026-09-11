@@ -30,24 +30,57 @@ export const metadata: Metadata = {
 export default function WhatWeDoPage() {
   return (
     <>
+      {/* The eyebrow carries the label, the H1 carries a message. Both used to
+          say 'what we do', and the one genuinely informative sentence on the
+          page sat below in a 14px bordered note. */}
       <PageHero
-        eyebrow="Our services"
-        headline="What We Do"
-        subline="Whatever you need. Whenever it's needed."
+        eyebrow="What we do"
+        headline="Marketing execution, end to end."
+        subline={SERVICES.intro}
       />
 
-      <ServicesNav />
-
-      {/* Breadth reassurance */}
-      <div className="bg-white dark:bg-navy border-b border-navy/8 dark:border-white/10">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
-          <p className="text-navy/60 dark:text-white/55 text-sm leading-relaxed max-w-2xl border-l-2 border-pink/50 pl-4">
-            {SERVICES.intro}
-          </p>
+      {/* Scenario entry points. Most visitors recognise their own situation
+          faster than they recognise a service category. */}
+      <section className="bg-white dark:bg-navy py-14 lg:py-20 dark:border-t dark:border-white/10">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <Reveal stagger>
+            <RevealItem>
+              <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-6">
+                Sound familiar?
+              </p>
+            </RevealItem>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {SERVICES.scenarios.map((scenario) => (
+                <RevealItem key={scenario.href}>
+                  <Link
+                    href={scenario.href}
+                    className="group flex h-full flex-col justify-between gap-5 rounded-2xl border border-navy/10 dark:border-white/10 hover:border-pink/50 bg-cream dark:bg-white/5 p-6 active:scale-[0.99] transition-all duration-200"
+                  >
+                    <p className="text-navy dark:text-white font-semibold leading-snug">
+                      {scenario.text}
+                    </p>
+                    <span className="inline-flex items-center gap-2 text-pink font-semibold text-sm">
+                      Start here
+                      <ArrowRight
+                        size={14}
+                        aria-hidden
+                        className="transition-transform duration-200 group-hover:translate-x-1"
+                      />
+                    </span>
+                  </Link>
+                </RevealItem>
+              ))}
+            </div>
+          </Reveal>
         </div>
-      </div>
+      </section>
 
       <ServicesOverview />
+
+      {/* The sticky index sits directly above the sections it indexes. It used
+          to appear three sections higher, tracking headings the visitor had
+          not reached yet. */}
+      <ServicesNav />
 
       {/* Regulated markets. This is the one capability a generic marketing
           freelancer cannot claim, so it gets full section scale, an anchor, a

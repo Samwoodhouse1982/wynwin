@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { motion, type Variants } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { SERVICE_ICON_MAP } from '@/components/ServiceSectionIcons';
+import { setEnquiryTopic } from '@/lib/enquiry';
 
 interface Service {
   name: string;
@@ -96,14 +97,23 @@ export default function ServicePillar({ id, title, services, index }: ServicePil
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="mt-10 flex items-center justify-between border-t border-navy/10 dark:border-white/10 pt-8"
+          className="mt-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-navy/10 dark:border-white/10 pt-8"
         >
           <p className="text-navy/50 dark:text-white/70 text-sm">Need help with {title.toLowerCase()}?</p>
+          {/* Points at the form already further down this page rather than
+              sending the visitor somewhere else to meet the same five fields,
+              and carries the pillar through so they need not re-explain it. */}
           <Link
-            href="/get-in-touch"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-pink text-white font-semibold text-sm rounded-full hover:bg-pink-dark transition-colors duration-200"
+            href="#contact"
+            onClick={() => setEnquiryTopic(title)}
+            className="group inline-flex items-center justify-center gap-2 w-full sm:w-auto min-h-11 px-5 py-2.5 bg-pink text-white font-semibold text-sm rounded-full hover:bg-pink-dark active:scale-[0.97] transition-all duration-200"
           >
-            Get in touch <ArrowRight size={14} />
+            Ask about {title.toLowerCase()}
+            <ArrowRight
+              size={14}
+              aria-hidden
+              className="transition-transform duration-200 group-hover:translate-x-1"
+            />
           </Link>
         </motion.div>
       </div>

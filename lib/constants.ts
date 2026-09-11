@@ -121,6 +121,14 @@ export const HOME = {
 
 export const SERVICES = {
   intro: 'Our range reflects two things: hands-on marketing expertise built across disciplines over 18 years, and a trusted network of specialist suppliers we call on when a brief needs it. Whatever we take on, we own end to end. Delivered on time and on budget.',
+  // Entry points for a visitor who recognises their own situation faster than
+  // they recognise a service category. Each drops them at the right section.
+  scenarios: [
+    { text: 'A launch is coming and the team is flat out', href: '#projects' },
+    { text: 'An exhibition needs running end to end', href: '#logistics' },
+    { text: 'A regulated product needs claims-safe marketing', href: '#regulated' },
+    { text: 'You need senior cover for a few days a month', href: '#operations' },
+  ],
   pillars: [
     {
       id: 'strategy',
