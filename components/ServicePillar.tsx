@@ -1,8 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { motion, type Variants } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 import { SERVICE_ICON_MAP } from '@/components/ServiceSectionIcons';
 import { setEnquiryTopic } from '@/lib/enquiry';
 import { DUR, EASE_OUT, STAGGER } from '@/lib/motion';
@@ -31,6 +32,18 @@ const cardContainer: Variants = {
 
 export default function ServicePillar({ id, title, services, index }: ServicePillarProps) {
   const isEven = index % 2 === 0;
+
+  // On a phone this page ran well past 8,000px, with every service name buried
+  // under its own paragraph. The names stay visible and scannable; the detail
+  // opens on tap. Above sm the detail is always shown and the toggle is gone.
+  const [open, setOpen] = useState<Set<string>>(new Set());
+  const toggle = (name: string) =>
+    setOpen((prev) => {
+      const next = new Set(prev);
+      if (next.has(name)) next.delete(name);
+      else next.add(name);
+      return next;
+    });
 
   return (
     <section
@@ -75,22 +88,55 @@ export default function ServicePillar({ id, title, services, index }: ServicePil
           whileInView="show"
           viewport={{ once: true, margin: '-40px' }}
         >
-          {services.map((service) => (
-            <motion.div
-              key={service.name}
-              variants={cardVariants}
-              // Inert card — tint only, no transform (see HowWeHelp).
-              className="bg-navy/5 dark:bg-white/5 hover:bg-navy/10 dark:hover:bg-white/10 rounded-2xl p-7 transition-colors duration-200 cursor-default"
-            >
-              <div className="flex items-start gap-3">
-                <div className="mt-[9px] w-1.5 h-1.5 rounded-full bg-navy/30 dark:bg-white/30 flex-shrink-0" />
-                <div>
-                  <h3 className="font-bold text-navy dark:text-white mb-2 leading-snug">{service.name}</h3>
-                  <p className="text-navy/60 dark:text-white/70 text-sm leading-relaxed">{service.detail}</p>
+          {services.map((service, i) => {
+            const detailId = `${id}-service-${i}`;
+            const isOpen = open.has(service.name);
+            return (
+              <motion.div
+                key={service.name}
+                variants={cardVariants}
+                // Inert card — tint only, no transform (see HowWeHelp).
+                className="bg-navy/5 dark:bg-white/5 hover:bg-navy/10 dark:hover:bg-white/10 rounded-2xl p-5 sm:p-7 transition-colors duration-200"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="mt-[9px] w-1.5 h-1.5 rounded-full bg-navy/30 dark:bg-white/30 flex-shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start gap-2">
+                      <h3 className="font-bold text-navy dark:text-white leading-snug flex-1">
+                        {service.name}
+                      </h3>
+                      {/* Phones only. `sm:hidden` is display:none, which also
+                          takes the control out of the accessibility tree, so
+                          aria-expanded can never contradict a detail that is
+                          permanently visible on wider screens. */}
+                      <button
+                        type="button"
+                        onClick={() => toggle(service.name)}
+                        aria-expanded={isOpen}
+                        aria-controls={detailId}
+                        aria-label={`${isOpen ? 'Hide' : 'Show'} details for ${service.name}`}
+                        className="sm:hidden -mt-2 -mr-2 w-11 h-11 flex items-center justify-center text-navy/50 dark:text-white/50 shrink-0"
+                      >
+                        <ChevronDown
+                          size={18}
+                          aria-hidden
+                          className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+                        />
+                      </button>
+                    </div>
+                    <p
+                      id={detailId}
+                      className={`text-navy/60 dark:text-white/70 text-sm leading-relaxed mt-2 ${
+                        isOpen ? 'block' : 'hidden'
+                      } sm:block`}
+                    >
+                      {service.detail}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </motion.div>
         {/* Per-pillar CTA */}
         <motion.div
