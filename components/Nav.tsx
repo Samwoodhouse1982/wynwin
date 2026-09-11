@@ -55,6 +55,16 @@ export default function Nav() {
     return () => window.removeEventListener('keydown', onKey);
   }, [open]);
 
+  // Stop the page scrolling behind the open drawer.
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [open]);
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -138,6 +148,24 @@ export default function Nav() {
       </nav>
 
       {/* Mobile drawer */}
+      <AnimatePresence>
+        {open && (
+          <motion.button
+            key="mobile-scrim"
+            type="button"
+            aria-label="Close menu"
+            onClick={() => setOpen(false)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            // The drawer was a dropdown over a page that stayed live behind it,
+            // and tapping outside did nothing.
+            className="md:hidden fixed inset-0 top-16 z-40 bg-navy/60 backdrop-blur-[2px] cursor-default"
+          />
+        )}
+      </AnimatePresence>
+
       <AnimatePresence>
         {open && (
           <motion.div

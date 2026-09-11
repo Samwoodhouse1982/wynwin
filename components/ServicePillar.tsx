@@ -46,7 +46,7 @@ export default function ServicePillar({ id, title, services, index }: ServicePil
           transition={{ duration: DUR.base, ease: EASE_OUT }}
           className="mb-12"
         >
-          <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-3">
+          <p className="text-navy/40 dark:text-white/40 font-display font-bold text-sm tracking-widest mb-3">
             0{index + 1}
           </p>
           <div className="flex items-center gap-4">
@@ -83,7 +83,7 @@ export default function ServicePillar({ id, title, services, index }: ServicePil
               className="bg-navy/5 dark:bg-white/5 hover:bg-navy/10 dark:hover:bg-white/10 rounded-2xl p-7 transition-colors duration-200 cursor-default"
             >
               <div className="flex items-start gap-3">
-                <div className="mt-[9px] w-1.5 h-1.5 rounded-full bg-pink flex-shrink-0" />
+                <div className="mt-[9px] w-1.5 h-1.5 rounded-full bg-navy/30 dark:bg-white/30 flex-shrink-0" />
                 <div>
                   <h3 className="font-bold text-navy dark:text-white mb-2 leading-snug">{service.name}</h3>
                   <p className="text-navy/60 dark:text-white/70 text-sm leading-relaxed">{service.detail}</p>

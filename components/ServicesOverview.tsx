@@ -22,7 +22,7 @@ export default function ServicesOverview() {
     <section className="bg-cream dark:bg-navy-light border-b border-navy/8 dark:border-white/10 py-12 lg:py-16">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.p
-          className="text-pink font-semibold text-xs uppercase tracking-widest mb-6"
+          className="text-navy/50 dark:text-white/50 font-semibold text-sm uppercase tracking-widest flex items-center gap-2 mb-6"
           initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

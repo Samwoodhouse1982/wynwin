@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, type Variants } from 'framer-motion';
-import { DiamondAccent } from '@/components/DiamondGraphic';
+import { SlashMark } from '@/components/SlashMark';
 import { BottleneckIcon, TeamIcon, SpeedIcon } from '@/components/HowWeHelpIcons';
 import { HOME } from '@/lib/constants';
 import { DUR, EASE_OUT, STAGGER } from '@/lib/motion';
@@ -24,7 +24,7 @@ const card: Variants = {
 
 export default function HowWeHelp() {
   return (
-    <section className="bg-cream dark:bg-navy py-20 lg:py-28">
+    <section className="bg-cream dark:bg-navy py-14 sm:py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -33,8 +33,8 @@ export default function HowWeHelp() {
           transition={{ duration: DUR.base, ease: EASE_OUT }}
           className="mb-12 space-y-3"
         >
-          <p className="text-pink font-semibold text-sm uppercase tracking-widest flex items-center gap-2">
-            <DiamondAccent speed={12} />
+          <p className="text-navy/50 dark:text-white/50 font-semibold text-sm uppercase tracking-widest flex items-center gap-2">
+            <SlashMark />
             How we help
           </p>
           <h2 className="text-3xl md:text-4xl font-bold text-navy dark:text-white max-w-xl">

@@ -9,6 +9,7 @@ import HowWeWork from '@/components/HowWeWork';
 import Reveal, { RevealItem } from '@/components/Reveal';
 import { FullContactForm } from '@/components/ContactForm';
 import { SERVICES, REGULATED_MARKETS, META } from '@/lib/constants';
+import { SlashMark } from '@/components/SlashMark';
 
 export const metadata: Metadata = {
   title: META.whatWeDo.title,
@@ -45,7 +46,8 @@ export default function WhatWeDoPage() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <Reveal stagger>
             <RevealItem>
-              <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-6">
+              <p className="text-navy/50 dark:text-white/50 font-semibold text-sm uppercase tracking-widest flex items-center gap-2 mb-6">
+                <SlashMark />
                 Sound familiar?
               </p>
             </RevealItem>
@@ -88,12 +90,13 @@ export default function WhatWeDoPage() {
           on the page with nothing linking to it and nothing to do at the end. */}
       <section
         id="regulated"
-        className="bg-white dark:bg-navy border-y border-navy/10 dark:border-white/10 py-20 lg:py-28 scroll-mt-36"
+        className="bg-white dark:bg-navy border-y border-navy/10 dark:border-white/10 py-14 sm:py-20 lg:py-28 scroll-mt-36"
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <Reveal stagger>
             <RevealItem>
-              <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-4">
+              <p className="text-navy/50 dark:text-white/50 font-semibold text-sm uppercase tracking-widest flex items-center gap-2 mb-4">
+                <SlashMark />
                 {REGULATED_MARKETS.eyebrow}
               </p>
             </RevealItem>
@@ -161,11 +164,12 @@ export default function WhatWeDoPage() {
 
       {/* Contact CTA — id lets the per-pillar CTAs point here instead of
           sending the visitor to another page with the same form on it. */}
-      <section id="contact" className="bg-navy py-20 lg:py-28 scroll-mt-36 border-t border-white/10">
+      <section id="contact" className="bg-navy py-14 sm:py-20 lg:py-28 scroll-mt-36 border-t border-white/10">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
             <Reveal direction="left">
-              <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-4">
+              <p className="text-white/50 font-semibold text-sm uppercase tracking-widest flex items-center gap-2 mb-4">
+                <SlashMark />
                 Contact us
               </p>
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">

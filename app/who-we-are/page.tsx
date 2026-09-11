@@ -6,6 +6,7 @@ import HowWeWork from '@/components/HowWeWork';
 import PreFooterCta from '@/components/PreFooterCta';
 import Reveal, { RevealItem } from '@/components/Reveal';
 import { ABOUT, CTA, META } from '@/lib/constants';
+import { SlashMark } from '@/components/SlashMark';
 
 export const metadata: Metadata = {
   title: META.whoWeAre.title,
@@ -43,7 +44,7 @@ export default function WhoWeArePage() {
       <PageHero eyebrow="About us" headline={ABOUT.headline} />
 
       {/* About copy */}
-      <section className="bg-white dark:bg-navy-light py-20 lg:py-28">
+      <section className="bg-white dark:bg-navy-light py-14 sm:py-20 lg:py-28">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           {/* Full-width copy + CTA */}
           <div className="max-w-2xl mb-16 lg:mb-20">
@@ -99,7 +100,7 @@ export default function WhoWeArePage() {
       </section>
 
       {/* Founder */}
-      <section className="bg-cream dark:bg-navy py-16 lg:py-20">
+      <section className="bg-cream dark:bg-navy py-12 sm:py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <Reveal direction="up">
             <div className="flex flex-col sm:flex-row sm:items-center gap-8">
@@ -111,7 +112,7 @@ export default function WhoWeArePage() {
                 className="rounded-full object-cover w-24 h-24 shrink-0 grayscale"
               />
               <div>
-                <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-3">Founder</p>
+                <p className="text-navy/50 dark:text-white/50 font-semibold text-sm uppercase tracking-widest flex items-center gap-2 mb-3"><SlashMark />Founder</p>
                 <h2 className="text-2xl font-bold text-navy dark:text-white mb-1">Sam Woodhouse</h2>
                 <p className="text-navy/60 dark:text-white/60 text-base mb-4">MD and Founder, WYN WIN</p>
                 <p className="text-navy/70 dark:text-white/70 text-base leading-relaxed mb-6 max-w-xl">

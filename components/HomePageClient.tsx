@@ -10,6 +10,7 @@ import TestimonialsSection from '@/components/TestimonialsSection';
 import { SimpleContactForm } from '@/components/ContactForm';
 import Reveal, { RevealItem } from '@/components/Reveal';
 import EntranceAnimation from '@/components/EntranceAnimation';
+import { SlashMark } from '@/components/SlashMark';
 import { BRAND, CTA, HOME } from '@/lib/constants';
 import {
   ENTRANCE_DONE_EVENT,
@@ -73,12 +74,13 @@ export default function HomePageClient() {
 
         {/* Value Proposition. Dark bands alternate navy / navy-light down the
             page so sections stay distinguishable in dark mode. */}
-        <section className="bg-white dark:bg-navy-light py-20 lg:py-28">
+        <section className="bg-white dark:bg-navy-light py-14 sm:py-20 lg:py-28">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="max-w-2xl">
               <Reveal stagger>
                 <RevealItem>
-                  <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-4">
+                  <p className="text-navy/50 dark:text-white/50 font-semibold text-sm uppercase tracking-widest flex items-center gap-2 mb-4">
+                    <SlashMark />
                     Our value
                   </p>
                 </RevealItem>
@@ -118,12 +120,13 @@ export default function HomePageClient() {
         <WhyWorkWithUs background="white" />
 
         {/* Services Preview */}
-        <section className="bg-navy py-20 lg:py-28 relative overflow-hidden">
+        <section className="bg-navy py-14 sm:py-20 lg:py-28 relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="mb-12">
               <Reveal stagger>
                 <RevealItem>
-                  <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-4">
+                  <p className="text-white/50 font-semibold text-sm uppercase tracking-widest flex items-center gap-2 mb-4">
+                    <SlashMark />
                     What we do
                   </p>
                 </RevealItem>
@@ -175,11 +178,12 @@ export default function HomePageClient() {
         {/* Inline contact form — the page's single closing ask. The pink
             PreFooterCta band used to sit directly beneath this with the same
             headline; it now runs only on pages that have no inline form. */}
-        <section className="bg-white dark:bg-navy py-20 lg:py-28 dark:border-t dark:border-white/10">
+        <section className="bg-white dark:bg-navy py-14 sm:py-20 lg:py-28 dark:border-t dark:border-white/10">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
               <Reveal direction="left">
-                <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-4">
+                <p className="text-navy/50 dark:text-white/50 font-semibold text-sm uppercase tracking-widest flex items-center gap-2 mb-4">
+                  <SlashMark />
                   Get in touch
                 </p>
                 <h2 className="text-3xl md:text-4xl font-bold text-navy dark:text-white mb-4">

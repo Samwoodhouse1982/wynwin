@@ -18,7 +18,7 @@ export default function PreFooterCta() {
           backgroundSize: '18px 18px',
         }}
       />
-<div className="relative max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-20">
+<div className="relative max-w-7xl mx-auto px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
           <motion.div
             initial={{ opacity: 0, x: -24 }}

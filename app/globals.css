@@ -57,6 +57,16 @@ h3, h4, h5, h6 {
   font-family: var(--font-body);
 }
 
+/* Used by the sticky services sub-nav, which scrolls horizontally on phones.
+   The class was already applied there but had never been defined. */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
 /* Custom scrollbar */
 html {
   scrollbar-color: #E8006A transparent; /* Firefox: thumb + track */

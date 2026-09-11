@@ -36,7 +36,7 @@ export default function Footer() {
 
           {/* Contact — the two fastest routes are buttons, not list items */}
           <div className="space-y-4">
-            <h3 className="text-sm font-semibold uppercase tracking-widest text-pink">
+            <h3 className="text-sm font-semibold uppercase tracking-widest text-white/50">
               Contact
             </h3>
             <div className="flex flex-col gap-2 items-start">
@@ -79,7 +79,7 @@ export default function Footer() {
 
           {/* Services — deep links the header cannot offer */}
           <div className="space-y-4">
-            <h3 className="text-sm font-semibold uppercase tracking-widest text-pink">
+            <h3 className="text-sm font-semibold uppercase tracking-widest text-white/50">
               Services
             </h3>
             <ul>
@@ -106,7 +106,7 @@ export default function Footer() {
 
           {/* Company */}
           <div className="space-y-4">
-            <h3 className="text-sm font-semibold uppercase tracking-widest text-pink">
+            <h3 className="text-sm font-semibold uppercase tracking-widest text-white/50">
               Company
             </h3>
             <ul>

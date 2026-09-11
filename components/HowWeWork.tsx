@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, type Variants } from 'framer-motion';
-import { DiamondAccent } from '@/components/DiamondGraphic';
+import { SlashMark } from '@/components/SlashMark';
 import { DUR, EASE_OUT, STAGGER } from '@/lib/motion';
 
 const steps = [
@@ -34,7 +34,7 @@ const item: Variants = {
 
 export default function HowWeWork() {
   return (
-    <section className="bg-navy py-20 lg:py-28 border-t border-white/10">
+    <section className="bg-navy py-14 sm:py-20 lg:py-28 border-t border-white/10">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -43,8 +43,8 @@ export default function HowWeWork() {
           transition={{ duration: DUR.base, ease: EASE_OUT }}
           className="space-y-4 mb-14"
         >
-          <p className="text-pink font-semibold text-sm uppercase tracking-widest flex items-center gap-2">
-            <DiamondAccent />
+          <p className="text-white/50 font-semibold text-sm uppercase tracking-widest flex items-center gap-2">
+            <SlashMark />
             How we work
           </p>
           <h2 className="text-3xl md:text-4xl font-bold text-white max-w-lg">

@@ -23,7 +23,7 @@ interface PageHeroProps {
 
 export default function PageHero({ eyebrow, headline, subline, dark = true }: PageHeroProps) {
   return (
-    <section className={`${dark ? 'bg-navy' : 'bg-cream dark:bg-navy-light'} py-20 lg:py-28 overflow-hidden relative`}>
+    <section className={`${dark ? 'bg-navy' : 'bg-cream dark:bg-navy-light'} py-14 sm:py-20 lg:py-28 overflow-hidden relative`}>
       {/* Angled grid */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ opacity: dark ? 0.04 : 0.06 }}>
         <motion.div

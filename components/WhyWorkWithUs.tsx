@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { motion, type Variants } from 'framer-motion';
-import { DiamondAccent } from '@/components/DiamondGraphic';
+import { SlashMark } from '@/components/SlashMark';
 import { CTA, HOME } from '@/lib/constants';
 import { DUR, EASE_OUT, STAGGER } from '@/lib/motion';
 
@@ -29,7 +29,7 @@ export default function WhyWorkWithUs({ background = 'white' }: Props) {
     : 'bg-white dark:bg-navy-light text-navy dark:text-white';
 
   return (
-    <section className={`${bgClass} py-20 lg:py-28`}>
+    <section className={`${bgClass} py-14 sm:py-20 lg:py-28`}>
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -38,8 +38,12 @@ export default function WhyWorkWithUs({ background = 'white' }: Props) {
           transition={{ duration: DUR.base, ease: EASE_OUT }}
           className="space-y-4 mb-14"
         >
-          <p className="text-pink font-semibold text-sm uppercase tracking-widest flex items-center gap-2">
-            <DiamondAccent />
+          <p
+            className={`font-semibold text-sm uppercase tracking-widest flex items-center gap-2 ${
+              isDark ? 'text-white/50' : 'text-navy/50 dark:text-white/50'
+            }`}
+          >
+            <SlashMark />
             Why work with us
           </p>
           <h2 className="text-3xl md:text-4xl font-bold max-w-lg">

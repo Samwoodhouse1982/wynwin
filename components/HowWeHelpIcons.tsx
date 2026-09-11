@@ -26,7 +26,7 @@ export function BottleneckIcon() {
       {/* Central node — pulses */}
       <motion.circle
         cx={24} cy={24} r={5}
-        fill="#00C896"
+        fill="currentColor"
         animate={{ scale: [1, 1.25, 1] }}
         transition={{ duration: 1.8, repeat: Infinity }}
       />
@@ -74,7 +74,7 @@ export function TeamIcon() {
       {/* Overlap indicator — pulses mint when circles are joined */}
       <motion.circle
         cx={24} cy={24} r={5}
-        fill="#00C896"
+        fill="currentColor"
         animate={{
           opacity: [0, 0, 0.85, 0.85, 0],
           scale:   [0.4, 0.4, 1.1,  1.0,  0.4],
@@ -100,7 +100,7 @@ export function SpeedIcon() {
       {/* Animated arc sweeps round */}
       <motion.circle
         cx={24} cy={24} r={18}
-        stroke="#00C896" strokeWidth={2.5} strokeLinecap="round"
+        stroke="currentColor" strokeWidth={2.5} strokeLinecap="round"
         fill="none"
         animate={{ pathLength: [0, 1, 1, 0] }}
         transition={{ duration: 2.2, repeat: Infinity, times: [0, 0.45, 0.75, 1] }}
