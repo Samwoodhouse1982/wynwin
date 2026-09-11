@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { BRAND } from '@/lib/constants';
+import { trackEvent } from '@/lib/analytics';
 
 // ── Web3Forms submission ───────────────────────────────────
 // Submissions go straight from the browser to Web3Forms (no backend). The
@@ -191,7 +192,18 @@ export function SimpleContactForm() {
 
 // ── Full Form (What We Do + Get In Touch) ──────────────────
 
-export function FullContactForm({ onDark = false }: { onDark?: boolean }) {
+export function FullContactForm({
+  onDark = false,
+  source,
+  messagePlaceholder,
+}: {
+  onDark?: boolean;
+  // Tags the enquiry with the page it came from (e.g. 'roi-calculators') so
+  // submissions can be identified in the inbox. Web3Forms passes any extra
+  // field straight through to the notification email.
+  source?: string;
+  messagePlaceholder?: string;
+}) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const {
     register,
@@ -212,7 +224,9 @@ export function FullContactForm({ onDark = false }: { onDark?: boolean }) {
     setStatus('loading');
     try {
       const fields: Record<string, string> = {
-        subject: `New enquiry from ${data.name}${data.company ? ` (${data.company})` : ''}`,
+        subject: `New enquiry from ${data.name}${data.company ? ` (${data.company})` : ''}${
+          source ? ` [${source}]` : ''
+        }`,
         from_name: data.name || 'WYNWIN website',
         name: data.name,
         email: data.email,
@@ -221,7 +235,9 @@ export function FullContactForm({ onDark = false }: { onDark?: boolean }) {
       fields.company = data.company;
       fields.message = data.message;
       fields.consent = data.consent ? 'Yes — accepted the Privacy Policy' : 'Not given';
+      if (source) fields.source = source;
       await sendToWeb3Forms(fields);
+      trackEvent('form_submission', source ? { source } : undefined);
       setStatus('success');
       reset();
     } catch {
@@ -272,7 +288,7 @@ export function FullContactForm({ onDark = false }: { onDark?: boolean }) {
           {...register('message')}
           rows={5}
           className={`${resolvedInputClass} resize-none`}
-          placeholder="Tell us about your project, timeline, or challenge…"
+          placeholder={messagePlaceholder ?? 'Tell us about your project, timeline, or challenge…'}
         />
       </Field>
 

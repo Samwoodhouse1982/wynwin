@@ -83,6 +83,7 @@ export default function Footer() {
               {[
                 { label: 'Home', href: '/' },
                 { label: 'What We Do', href: '/what-we-do' },
+                { label: 'ROI Calculators', href: '/roi-calculators' },
                 { label: 'Who We Are', href: '/who-we-are' },
                 { label: 'Get In Touch', href: '/get-in-touch' },
                 { label: 'Privacy Policy', href: '/privacy' },

@@ -8,6 +8,8 @@ import { SERVICE_ICON_MAP } from '@/components/ServiceSectionIcons';
 interface Service {
   name: string;
   detail: string;
+  // Optional pointer to a dedicated page for this service.
+  link?: { label: string; href: string };
 }
 
 interface ServicePillarProps {
@@ -85,6 +87,14 @@ export default function ServicePillar({ id, title, services, index }: ServicePil
                 <div>
                   <h3 className="font-bold text-navy dark:text-white mb-2 leading-snug">{service.name}</h3>
                   <p className="text-navy/60 dark:text-white/70 text-sm leading-relaxed">{service.detail}</p>
+                  {service.link && (
+                    <Link
+                      href={service.link.href}
+                      className="inline-flex items-center gap-2 mt-3 text-pink text-sm font-semibold hover:gap-3 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink rounded-sm"
+                    >
+                      {service.link.label} <ArrowRight size={14} aria-hidden />
+                    </Link>
+                  )}
                 </div>
               </div>
             </motion.div>
