@@ -135,7 +135,7 @@ export default function WhatIf() {
 
       <div className={styles.stats}>
         <div className={`${styles.stat} ${styles.lost}`}>
-          <div className={styles.statLabel}>Revenue that never comes back</div>
+          <div className={styles.statLabel}>Lost revenue</div>
           <div className={`${styles.statVal} ${styles.num}`}>{fmtAuto(parts[0])}</div>
           <div className={`${styles.statNote} ${styles.num}`}>of {fmtAuto(deferred)} in delayed care</div>
         </div>

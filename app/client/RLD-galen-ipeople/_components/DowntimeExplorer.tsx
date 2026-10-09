@@ -170,7 +170,7 @@ export default function DowntimeExplorer() {
 
       <div className={styles.stats}>
         <div className={`${styles.stat} ${styles.lost}`}>
-          <div className={styles.statLabel}>Revenue that never comes back</div>
+          <div className={styles.statLabel}>Lost revenue</div>
           <div className={`${styles.statVal} ${styles.num}`}>{fmt(m.parts[0])}</div>
           <div className={`${styles.statNote} ${styles.num}`}>of {fmt(m.deferred)} in delayed care</div>
         </div>
