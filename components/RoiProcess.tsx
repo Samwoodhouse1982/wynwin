@@ -36,7 +36,7 @@ export default function RoiProcess() {
   const { process } = ROI;
 
   return (
-    <section className="bg-white py-20 dark:bg-navy lg:py-28">
+    <section className="bg-white py-14 sm:py-20 dark:bg-navy-light lg:py-28">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <Reveal>
           <Eyebrow>Our process</Eyebrow>

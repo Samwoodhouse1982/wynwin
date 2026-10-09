@@ -75,7 +75,7 @@ export default function RoiCalculatorsPage() {
       <RoiHero />
 
       {/* ── 2. The problem ──────────────────────────────────── */}
-      <section className="bg-white py-20 dark:bg-navy lg:py-28">
+      <section className="bg-white py-14 sm:py-20 dark:bg-navy-light lg:py-28">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <Reveal stagger>
             <RevealItem>
@@ -101,7 +101,7 @@ export default function RoiCalculatorsPage() {
       <RoiRange />
 
       {/* ── 4. Built to scale ───────────────────────────────── */}
-      <section className="bg-white py-20 dark:bg-navy lg:py-28">
+      <section className="bg-white py-14 sm:py-20 dark:bg-navy-light lg:py-28">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <Reveal>
             <Eyebrow>Scale</Eyebrow>
@@ -120,7 +120,7 @@ export default function RoiCalculatorsPage() {
                 key={scaleItem.title}
                 className={scaleItem.wide ? 'lg:col-span-3' : 'lg:col-span-2'}
               >
-                <div className="h-full rounded-2xl border border-navy/10 bg-cream p-7 dark:border-white/10 dark:bg-navy-light">
+                <div className="h-full rounded-2xl border border-navy/10 bg-cream p-7 dark:border-white/10 dark:bg-navy">
                   <h3 className="mb-3 text-lg font-bold leading-snug text-navy dark:text-white">
                     {scaleItem.title}
                   </h3>
@@ -136,7 +136,7 @@ export default function RoiCalculatorsPage() {
 
       {/* ── 5. Examples ─────────────────────────────────────── */}
       {/* No figures, outputs or screenshots of results appear here. */}
-      <section id="examples" className="scroll-mt-24 bg-cream py-20 dark:bg-navy-light lg:py-28">
+      <section id="examples" className="scroll-mt-36 bg-cream py-14 sm:py-20 dark:bg-navy lg:py-28">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <Reveal>
             <Eyebrow>Examples</Eyebrow>
@@ -155,7 +155,7 @@ export default function RoiCalculatorsPage() {
           <Reveal stagger className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {ROI.examples.cards.map((card) => (
               <RevealItem key={card.client}>
-                <article className="flex h-full flex-col rounded-2xl border border-navy/10 bg-white p-7 dark:border-white/10 dark:bg-navy">
+                <article className="flex h-full flex-col rounded-2xl border border-navy/10 bg-white p-7 dark:border-white/10 dark:bg-navy-light">
                   <h3 className="text-lg font-bold leading-snug text-navy dark:text-white">
                     {card.client}
                   </h3>
@@ -173,7 +173,7 @@ export default function RoiCalculatorsPage() {
                         className="flex items-start gap-2.5 text-sm leading-relaxed text-navy/70 dark:text-white/75"
                       >
                         <span
-                          className="mt-[7px] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-pink"
+                          className="mt-[7px] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-navy/30 dark:bg-white/30"
                           aria-hidden="true"
                         />
                         {driver}
@@ -239,16 +239,16 @@ export default function RoiCalculatorsPage() {
       <RoiProcess />
 
       {/* ── 7. AI and people ────────────────────────────────── */}
-      <section className="bg-navy py-20 lg:py-28">
+      <section className="bg-cream py-14 sm:py-20 dark:bg-navy lg:py-28">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <Reveal>
             <div className="max-w-3xl">
               <Eyebrow>AI and people</Eyebrow>
-              <h2 className="mb-6 text-3xl font-bold text-white md:text-4xl">
+              <h2 className="mb-6 text-3xl font-bold text-navy dark:text-white md:text-4xl">
                 {ROI.aiAndPeople.headline}
               </h2>
-              <p className="leading-relaxed text-white/70">{ROI.aiAndPeople.body}</p>
-              <TbcNote onDark className="mt-6">
+              <p className="leading-relaxed text-navy/70 dark:text-white/70">{ROI.aiAndPeople.body}</p>
+              <TbcNote className="mt-6">
                 {ROI.aiAndPeople.tbc}
               </TbcNote>
             </div>
@@ -257,7 +257,7 @@ export default function RoiCalculatorsPage() {
       </section>
 
       {/* ── 8. What you get ─────────────────────────────────── */}
-      <section className="bg-white py-20 dark:bg-navy lg:py-28">
+      <section className="bg-white py-14 sm:py-20 dark:bg-navy-light lg:py-28">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <Reveal>
             <Eyebrow>Deliverables</Eyebrow>
@@ -284,7 +284,7 @@ export default function RoiCalculatorsPage() {
       </section>
 
       {/* ── 9. Who we work with ─────────────────────────────── */}
-      <section className="bg-cream py-20 dark:bg-navy-light lg:py-28">
+      <section className="bg-cream py-14 sm:py-20 dark:bg-navy lg:py-28">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <Reveal>
             <div className="max-w-3xl">
@@ -301,7 +301,7 @@ export default function RoiCalculatorsPage() {
       </section>
 
       {/* ── 10. Why WYN WIN ─────────────────────────────────── */}
-      <section className="bg-white py-20 dark:bg-navy lg:py-28">
+      <section className="bg-white py-14 sm:py-20 dark:bg-navy-light lg:py-28">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <Reveal>
             <Eyebrow>Why us</Eyebrow>
@@ -334,7 +334,7 @@ export default function RoiCalculatorsPage() {
       </section>
 
       {/* ── 11. FAQs ────────────────────────────────────────── */}
-      <section className="bg-cream py-20 dark:bg-navy-light lg:py-28">
+      <section className="bg-cream py-14 sm:py-20 dark:bg-navy lg:py-28">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <Reveal>
             <Eyebrow>FAQs</Eyebrow>
@@ -349,45 +349,45 @@ export default function RoiCalculatorsPage() {
       </section>
 
       {/* ── 12. Final CTA and form ──────────────────────────── */}
-      <section id="contact" className="scroll-mt-24 bg-navy py-20 lg:py-28">
+      <section id="contact" className="scroll-mt-36 bg-white py-14 sm:py-20 dark:bg-navy-light lg:py-28">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="grid grid-cols-1 items-start gap-16 lg:grid-cols-2">
             <Reveal direction="left">
               <Eyebrow>Get started</Eyebrow>
-              <h2 className="mb-4 text-3xl font-bold text-white md:text-4xl">
+              <h2 className="mb-4 text-3xl font-bold text-navy dark:text-white md:text-4xl">
                 {ROI.finalCta.headline}
               </h2>
-              <p className="leading-relaxed text-white/70">{ROI.finalCta.body}</p>
+              <p className="leading-relaxed text-navy/70 dark:text-white/70">{ROI.finalCta.body}</p>
 
               <div className="mt-10 space-y-4">
                 <a
                   href={BRAND.phoneHref}
-                  className="group flex items-center gap-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+                  className="group flex items-center gap-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-navy dark:focus-visible:outline-white"
                 >
                   <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-pink/20 transition-colors duration-200 group-hover:bg-pink/40">
                     <Phone size={16} className="text-pink" aria-hidden />
                   </span>
                   <span>
-                    <span className="mb-0.5 block text-xs uppercase tracking-wider text-white/60">
+                    <span className="mb-0.5 block text-xs uppercase tracking-wider text-navy/60 dark:text-white/60">
                       Phone
                     </span>
-                    <span className="block font-medium text-white transition-colors duration-200 group-hover:text-pink">
+                    <span className="block font-medium text-navy transition-colors duration-200 group-hover:text-pink dark:text-white">
                       {BRAND.phone}
                     </span>
                   </span>
                 </a>
                 <a
                   href={BRAND.emailHref}
-                  className="group flex items-center gap-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+                  className="group flex items-center gap-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-navy dark:focus-visible:outline-white"
                 >
                   <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-pink/20 transition-colors duration-200 group-hover:bg-pink/40">
                     <Mail size={16} className="text-pink" aria-hidden />
                   </span>
                   <span>
-                    <span className="mb-0.5 block text-xs uppercase tracking-wider text-white/60">
+                    <span className="mb-0.5 block text-xs uppercase tracking-wider text-navy/60 dark:text-white/60">
                       Email
                     </span>
-                    <span className="block font-medium text-white transition-colors duration-200 group-hover:text-pink">
+                    <span className="block font-medium text-navy transition-colors duration-200 group-hover:text-pink dark:text-white">
                       {BRAND.email}
                     </span>
                   </span>
@@ -396,9 +396,8 @@ export default function RoiCalculatorsPage() {
             </Reveal>
 
             <Reveal delay={0.15}>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-8 lg:p-10">
+              <div className="rounded-2xl border border-navy/10 bg-cream p-5 shadow-sm dark:border-white/10 dark:bg-white/5 dark:shadow-none sm:p-8 lg:p-10">
                 <FullContactForm
-                  onDark
                   source={ROI.finalCta.source}
                   messagePlaceholder={ROI.finalCta.messagePlaceholder}
                 />

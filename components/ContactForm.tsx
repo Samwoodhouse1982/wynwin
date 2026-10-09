@@ -5,30 +5,17 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
-import { track } from '@vercel/analytics';
 import { Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { BRAND } from '@/lib/constants';
 import { ENQUIRY_TOPIC_EVENT } from '@/lib/enquiry';
+import { trackEvent } from '@/lib/analytics';
 
 // Nothing recorded which page or button produced an enquiry, so there was no
 // way to tell what was working — or to judge whether this refresh helped.
-// Vercel's track() is a no-op unless the Analytics component is mounted, and
-// gtag only exists once analytics consent has been given, so both calls
-// respect the cookie banner without needing to check it.
-declare global {
-  interface Window {
-    gtag?: (command: string, event: string, params?: Record<string, unknown>) => void;
-  }
-}
-
+// The send itself lives in lib/analytics, which is the single place events go
+// out from; 'generate_lead' is the GA4 standard name for a conversion.
 function recordEnquiry(source: string, topic?: string | null) {
-  const detail = topic ? { source, topic } : { source };
-  try {
-    track('enquiry', detail);
-    window.gtag?.('event', 'generate_lead', detail);
-  } catch {
-    // Measurement must never break the thing being measured.
-  }
+  trackEvent('enquiry', topic ? { source, topic } : { source }, 'generate_lead');
 }
 
 // Sending an enquiry is the one conversion on the site; it used to resolve with

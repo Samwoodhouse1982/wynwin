@@ -2,6 +2,8 @@
 // Plain (non-client) components so they can render inside server
 // sections as well as client ones.
 
+import { SlashMark } from '@/components/SlashMark';
+
 /**
  * Visible placeholder for anything still to be confirmed. Every one of
  * these must be resolved — filled in or deleted from lib/constants.ts —
@@ -76,10 +78,16 @@ export function DataEntryMeter({ level, label }: { level: number; label: string 
 }
 
 /**
- * Section eyebrow, matching the treatment used across the site.
+ * Section eyebrow, matching the treatment used across the site: muted, with
+ * the logo-derived slash as its marker. Pink is reserved for calls to action,
+ * links, active nav, the pre-footer band and one hero-level moment per page —
+ * this used to be pink, which was the site convention when the page was built.
  */
 export function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <p className="mb-4 text-sm font-semibold uppercase tracking-widest text-pink">{children}</p>
+    <p className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-navy/50 dark:text-white/50">
+      <SlashMark />
+      {children}
+    </p>
   );
 }
