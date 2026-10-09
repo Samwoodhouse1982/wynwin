@@ -5,6 +5,7 @@ import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import CookieBanner from '@/components/CookieBanner';
+import SiteShell from '@/components/SiteShell';
 import { META } from '@/lib/constants';
 
 // Unbounded — display / headings. Only bold is ever used (h1, h2 and the
@@ -64,12 +65,12 @@ export default function RootLayout({
     <html lang="en-GB" className={`${body.variable} ${display.variable}`} suppressHydrationWarning>
       <body className="min-h-screen flex flex-col antialiased">
         <ThemeProvider>
-          <Nav />
-          <main className="flex-1 pt-16 lg:pt-20">{children}</main>
-          <Footer />
           {/* CookieBanner also loads the analytics scripts, but only after
-              explicit consent — see components/CookieBanner.tsx. */}
-          <CookieBanner />
+              explicit consent — see components/CookieBanner.tsx. SiteShell
+              leaves the chrome off for the bare /client/* previews. */}
+          <SiteShell nav={<Nav />} footer={<Footer />} banner={<CookieBanner />}>
+            {children}
+          </SiteShell>
         </ThemeProvider>
       </body>
     </html>
