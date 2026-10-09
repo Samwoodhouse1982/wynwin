@@ -28,6 +28,7 @@
 .root h3 {
   font-family: var(--display);
   text-wrap: balance;
+  line-height: 1.2;
   margin: 0;
 }
 .root p {
@@ -326,6 +327,7 @@
   font-weight: 600;
 }
 .curve svg {
+  touch-action: pan-y;
   width: 100%;
   height: auto;
   display: block;
@@ -564,4 +566,64 @@
   .minor {
     display: none;
   }
+}
+
+/* Draggable chart */
+.curveHit {
+  fill: transparent;
+  cursor: ew-resize;
+}
+
+/* What-if section */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.chip {
+  font: inherit;
+  font-size: 14px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  cursor: pointer;
+}
+.chip:hover {
+  border-color: var(--brand);
+}
+.chip:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+.chipOn {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--on-brand);
+}
+.fieldLabel {
+  font-weight: 600;
+  font-size: 15px;
+  display: block;
+}
+.reset {
+  font: inherit;
+  font-size: 14px;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--brand);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.whatif .stats {
+  margin-top: 24px;
+}
+.assume {
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 14px !important;
+  max-width: 65ch;
 }

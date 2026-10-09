@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import RldHeader from './_components/RldHeader';
 import DowntimeExplorer from './_components/DowntimeExplorer';
+import WhatIf from './_components/WhatIf';
 import styles from './_components/Downtime.module.css';
 
 export const metadata: Metadata = {
@@ -168,6 +169,8 @@ export default function ClientPreviewPage() {
               </p>
             </section>
 
+            <WhatIf />
+
             <section className={styles.cta} aria-labelledby="cta-h">
               <h2 id="cta-h">Model your own exposure</h2>
               <p>
@@ -214,6 +217,13 @@ export default function ClientPreviewPage() {
                   loss, an audited accounting figure or an estimate of savings from IPeople. Health
                   systems should test these assumptions against their own data before making
                   investment decisions.
+                </p>
+                <p>
+                  The &quot;What if this had happened at your system&quot; section rescales every
+                  figure in proportion to annual patient care revenue, relative to the $21 billion
+                  system above. That is a simplification: device recovery and chart backfill follow
+                  device count and paper volume more than revenue, so treat the scaled figures as a
+                  rough guide.
                 </p>
                 <p>
                   The model does not include patient safety events, liability, regulatory

@@ -62,3 +62,18 @@ export const SCALE = model(MAX_H).total;
 export function fmt(n: number) {
   return n >= 100 ? `$${Math.round(n)}M` : `$${n.toFixed(1)}M`;
 }
+
+// The modeled system has around $21 billion in annual patient care revenue.
+// Scaling to another size is a simple proportion on that revenue, which is a
+// rough assumption: device and chart backfill costs really follow device count
+// and paper volume, not revenue.
+export const REF_REVENUE_M = 21000;
+
+/** Like fmt, but handles values from tens of thousands up to billions. */
+export function fmtAuto(n: number) {
+  if (n >= 1000) return `$${(n / 1000).toFixed(1)}B`;
+  if (n >= 100) return `$${Math.round(n)}M`;
+  if (n >= 1) return `$${n.toFixed(1)}M`;
+  if (n >= 0.001) return `$${Math.round(n * 1000)}K`;
+  return '$0';
+}

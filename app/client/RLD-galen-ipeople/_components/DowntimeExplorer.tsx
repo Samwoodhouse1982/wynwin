@@ -54,6 +54,8 @@ export default function DowntimeExplorer() {
   const [hours, setHours] = useState(24);
   const [tip, setTip] = useState<Tip | null>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const dragging = useRef(false);
   const segRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const m = useMemo(() => model(hours), [hours]);
@@ -82,6 +84,14 @@ export default function DowntimeExplorer() {
   function setH(next: number) {
     setHours(Math.max(MIN_H, Math.min(MAX_H, Math.round(next))));
     setTip(null);
+  }
+
+  // Click or drag on the chart: turn the pointer position into an outage length.
+  function hoursFromPointer(e: React.PointerEvent) {
+    const r = svgRef.current?.getBoundingClientRect();
+    if (!r) return;
+    const x = ((e.clientX - r.left) / r.width) * W;
+    setH(MIN_H + ((x - L) / PW) * (MAX_H - MIN_H));
   }
 
   function showTip(i: number, x: number) {
@@ -246,7 +256,9 @@ export default function DowntimeExplorer() {
 
       <div className={styles.curve}>
         <h3>How cost builds hour by hour</h3>
+        <p className={styles.hint}>Click or drag along the chart to change the outage length.</p>
         <svg
+          ref={svgRef}
           viewBox={`0 0 ${W} ${H}`}
           role="img"
           aria-label="Line chart of total modeled impact and permanently lost revenue from 1 to 120 hours"
@@ -274,6 +286,30 @@ export default function DowntimeExplorer() {
           <line x1={X(hours)} x2={X(hours)} y1={T} y2={T + PH} className={styles.cur} />
           <circle cx={X(hours)} cy={Y(m.total)} r={5} className={styles.dotT} />
           <circle cx={X(hours)} cy={Y(m.parts[0])} r={4.5} className={styles.dotL} />
+          {/* Transparent hit area over the plot. The slider above stays the
+              keyboard route, so this is hidden from assistive tech. */}
+          <rect
+            x={L}
+            y={T}
+            width={PW}
+            height={PH}
+            className={styles.curveHit}
+            aria-hidden="true"
+            onPointerDown={(e) => {
+              e.currentTarget.setPointerCapture(e.pointerId);
+              dragging.current = true;
+              hoursFromPointer(e);
+            }}
+            onPointerMove={(e) => {
+              if (dragging.current) hoursFromPointer(e);
+            }}
+            onPointerUp={() => {
+              dragging.current = false;
+            }}
+            onPointerCancel={() => {
+              dragging.current = false;
+            }}
+          />
         </svg>
         <div className={styles.key}>
           <span>
