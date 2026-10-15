@@ -22,7 +22,7 @@ export default function CookiesPage() {
       <div className="max-w-3xl mx-auto px-6 lg:px-8">
         <p className="text-pink font-semibold text-sm uppercase tracking-widest mb-4">Legal</p>
         <h1 className="text-4xl font-bold text-navy dark:text-white mb-4">Cookie Policy</h1>
-        <p className="text-navy/50 dark:text-white/60 text-sm mb-12">Last updated: March 2025</p>
+        <p className="text-navy/50 dark:text-white/60 text-sm mb-12">Last updated: October 2026</p>
 
         <div className="space-y-8 text-navy/70 dark:text-white/70">
           <section>
@@ -60,6 +60,14 @@ export default function CookiesPage() {
                     <td className="px-4 py-3">No (with consent)</td>
                   </tr>
                   <tr className="bg-white dark:bg-navy-light">
+                    <td className="px-4 py-3 font-medium text-navy dark:text-white">Marketing</td>
+                    <td className="px-4 py-3">
+                      Recognise returning visitors and link site visits to enquiries in our CRM
+                      (HubSpot)
+                    </td>
+                    <td className="px-4 py-3">No (with consent)</td>
+                  </tr>
+                  <tr className="bg-cream dark:bg-navy">
                     <td className="px-4 py-3 font-medium text-navy dark:text-white">Preferences</td>
                     <td className="px-4 py-3">Remember your settings</td>
                     <td className="px-4 py-3">No (with consent)</td>

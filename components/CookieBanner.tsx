@@ -13,6 +13,7 @@ import {
 
 const CONSENT_KEY = 'wynwin_cookie_consent';
 const GA_ID = 'G-BNH3Q60D6T';
+const HUBSPOT_SRC = 'https://js-eu1.hs-scripts.com/148860149.js';
 
 export default function CookieBanner() {
   const [consent, setConsent] = useState<'accepted' | 'declined' | null>(null);
@@ -90,6 +91,10 @@ export default function CookieBanner() {
               gtag('config', '${GA_ID}');
             `}
           </Script>
+          {/* HubSpot tracking code. It sets cookies that tie visits to contact
+              records, so it sits behind the same consent as GA. The id is the
+              one HubSpot's own snippet uses. */}
+          <Script id="hs-script-loader" src={HUBSPOT_SRC} strategy="afterInteractive" />
         </>
       )}
 
@@ -107,7 +112,7 @@ export default function CookieBanner() {
           >
             <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4 sm:py-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
               <p className="text-white/70 text-sm leading-relaxed max-w-2xl">
-                We use analytics cookies to see how the site is used.{' '}
+                We use analytics and tracking cookies to see how the site is used and to connect visits with enquiries.{' '}
                 <Link href="/cookies" className="text-pink hover:underline">
                   Cookie Policy
                 </Link>
