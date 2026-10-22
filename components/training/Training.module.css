@@ -58,6 +58,11 @@
   letter-spacing: -0.02em;
   color: var(--t-brand);
 }
+.logo {
+  height: 52px;
+  width: auto;
+  display: block;
+}
 .headerTag {
   font-size: 14px;
   color: var(--t-muted);

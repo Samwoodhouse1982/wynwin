@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import Image from 'next/image';
 import { Search, X } from 'lucide-react';
 import type { TrainingCatalogue, TrainingVideo } from '@/lib/training/types';
 import { makeLocalSearch } from '@/lib/training/search';
@@ -25,6 +26,7 @@ interface Props {
     heroTitle: string;
     heroLead: string;
     searchPlaceholder?: string;
+    logo?: { src: string; alt: string; width: number; height: number };
   };
   /** CSS custom properties (--t-*) for this client's look. */
   theme: Record<string, string>;
@@ -51,7 +53,6 @@ export default function TrainingHub({ catalogue, brand, theme }: Props) {
   // undefined means "default to the visitor's own role".
   const [roleFilter, setRoleFilter] = useState<string | undefined>(undefined);
   const [focusFilter, setFocusFilter] = useState<string>('all');
-  const [tierFilter, setTierFilter] = useState<string>('all');
   const [activeId, setActiveId] = useState<string | null>(null);
 
   const search = useMemo(() => makeLocalSearch(catalogue), [catalogue]);
@@ -94,12 +95,11 @@ export default function TrainingHub({ catalogue, brand, theme }: Props) {
       (v) =>
         (effectiveRole === 'all' || v.roles === 'all' || v.roles.includes(effectiveRole)) &&
         (focusFilter === 'all' || v.focus.includes(focusFilter)) &&
-        (tierFilter === 'all' || v.tier === tierFilter) &&
         (!matchIds || matchIds.includes(v.id)),
     );
     if (!matchIds) return filtered;
     return [...filtered].sort((a, b) => matchIds.indexOf(a.id) - matchIds.indexOf(b.id));
-  }, [catalogue.videos, effectiveRole, focusFilter, tierFilter, matchIds]);
+  }, [catalogue.videos, effectiveRole, focusFilter, matchIds]);
 
   // When nothing matches, say whether widening the role filter would help. A
   // practice manager searching "booking" otherwise sees a dead end, because
@@ -109,20 +109,17 @@ export default function TrainingHub({ catalogue, brand, theme }: Props) {
       catalogue.videos.filter(
         (v) =>
           (focusFilter === 'all' || v.focus.includes(focusFilter)) &&
-          (tierFilter === 'all' || v.tier === tierFilter) &&
-          (!matchIds || matchIds.includes(v.id)),
+            (!matchIds || matchIds.includes(v.id)),
       ).length,
-    [catalogue.videos, focusFilter, tierFilter, matchIds],
+    [catalogue.videos, focusFilter, matchIds],
   );
 
   const active = catalogue.videos.find((v) => v.id === activeId) ?? null;
-  const filtersActive =
-    effectiveRole !== 'all' || focusFilter !== 'all' || tierFilter !== 'all' || !!matchIds;
+  const filtersActive = effectiveRole !== 'all' || focusFilter !== 'all' || !!matchIds;
 
   const clearFilters = () => {
     setRoleFilter('all');
     setFocusFilter('all');
-    setTierFilter('all');
     onQuery('');
   };
 
@@ -136,7 +133,18 @@ export default function TrainingHub({ catalogue, brand, theme }: Props) {
   const header = (
     <header className={styles.header}>
       <div className={cx(styles.wrap, styles.headerInner)}>
-        <span className={styles.wordmark}>{brand.name}</span>
+        {brand.logo ? (
+          <Image
+            src={brand.logo.src}
+            alt={brand.logo.alt}
+            width={brand.logo.width}
+            height={brand.logo.height}
+            className={styles.logo}
+            priority
+          />
+        ) : (
+          <span className={styles.wordmark}>{brand.name}</span>
+        )}
         <span className={styles.headerTag}>{brand.tagline}</span>
       </div>
     </header>
@@ -236,22 +244,6 @@ export default function TrainingHub({ catalogue, brand, theme }: Props) {
                 </button>
               ))}
             </div>
-            {catalogue.tiers && catalogue.tiers.length > 0 && (
-              <div className={styles.filterRow} role="group" aria-label="Filter by style">
-                <span className={styles.filterLabel}>Style</span>
-                {[{ id: 'all', label: 'All styles' }, ...catalogue.tiers].map((t) => (
-                  <button
-                    key={t.id}
-                    type="button"
-                    aria-pressed={tierFilter === t.id}
-                    className={cx(styles.chip, tierFilter === t.id && styles.chipOn)}
-                    onClick={() => setTierFilter(t.id)}
-                  >
-                    {t.label}
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
 
           <p className={styles.status} aria-live="polite">

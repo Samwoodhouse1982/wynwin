@@ -1,23 +1,28 @@
 // Look and feel for the Medicus training page. Everything that is "brand" is in
 // this one file.
 //
-// THESE ARE PLACEHOLDER VALUES, not Medicus's real brand. They were chosen to
-// feel calm and clinical because the Medicus site could not be reached when this
-// was built. To brand it properly, replace the hex values below and the
-// wordmark text with the real ones (and tell me the font and logo to match).
+// The navy and green are sampled from the Medicus logo. The remaining greys and
+// the font are still placeholders, because the Medicus site could not be reached
+// when this was built. Swap them for the real values if you have them.
 export const theme: Record<string, string> = {
   '--t-bg': '#f6f8fb',
   '--t-surface': '#ffffff',
-  '--t-ink': '#0b1f33',
+  '--t-ink': '#051e3c',
   '--t-muted': '#5b6b7b',
   '--t-line': '#dbe3ec',
-  '--t-brand': '#0e4a7b',
+  '--t-brand': '#051e3c',
   '--t-brand-ink': '#ffffff',
-  '--t-accent': '#2bb3a3',
+  '--t-accent': '#0cd996',
 };
 
 export const brand = {
   name: 'Medicus',
+  logo: {
+    src: '/clients/medicus/logo.png',
+    alt: 'Medicus by Doctolib',
+    width: 1125,
+    height: 445,
+  },
   tagline: 'Training library',
   searchPlaceholder: 'Search, for example “dispensing” or “reports”',
   heroTitle: 'Welcome to Medicus training',

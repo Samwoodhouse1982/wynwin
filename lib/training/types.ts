@@ -38,7 +38,7 @@ export interface TrainingCatalogue {
   clientId: string;
   roles: Option[];
   focuses: Option[];
-  /** Optional. Production tiers, e.g. standard and premium. Adds a Style filter. */
+  /** Optional. Production tiers, shown as a tag on each video's card. */
   tiers?: Option[];
   /** Groups of words that mean the same thing, e.g. ['booking', 'appointment']. */
   synonyms: string[][];

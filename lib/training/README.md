@@ -26,7 +26,7 @@ Edit that client's `catalogue.ts` and add an entry to `videos`:
 `{ type: 'loom', id }` (the 32 characters at the end of a Loom share link) or
 `{ type: 'file', url, poster? }`. Leave it `null` (with `placeholder: true`) until
 the video exists. Roles, topics and tiers are defined at the top of the same file (tiers are
-optional; leave `tiers` out and the Style filter doesn't appear);
+optional and only appear as a tag on the card);
 filters and search read from it, so nothing else changes.
 
 **Hosting.** Prefer Vimeo or YouTube (unlisted) or a video host over files in
