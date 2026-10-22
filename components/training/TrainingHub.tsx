@@ -19,7 +19,13 @@ import styles from './Training.module.css';
 
 interface Props {
   catalogue: TrainingCatalogue;
-  brand: { name: string; tagline: string; heroTitle: string; heroLead: string };
+  brand: {
+    name: string;
+    tagline: string;
+    heroTitle: string;
+    heroLead: string;
+    searchPlaceholder?: string;
+  };
   /** CSS custom properties (--t-*) for this client's look. */
   theme: Record<string, string>;
 }
@@ -184,7 +190,7 @@ export default function TrainingHub({ catalogue, brand, theme }: Props) {
             <input
               type="search"
               className={cx(styles.input, styles.searchInput)}
-              placeholder="Search, for example “booking” or “reports”"
+              placeholder={brand.searchPlaceholder ?? 'Search the videos'}
               aria-label="Search training videos"
               value={query}
               onChange={(e) => onQuery(e.target.value)}
@@ -299,8 +305,12 @@ export default function TrainingHub({ catalogue, brand, theme }: Props) {
                     <span className={styles.cardSummary}>{v.summary}</span>
                     <span className={styles.tags}>
                       {v.placeholder && <span className={cx(styles.tag, styles.tagMuted)}>Placeholder</span>}
-                      {v.tier === 'premium' && (
-                        <span className={cx(styles.tag, styles.tagPremium)}>{tierLabel(v.tier)}</span>
+                      {v.tier && (
+                        <span
+                          className={cx(styles.tag, v.tier === 'premium' ? styles.tagPremium : styles.tagTier)}
+                        >
+                          {tierLabel(v.tier)}
+                        </span>
                       )}
                       {v.durationMin && <span className={styles.tag}>{v.durationMin} min</span>}
                       {v.focus.map((f) => (

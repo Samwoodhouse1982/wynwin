@@ -19,6 +19,7 @@ export const theme: Record<string, string> = {
 export const brand = {
   name: 'Medicus',
   tagline: 'Training library',
+  searchPlaceholder: 'Search, for example “dispensing” or “reports”',
   heroTitle: 'Welcome to Medicus training',
   heroLead:
     'Short videos to help you and your practice get the most from Medicus. Tell us a little about you and we will show you the ones that matter most.',

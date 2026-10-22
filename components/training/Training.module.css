@@ -420,6 +420,11 @@
   background: var(--t-brand);
   color: var(--t-brand-ink);
 }
+.tagTier {
+  background: transparent;
+  border: 1px solid var(--t-brand);
+  color: var(--t-brand);
+}
 .tagMuted {
   background: #f1f3f5;
   color: var(--t-muted);

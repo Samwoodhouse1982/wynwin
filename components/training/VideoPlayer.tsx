@@ -9,6 +9,9 @@ function embedUrl(source: Exclude<VideoSource, { type: 'file' }>): string {
   if (source.type === 'youtube') {
     return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(source.id)}?rel=0`;
   }
+  if (source.type === 'loom') {
+    return `https://www.loom.com/embed/${encodeURIComponent(source.id)}`;
+  }
   const hash = source.hash ? `&h=${encodeURIComponent(source.hash)}` : '';
   return `https://player.vimeo.com/video/${encodeURIComponent(source.id)}?dnt=1${hash}`;
 }

@@ -12,6 +12,7 @@ export interface Option {
 export type VideoSource =
   | { type: 'youtube'; id: string }
   | { type: 'vimeo'; id: string; hash?: string }
+  | { type: 'loom'; id: string }
   | { type: 'file'; url: string; poster?: string };
 
 export interface TrainingVideo {

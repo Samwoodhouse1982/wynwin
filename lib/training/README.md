@@ -22,7 +22,8 @@ Edit that client's `catalogue.ts` and add an entry to `videos`:
 }
 ```
 
-`source` can be `{ type: 'youtube', id }`, `{ type: 'vimeo', id, hash? }` or
+`source` can be `{ type: 'youtube', id }`, `{ type: 'vimeo', id, hash? }`,
+`{ type: 'loom', id }` (the 32 characters at the end of a Loom share link) or
 `{ type: 'file', url, poster? }`. Leave it `null` (with `placeholder: true`) until
 the video exists. Roles, topics and tiers are defined at the top of the same file (tiers are
 optional; leave `tiers` out and the Style filter doesn't appear);
