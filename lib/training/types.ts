@@ -23,6 +23,8 @@ export interface TrainingVideo {
   roles: string[] | 'all';
   /** Focus ids. Ids must exist in catalogue.focuses. */
   focus: string[];
+  /** Production tier id, if the catalogue uses tiers. Must exist in catalogue.tiers. */
+  tier?: string;
   /** Search terms that don't appear in the title or summary. */
   keywords: string[];
   /** null until the video exists; the card shows "coming soon". */
@@ -35,6 +37,8 @@ export interface TrainingCatalogue {
   clientId: string;
   roles: Option[];
   focuses: Option[];
+  /** Optional. Production tiers, e.g. standard and premium. Adds a Style filter. */
+  tiers?: Option[];
   /** Groups of words that mean the same thing, e.g. ['booking', 'appointment']. */
   synonyms: string[][];
   videos: TrainingVideo[];

@@ -45,6 +45,7 @@ export default function TrainingHub({ catalogue, brand, theme }: Props) {
   // undefined means "default to the visitor's own role".
   const [roleFilter, setRoleFilter] = useState<string | undefined>(undefined);
   const [focusFilter, setFocusFilter] = useState<string>('all');
+  const [tierFilter, setTierFilter] = useState<string>('all');
   const [activeId, setActiveId] = useState<string | null>(null);
 
   const search = useMemo(() => makeLocalSearch(catalogue), [catalogue]);
@@ -73,6 +74,7 @@ export default function TrainingHub({ catalogue, brand, theme }: Props) {
   };
 
   const roleLabel = (id: string) => catalogue.roles.find((r) => r.id === id)?.label ?? id;
+  const tierLabel = (id: string) => catalogue.tiers?.find((t) => t.id === id)?.label ?? id;
   const focusLabel = (id: string) => catalogue.focuses.find((f) => f.id === id)?.label ?? id;
 
   const ownRole =
@@ -86,11 +88,12 @@ export default function TrainingHub({ catalogue, brand, theme }: Props) {
       (v) =>
         (effectiveRole === 'all' || v.roles === 'all' || v.roles.includes(effectiveRole)) &&
         (focusFilter === 'all' || v.focus.includes(focusFilter)) &&
+        (tierFilter === 'all' || v.tier === tierFilter) &&
         (!matchIds || matchIds.includes(v.id)),
     );
     if (!matchIds) return filtered;
     return [...filtered].sort((a, b) => matchIds.indexOf(a.id) - matchIds.indexOf(b.id));
-  }, [catalogue.videos, effectiveRole, focusFilter, matchIds]);
+  }, [catalogue.videos, effectiveRole, focusFilter, tierFilter, matchIds]);
 
   // When nothing matches, say whether widening the role filter would help. A
   // practice manager searching "booking" otherwise sees a dead end, because
@@ -100,17 +103,20 @@ export default function TrainingHub({ catalogue, brand, theme }: Props) {
       catalogue.videos.filter(
         (v) =>
           (focusFilter === 'all' || v.focus.includes(focusFilter)) &&
+          (tierFilter === 'all' || v.tier === tierFilter) &&
           (!matchIds || matchIds.includes(v.id)),
       ).length,
-    [catalogue.videos, focusFilter, matchIds],
+    [catalogue.videos, focusFilter, tierFilter, matchIds],
   );
 
   const active = catalogue.videos.find((v) => v.id === activeId) ?? null;
-  const filtersActive = effectiveRole !== 'all' || focusFilter !== 'all' || !!matchIds;
+  const filtersActive =
+    effectiveRole !== 'all' || focusFilter !== 'all' || tierFilter !== 'all' || !!matchIds;
 
   const clearFilters = () => {
     setRoleFilter('all');
     setFocusFilter('all');
+    setTierFilter('all');
     onQuery('');
   };
 
@@ -224,6 +230,22 @@ export default function TrainingHub({ catalogue, brand, theme }: Props) {
                 </button>
               ))}
             </div>
+            {catalogue.tiers && catalogue.tiers.length > 0 && (
+              <div className={styles.filterRow} role="group" aria-label="Filter by style">
+                <span className={styles.filterLabel}>Style</span>
+                {[{ id: 'all', label: 'All styles' }, ...catalogue.tiers].map((t) => (
+                  <button
+                    key={t.id}
+                    type="button"
+                    aria-pressed={tierFilter === t.id}
+                    className={cx(styles.chip, tierFilter === t.id && styles.chipOn)}
+                    onClick={() => setTierFilter(t.id)}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <p className={styles.status} aria-live="polite">
@@ -277,6 +299,9 @@ export default function TrainingHub({ catalogue, brand, theme }: Props) {
                     <span className={styles.cardSummary}>{v.summary}</span>
                     <span className={styles.tags}>
                       {v.placeholder && <span className={cx(styles.tag, styles.tagMuted)}>Placeholder</span>}
+                      {v.tier === 'premium' && (
+                        <span className={cx(styles.tag, styles.tagPremium)}>{tierLabel(v.tier)}</span>
+                      )}
                       {v.durationMin && <span className={styles.tag}>{v.durationMin} min</span>}
                       {v.focus.map((f) => (
                         <span key={f} className={styles.tag}>

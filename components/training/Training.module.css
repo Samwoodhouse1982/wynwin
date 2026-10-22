@@ -416,6 +416,10 @@
   background: #eaf1f8;
   color: var(--t-brand);
 }
+.tagPremium {
+  background: var(--t-brand);
+  color: var(--t-brand-ink);
+}
 .tagMuted {
   background: #f1f3f5;
   color: var(--t-muted);

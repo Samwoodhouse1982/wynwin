@@ -16,6 +16,7 @@ Edit that client's `catalogue.ts` and add an entry to `videos`:
   durationMin: 4,                        // optional
   roles: ['gp', 'admin'],                // role ids, or 'all'
   focus: ['day-to-day'],                 // topic ids
+  tier: 'premium',                       // optional; ids from catalogue.tiers
   keywords: ['diary', 'slots'],          // search terms not in the title/summary
   source: { type: 'vimeo', id: '123456789' },
 }
@@ -23,7 +24,8 @@ Edit that client's `catalogue.ts` and add an entry to `videos`:
 
 `source` can be `{ type: 'youtube', id }`, `{ type: 'vimeo', id, hash? }` or
 `{ type: 'file', url, poster? }`. Leave it `null` (with `placeholder: true`) until
-the video exists. Roles and topics are defined at the top of the same file;
+the video exists. Roles, topics and tiers are defined at the top of the same file (tiers are
+optional; leave `tiers` out and the Style filter doesn't appear);
 filters and search read from it, so nothing else changes.
 
 **Hosting.** Prefer Vimeo or YouTube (unlisted) or a video host over files in
