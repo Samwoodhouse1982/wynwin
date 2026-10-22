@@ -277,7 +277,7 @@ export default function TrainingHub({ catalogue, brand, theme }: Props) {
                   <X size={20} aria-hidden />
                 </button>
               </div>
-              <VideoPlayer source={active.source} title={active.title} />
+              <VideoPlayer source={active.source} title={active.title} icon={active.icon} />
             </section>
           )}
         </div>
@@ -291,7 +291,7 @@ export default function TrainingHub({ catalogue, brand, theme }: Props) {
                   className={cx(styles.card, v.id === activeId && styles.cardActive)}
                   onClick={() => open(v)}
                 >
-                  <VideoThumb source={v.source} />
+                  <VideoThumb source={v.source} icon={v.icon} />
                   <span className={styles.cardBody}>
                     <span className={styles.cardTitle}>{v.title}</span>
                     <span className={styles.cardSummary}>{v.summary}</span>

@@ -1,6 +1,31 @@
-import { Play } from 'lucide-react';
-import type { VideoSource } from '@/lib/training/types';
+import { Briefcase, ChartColumn, Pill, Play, Sparkles, Stethoscope, type LucideIcon } from 'lucide-react';
+import type { ThumbIcon, VideoSource } from '@/lib/training/types';
 import styles from './Training.module.css';
+
+const ICONS: Record<ThumbIcon, LucideIcon> = {
+  sparkles: Sparkles,
+  pill: Pill,
+  stethoscope: Stethoscope,
+  chart: ChartColumn,
+  briefcase: Briefcase,
+  play: Play,
+};
+
+// Generated thumbnail: a branded card with a topic icon and a status label, so
+// every video has artwork before a real thumbnail exists. Sized by the font
+// size of its container, so the same art serves the small cards and the larger
+// player panel.
+function ThumbArt({ icon = 'play', label, large }: { icon?: ThumbIcon; label: string; large?: boolean }) {
+  const Icon = ICONS[icon];
+  return (
+    <div className={`${styles.thumb} ${large ? styles.thumbLarge : ''}`}>
+      <span className={styles.thumbIcon}>
+        <Icon aria-hidden />
+      </span>
+      <span className={styles.thumbLabel}>{label}</span>
+    </div>
+  );
+}
 
 // Privacy-friendly embeds: YouTube's no-cookie domain, and Vimeo's do-not-track
 // flag. These are shown to NHS staff on shared computers, so no tracking
@@ -19,15 +44,16 @@ function embedUrl(source: Exclude<VideoSource, { type: 'file' }>): string {
 export default function VideoPlayer({
   source,
   title,
+  icon,
 }: {
   source: VideoSource | null;
   title: string;
+  icon?: ThumbIcon;
 }) {
   if (!source) {
     return (
-      <div className={styles.videoPlaceholder} role="img" aria-label={`${title}: video coming soon`}>
-        <Play aria-hidden />
-        <span>Video coming soon</span>
+      <div role="img" aria-label={`${title}: video coming soon`}>
+        <ThumbArt icon={icon} label="Video coming soon" large />
       </div>
     );
   }
@@ -61,11 +87,10 @@ export default function VideoPlayer({
 }
 
 // Card thumbnail. Decorative: the card's button already carries the title.
-export function VideoThumb({ source }: { source: VideoSource | null }) {
+export function VideoThumb({ source, icon }: { source: VideoSource | null; icon?: ThumbIcon }) {
   return (
-    <div className={styles.videoPlaceholder} aria-hidden="true">
-      <Play />
-      <span>{source ? 'Watch' : 'Coming soon'}</span>
+    <div aria-hidden="true">
+      <ThumbArt icon={icon} label={source ? 'Watch' : 'Coming soon'} />
     </div>
   );
 }

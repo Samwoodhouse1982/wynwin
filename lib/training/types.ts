@@ -15,6 +15,10 @@ export type VideoSource =
   | { type: 'loom'; id: string }
   | { type: 'file'; url: string; poster?: string };
 
+// Icons available for generated thumbnails. Add one here and in ICONS in
+// components/training/VideoPlayer.tsx.
+export type ThumbIcon = 'sparkles' | 'pill' | 'stethoscope' | 'chart' | 'briefcase' | 'play';
+
 export interface TrainingVideo {
   id: string;
   title: string;
@@ -28,6 +32,8 @@ export interface TrainingVideo {
   tier?: string;
   /** Search terms that don't appear in the title or summary. */
   keywords: string[];
+  /** Icon for the generated thumbnail. Defaults to a play button. */
+  icon?: ThumbIcon;
   /** null until the video exists; the card shows "coming soon". */
   source: VideoSource | null;
   placeholder?: boolean;

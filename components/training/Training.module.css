@@ -11,7 +11,9 @@
   --t-brand-ink: #ffffff;
   --t-accent: #2bb3a3;
   --t-radius: 14px;
+  --t-brand-soft: #0d3a63;
   --t-font: var(--font-instrument), system-ui, sans-serif;
+  --t-font-heading: var(--t-font);
   min-height: 100vh;
   background: var(--t-bg);
   color: var(--t-ink);
@@ -23,10 +25,10 @@
 .root h1,
 .root h2,
 .root h3 {
-  font-family: var(--t-font);
-  line-height: 1.15;
-  letter-spacing: -0.01em;
-  font-weight: 600; /* Tailwind's reset makes headings inherit normal weight */
+  font-family: var(--t-font-heading);
+  line-height: 1.2;
+  letter-spacing: 0;
+  font-weight: 400; /* Tailwind's reset makes headings inherit normal weight */
   margin: 0;
   color: var(--t-ink);
 }
@@ -81,8 +83,8 @@
 }
 .hero h1,
 .libraryHead h1 {
-  font-size: clamp(32px, 5vw, 48px);
-  font-weight: 700;
+  font-size: clamp(32px, 5vw, 46px);
+  font-weight: 400;
   margin-top: 10px;
   max-width: 18em;
   text-wrap: balance;
@@ -341,26 +343,55 @@
   background: #000;
   display: block;
 }
-.videoPlaceholder {
+/* Generated thumbnail */
+.thumb {
+  position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
   border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  color: var(--t-brand);
-  background: linear-gradient(135deg, #e6eef6, #dff3f0);
-  font-size: 15px;
-  font-weight: 600;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  font-size: 14px; /* everything inside is sized in em from here */
+  color: #fff;
+  background:
+    radial-gradient(circle at 88% 12%, color-mix(in srgb, var(--t-accent) 38%, transparent), transparent 46%),
+    linear-gradient(135deg, var(--t-brand), var(--t-brand-soft));
 }
-.videoPlaceholder svg {
-  width: 40px;
-  height: 40px;
-  padding: 10px;
+.thumbLarge {
+  font-size: 22px;
+}
+.thumbIcon {
+  width: 4em;
+  height: 4em;
   border-radius: 50%;
-  background: var(--t-surface);
+  background: #fff;
+  color: var(--t-brand);
+  display: grid;
+  place-items: center;
+}
+.thumbIcon svg {
+  width: 1.9em;
+  height: 1.9em;
+}
+.thumbLabel {
+  position: absolute;
+  left: 0.8em;
+  bottom: 0.7em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 0.85em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.thumbLabel::before {
+  content: '';
+  width: 0.6em;
+  height: 0.6em;
+  border-radius: 50%;
+  background: var(--t-accent);
 }
 
 /* Grid + cards */
@@ -400,8 +431,9 @@
   padding: 0 4px 4px;
 }
 .cardTitle {
-  font-size: 18px;
-  font-weight: 600;
+  font-family: var(--t-font-heading);
+  font-size: 19px;
+  font-weight: 700;
   line-height: 1.25;
 }
 .cardSummary {

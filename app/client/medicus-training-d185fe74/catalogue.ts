@@ -50,6 +50,7 @@ export const catalogue: TrainingCatalogue = {
   videos: [
     {
       id: 'welcome-getting-started',
+      icon: 'sparkles',
       title: 'Welcome and getting started',
       summary: 'Placeholder. A short tour to find your way around.',
       roles: 'all',
@@ -60,6 +61,7 @@ export const catalogue: TrainingCatalogue = {
     },
     {
       id: 'dispensing',
+      icon: 'pill',
       title: 'Dispensing with Medicus',
       summary: 'Placeholder. Video coming soon.',
       roles: ['dispenser', 'admin'],
@@ -70,6 +72,7 @@ export const catalogue: TrainingCatalogue = {
     },
     {
       id: 'reporting',
+      icon: 'chart',
       title: 'Reporting for practice management',
       summary: 'Placeholder. Video coming soon.',
       roles: ['practice-manager', 'gp-partner'],
@@ -80,6 +83,7 @@ export const catalogue: TrainingCatalogue = {
     },
     {
       id: 'back-office-admin',
+      icon: 'briefcase',
       title: 'Back office administration',
       summary: 'Placeholder. Video coming soon.',
       roles: ['practice-manager', 'admin'],
@@ -90,6 +94,7 @@ export const catalogue: TrainingCatalogue = {
     },
     {
       id: 'clinic-nurse-workflow',
+      icon: 'stethoscope',
       title: 'Clinic nurse workflow',
       summary: 'Placeholder. Video coming soon.',
       roles: ['nurse'],
