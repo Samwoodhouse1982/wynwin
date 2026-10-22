@@ -370,6 +370,50 @@
   inset: 0;
   background: linear-gradient(to top, rgba(5, 30, 60, 0.78), rgba(5, 30, 60, 0.05) 55%);
 }
+.thumbHasBadge .thumbIcon {
+  transform: translateY(0.7em); /* clear of the badge above it */
+}
+.thumbBadge {
+  position: absolute;
+  top: 0.7em;
+  left: 0.7em;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.3em 0.75em 0.3em 0.6em;
+  border-radius: 999px;
+  background: var(--t-accent);
+  color: var(--t-brand);
+  font-size: 0.82em;
+  font-weight: 700;
+}
+.thumbBadge svg {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+}
+.recommendedLine {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--t-brand);
+  margin-bottom: 6px !important;
+}
+.recommendedLine svg {
+  fill: var(--t-accent);
+  stroke: var(--t-brand);
+}
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
 .thumbIcon {
   position: relative;
   z-index: 1;

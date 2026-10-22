@@ -2,7 +2,7 @@
 
 import { useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import Image from 'next/image';
-import { Search, X } from 'lucide-react';
+import { Search, Star, X } from 'lucide-react';
 import type { TrainingCatalogue, TrainingVideo } from '@/lib/training/types';
 import { makeLocalSearch } from '@/lib/training/search';
 import {
@@ -33,6 +33,11 @@ interface Props {
 }
 
 const cx = (...parts: (string | false | undefined)[]) => parts.filter(Boolean).join(' ');
+
+// Recommended for this visitor's own role (not whichever role chip they are
+// browsing), so "recommended for you" always means for them.
+const isRecommendedFor = (v: TrainingVideo, role?: string) =>
+  !!role && (v.recommendedFor === 'all' || !!v.recommendedFor?.includes(role));
 
 export default function TrainingHub({ catalogue, brand, theme }: Props) {
   const key = storageKey(catalogue.clientId);
@@ -90,6 +95,8 @@ export default function TrainingHub({ catalogue, brand, theme }: Props) {
       : 'all';
   const effectiveRole = roleFilter ?? ownRole;
 
+  const myRole = registration?.role;
+
   const visible = useMemo(() => {
     const filtered = catalogue.videos.filter(
       (v) =>
@@ -97,9 +104,13 @@ export default function TrainingHub({ catalogue, brand, theme }: Props) {
         (focusFilter === 'all' || v.focus.includes(focusFilter)) &&
         (!matchIds || matchIds.includes(v.id)),
     );
-    if (!matchIds) return filtered;
-    return [...filtered].sort((a, b) => matchIds.indexOf(a.id) - matchIds.indexOf(b.id));
-  }, [catalogue.videos, effectiveRole, focusFilter, matchIds]);
+    // While searching, best match first. Otherwise recommended videos lead and
+    // the rest keep the catalogue's order (Array.sort is stable).
+    if (matchIds) return [...filtered].sort((a, b) => matchIds.indexOf(a.id) - matchIds.indexOf(b.id));
+    return [...filtered].sort(
+      (a, b) => Number(isRecommendedFor(b, myRole)) - Number(isRecommendedFor(a, myRole)),
+    );
+  }, [catalogue.videos, effectiveRole, focusFilter, matchIds, myRole]);
 
   // When nothing matches, say whether widening the role filter would help. A
   // practice manager searching "booking" otherwise sees a dead end, because
@@ -265,6 +276,11 @@ export default function TrainingHub({ catalogue, brand, theme }: Props) {
             <section className={styles.player} aria-label="Now playing">
               <div className={styles.playerHead}>
                 <div>
+                  {isRecommendedFor(active, myRole) && (
+                    <p className={styles.recommendedLine}>
+                      <Star size={14} aria-hidden /> Recommended watch for you
+                    </p>
+                  )}
                   <h2>{active.title}</h2>
                   <p className={styles.cardSummary}>{active.summary}</p>
                 </div>
@@ -291,8 +307,13 @@ export default function TrainingHub({ catalogue, brand, theme }: Props) {
                   className={cx(styles.card, v.id === activeId && styles.cardActive)}
                   onClick={() => open(v)}
                 >
-                  <VideoThumb source={v.source} icon={v.icon} />
+                  <VideoThumb
+                    source={v.source}
+                    icon={v.icon}
+                    badge={isRecommendedFor(v, myRole) ? 'Recommended watch' : undefined}
+                  />
                   <span className={styles.cardBody}>
+                    {isRecommendedFor(v, myRole) && <span className={styles.srOnly}>Recommended watch for you. </span>}
                     <span className={styles.cardTitle}>{v.title}</span>
                     <span className={styles.cardSummary}>{v.summary}</span>
                     <span className={styles.tags}>

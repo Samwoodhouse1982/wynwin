@@ -17,6 +17,7 @@ Edit that client's `catalogue.ts` and add an entry to `videos`:
   roles: ['gp', 'admin'],                // role ids, or 'all'
   focus: ['day-to-day'],                 // topic ids
   tier: 'premium',                       // optional; ids from catalogue.tiers
+  recommendedFor: ['admin'],             // optional; role ids or 'all'. Badge + listed first
   keywords: ['diary', 'slots'],          // search terms not in the title/summary
   source: { type: 'vimeo', id: '123456789' },
 }

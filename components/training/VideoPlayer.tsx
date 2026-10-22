@@ -2,7 +2,16 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Briefcase, ChartColumn, Pill, Play, Sparkles, Stethoscope, type LucideIcon } from 'lucide-react';
+import {
+  Briefcase,
+  ChartColumn,
+  Pill,
+  Play,
+  Sparkles,
+  Star,
+  Stethoscope,
+  type LucideIcon,
+} from 'lucide-react';
 import type { ThumbIcon, VideoSource } from '@/lib/training/types';
 import styles from './Training.module.css';
 
@@ -24,11 +33,13 @@ function ThumbArt({
   label,
   large,
   imageSrc,
+  badge,
 }: {
   icon?: ThumbIcon;
   label: string;
   large?: boolean;
   imageSrc?: string | null;
+  badge?: string;
 }) {
   const Icon = ICONS[icon];
   // If the real thumbnail can't be loaded (video removed, no network), quietly
@@ -36,7 +47,9 @@ function ThumbArt({
   const [imageFailed, setImageFailed] = useState(false);
   const showImage = !!imageSrc && !imageFailed;
   return (
-    <div className={`${styles.thumb} ${large ? styles.thumbLarge : ''}`}>
+    <div
+      className={`${styles.thumb} ${large ? styles.thumbLarge : ''} ${badge ? styles.thumbHasBadge : ''}`}
+    >
       {showImage && (
         <>
           <Image
@@ -49,6 +62,12 @@ function ThumbArt({
           />
           <span className={styles.thumbScrim} />
         </>
+      )}
+      {badge && (
+        <span className={styles.thumbBadge}>
+          <Star aria-hidden />
+          {badge}
+        </span>
       )}
       <span className={styles.thumbIcon}>
         <Icon aria-hidden />
@@ -128,10 +147,23 @@ export default function VideoPlayer({
 }
 
 // Card thumbnail. Decorative: the card's button already carries the title.
-export function VideoThumb({ source, icon }: { source: VideoSource | null; icon?: ThumbIcon }) {
+export function VideoThumb({
+  source,
+  icon,
+  badge,
+}: {
+  source: VideoSource | null;
+  icon?: ThumbIcon;
+  badge?: string;
+}) {
   return (
     <div aria-hidden="true">
-      <ThumbArt icon={icon} label={source ? 'Watch' : 'Coming soon'} imageSrc={thumbnailFor(source)} />
+      <ThumbArt
+        icon={icon}
+        label={source ? 'Watch' : 'Coming soon'}
+        imageSrc={thumbnailFor(source)}
+        badge={badge}
+      />
     </div>
   );
 }

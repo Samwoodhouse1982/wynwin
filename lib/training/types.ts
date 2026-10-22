@@ -26,6 +26,12 @@ export interface TrainingVideo {
   durationMin?: number;
   /** Role ids this video is for, or 'all'. Ids must exist in catalogue.roles. */
   roles: string[] | 'all';
+  /**
+   * Roles this is a recommended watch for, or 'all'. Shown as a badge to a
+   * visitor whose role matches, and listed first for them. Narrower than
+   * `roles`: that decides who sees the video, this picks the ones to start with.
+   */
+  recommendedFor?: string[] | 'all';
   /** Focus ids. Ids must exist in catalogue.focuses. */
   focus: string[];
   /** Production tier id, if the catalogue uses tiers. Must exist in catalogue.tiers. */
