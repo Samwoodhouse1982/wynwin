@@ -14,6 +14,15 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  images: {
+    // Training library video thumbnails come from YouTube. Next fetches them
+    // server-side and serves them from our own domain, so visitors' browsers
+    // never contact Google just by opening the page. The pattern is the one
+    // image YouTube publishes per video and nothing else.
+    remotePatterns: [
+      { protocol: "https", hostname: "i.ytimg.com", pathname: "/vi/*/hqdefault.jpg", search: "" },
+    ],
+  },
   async headers() {
     return [
       {

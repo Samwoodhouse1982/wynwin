@@ -361,7 +361,18 @@
 .thumbLarge {
   font-size: 22px;
 }
+.thumbImage {
+  object-fit: cover;
+}
+/* Keeps the white label readable over a photograph. */
+.thumbScrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(5, 30, 60, 0.78), rgba(5, 30, 60, 0.05) 55%);
+}
 .thumbIcon {
+  position: relative;
+  z-index: 1;
   width: 4em;
   height: 4em;
   border-radius: 50%;
@@ -375,6 +386,7 @@
   height: 1.9em;
 }
 .thumbLabel {
+  z-index: 1;
   position: absolute;
   left: 0.8em;
   bottom: 0.7em;
