@@ -562,8 +562,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       <div class="block">
         <dl class="staff-list">
           <div class="staff-row"><dt>Clinical sessions a week</dt><dd id="sc-sessions">88</dd></div>
-          <div class="staff-row"><dt>Admin time released</dt><dd id="sc-admin">0.5 WTE</dd></div>
-          <div class="staff-row"><dt><label for="adminteam-actual">Admin team (FTE)</label> <small class="hint">(optional, for context)</small></dt><dd><input class="num-input" id="adminteam-actual" type="number" min="0" step="0.5" value="" placeholder="e.g. 15"></dd></div>
+          <div class="staff-row"><dt>Admin time released</dt><dd id="sc-admin">0.5 FTE</dd></div>
         </dl>
         <p class="hint" id="admin-share"></p>
       </div>
@@ -783,7 +782,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
   var state = {
     patients: REF.patients,
     mode: "wilmslow",
-    actual: { gp: REF.gp, nurse: REF.nurse, adminTeam: null },
+    actual: { gp: REF.gp, nurse: REF.nurse },
     a: Object.assign({}, DEFAULTS),
     vendors: VENDORS.map(function (v) { return Object.assign({}, v); })
   };
@@ -996,11 +995,6 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       apply(v);
     });
   });
-  $("adminteam-actual").addEventListener("input", function (e) {
-    var v = parseFloat(e.target.value);
-    state.actual.adminTeam = (e.target.value === "" || isNaN(v) || v <= 0) ? null : v;
-    render();
-  });
 
   /* Vendors */
   var vendorsEl = $("vendors");
@@ -1091,8 +1085,6 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     state.patients = REF.patients;
     pInput.value = nf0.format(REF.patients);
     pRange.value = REF.patients;
-    state.actual.adminTeam = null;
-    $("adminteam-actual").value = "";
     state.vendors = VENDORS.map(function (v) { return Object.assign({}, v); });
     buildVendors();
     basis = "wilmslow"; state.mode = "wilmslow";
@@ -1204,10 +1196,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     /* staffing */
     syncStaffControls(s);
     var adminTxt = nf2.format(Math.round(s.admin * 100) / 100) + " FTE";
-    $("sc-admin").textContent = adminTxt;
-    $("admin-share").textContent = state.actual.adminTeam
-      ? "That is about " + nf1.format(s.admin / state.actual.adminTeam * 100) + "% of a " + nf2.format(state.actual.adminTeam) + " FTE admin team."
-      : "Admin time released follows list size at the reference practice's rate. Enter the admin team size to see it as a share of the team.";
+    $("sc-admin").innerHTML = adminTxt + "<small>" + nf1.format(r.adminHrs) + " hrs a week</small>";
+    $("admin-share").textContent = "Admin time released is not a staffing input. It follows list size at the reference practice's rate (" + nf3.format(a.adminPer10k) + " FTE per 10,000 patients) and can be adjusted on the results page.";
     var sessions = nf0.format(Math.round(r.gpSessions + r.nurseSessions));
     $("sc-sessions").textContent = sessions;
 
@@ -1339,7 +1329,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     if (!J) throw new Error("pdf library not loaded");
     var R = lastResult, r = R.r, s = R.s, a = R.a;
     var doc = new J({ unit: "mm", format: "a4" });
-    var W = 210, M = 18, cw = W - M * 2;
+    var W = 210, M = 18, cw = W - M * 2, FOOT = 283;
     var INK = [9, 28, 57], GREEN = [110, 186, 144], BLUE = [61, 115, 175], BLUE_DK = [31, 79, 128], BLUE_LT = [127, 166, 209];
     var TEXT = [33, 33, 33], LIGHT = [91, 97, 107], MUTED = [114, 119, 128], BORDER = [229, 231, 235], TINT = [235, 241, 248], BG = [244, 245, 247];
     var today = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
@@ -1353,10 +1343,25 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       doc.text(lines, x, y);
       return y + lines.length * (lh || size * 0.5);
     }
+    function wordmark(x, y, size, c) {
+      doc.setFont("times", "normal"); doc.setFontSize(size); col(c);
+      doc.text("Medicus", x, y);
+      col(GREEN); doc.text(".", x + doc.getTextWidth("Medicus"), y);
+    }
+    function rule(y) { stroke(BORDER); doc.line(M, y, W - M, y); }
+    /* Continuation pages carry a slim header; page 1 has the full band. */
+    function newPage() {
+      doc.addPage();
+      wordmark(M, 15, 14, INK);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(MUTED);
+      doc.text("Practice time calculator  ·  Prepared for " + lead.practice + "  ·  " + today, W - M, 15, { align: "right" });
+      rule(20);
+      return 32;
+    }
+    function ensure(y, need) { return y + need > FOOT - 6 ? newPage() : y; }
 
-    /* Header band */
+    /* ---------- Page 1: the estimate ---------- */
     fill(INK); doc.rect(0, 0, W, 40, "F");
-    /* Brand CTA glow: radial Accent Blue from above the band, built from stepped translucent ellipses clipped to the band */
     doc.saveGraphicsState();
     doc.rect(0, 0, W, 40, null); doc.clip(); doc.discardPath();
     fill(BLUE);
@@ -1366,10 +1371,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     }
     doc.restoreGraphicsState();
     doc.setGState(new doc.GState({ opacity: 1 }));
-    doc.setFont("times", "normal"); doc.setFontSize(24); col([255, 255, 255]);
-    doc.text("Medicus", M, 20);
-    var mw = doc.getTextWidth("Medicus");
-    col(GREEN); doc.text(".", M + mw, 20);
+    wordmark(M, 20, 24, [255, 255, 255]);
     eyebrow("Practice time calculator", M, 28, GREEN);
     doc.setFont("helvetica", "normal"); doc.setFontSize(9); col([219, 228, 239]);
     doc.text("Prepared for " + lead.practice, W - M, 18, { align: "right" });
@@ -1378,7 +1380,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     doc.text(today, W - M, 28.5, { align: "right" });
 
     /* Hero */
-    var y = 58;
+    var y = 54;
     eyebrow("Time returned to the practice", M, y); y += 11;
     doc.setFont("times", "normal"); doc.setFontSize(40); col(INK);
     var big = nf1.format(r.weekHrs);
@@ -1388,21 +1390,21 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     doc.text("hours a week", M + bw + 3, y);
     y += 8;
     y = para(nf1.format(r.clinHrs) + " clinical hours and " + nf1.format(r.adminHrs) + " admin hours a week, for a practice of " + nf0.format(state.patients) +
-      " registered patients with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE nurses (" + R.modeName + ").", M, y, cw, 10, LIGHT, 5);
+      " registered patients with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE practice nurses (" + R.modeName + ").", M, y, cw, 10, LIGHT, 5);
 
     /* Tiles */
-    y += 5;
-    var tw = (cw - 8) / 3, th = 24;
+    y += 3;
+    var tw = (cw - 8) / 3, th = 22;
     [["Per clinician, each day", nf0.format(r.perClinDay), "minutes back"],
      ["Clinical capacity, each week", "about " + nf0.format(r.appts), nf0.format(a.apptMins) + "-minute appointments"],
      ["Over a year", nf0.format(r.yearHrs), "hours, about " + nf0.format(r.sessionsYear) + " clinical sessions"]].forEach(function (t, i) {
       var x = M + i * (tw + 4);
       stroke(BORDER); fill([255, 255, 255]); doc.roundedRect(x, y, tw, th, 2.5, 2.5, "FD");
       doc.setFont("helvetica", "normal"); doc.setFontSize(8); col(LIGHT); doc.text(t[0], x + 5, y + 7);
-      doc.setFont("times", "normal"); doc.setFontSize(18); col(INK); doc.text(t[1], x + 5, y + 15.5);
-      doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(MUTED); doc.text(t[2], x + 5, y + 20.5);
+      doc.setFont("times", "normal"); doc.setFontSize(18); col(INK); doc.text(t[1], x + 5, y + 14.5);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(MUTED); doc.text(t[2], x + 5, y + 19);
     });
-    y += th + 10;
+    y += th + 9;
 
     /* Breakdown */
     doc.setFont("helvetica", "bold"); doc.setFontSize(11); col(INK); doc.text("Where the time comes from", M, y);
@@ -1417,61 +1419,162 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     [["Fewer slowdowns and downtime", nf2.format(a.downtimeMins) + " min saved in each of " + R.sessions + " clinical sessions a week", r.downHrs, BLUE_DK],
      ["Fewer logins", nf2.format(a.loginMins) + " min x " + nf2.format(a.loginsPerDay) + " logins a day across " + nf1.format(r.clinicians) + " clinicians", r.loginHrs, BLUE],
      ["Less manual admin", nf2.format(Math.round(s.admin * 100) / 100) + " FTE of admin time at " + nf2.format(a.adminHours) + " hrs a week", r.adminHrs, BLUE_LT]].forEach(function (row) {
-      stroke(BORDER); doc.line(M, y, W - M, y); y += 5.5;
+      rule(y); y += 5.5;
       fill(row[3]); doc.roundedRect(M, y - 2.6, 3, 3, .6, .6, "F");
       doc.setFont("helvetica", "bold"); doc.setFontSize(9.5); col(INK); doc.text(row[0], M + 6, y);
-      doc.setFont("helvetica", "bold"); doc.setFontSize(9.5); col(INK); doc.text(hrs(row[2]) + " a week", W - M, y, { align: "right" });
+      doc.text(hrs(row[2]) + " a week", W - M, y, { align: "right" });
       doc.setFont("helvetica", "normal"); doc.setFontSize(8); col(MUTED); doc.text(pct(row[2], r.weekHrs), W - M - 34, y, { align: "right" });
       y += 4.2;
       doc.setFont("helvetica", "normal"); doc.setFontSize(8); col(LIGHT); doc.text(row[1], M + 6, y);
       y += 3.5;
     });
-    stroke(BORDER); doc.line(M, y, W - M, y);
-    y += 8;
+    rule(y);
+    y += 7;
 
-    /* Money */
-    var mh = R.hasLic ? 30 : 24;
+    /* What the time is worth */
+    var mh = 23;
     fill(BG); stroke(BORDER); doc.roundedRect(M, y, cw, mh, 2.5, 2.5, "FD");
     eyebrow("What that time is worth", M + 6, y + 7, MUTED);
     doc.setFont("times", "normal"); doc.setFontSize(18); col(INK); doc.text(gbp(r.timeVal) + " a year", M + 6, y + 15);
     doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(LIGHT);
-    doc.text(doc.splitTextToSize("Clinical time at " + gbpExact(a.gpSession) + " a GP session and " + gbpExact(a.nurseSession) + " a nurse session; admin at £" + money2.format(a.adminRate) + " an hour loaded; " + nf2.format(a.weeks) + " weeks a year.", cw - 12), M + 6, y + 20);
-    if (R.hasLic) {
-      stroke(BORDER); doc.line(M + 6, y + 23.5, W - M - 6, y + 23.5);
-      doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); col(TEXT);
-      doc.text("Plus add-ons retired for " + R.costed.map(function (v) { return v.name + (v.userCost ? "" : " (est.)"); }).join(", "), M + 6, y + 27.5);
-      doc.setFont("helvetica", "bold"); col(INK); doc.text(gbpExact(r.licVal) + " a year", W - M - 6, y + 27.5, { align: "right" });
-    }
-    y += mh + 8;
+    doc.text(doc.splitTextToSize("Clinical time at " + gbpExact(a.gpSession) + " a GP session and " + gbpExact(a.nurseSession) + " a nurse session; admin at £" +
+      money2.format(a.adminRate) + " an hour loaded; " + nf2.format(a.weeks) + " weeks a year.", cw - 12), M + 6, y + 20);
+    y += mh + 7;
 
-    /* Native functions */
+    /* Third-party add-ons retired: summary, then the functions that retire them */
     var on = state.vendors.filter(function (v) { return v.on; });
-    doc.setFont("helvetica", "bold"); doc.setFontSize(11); col(INK); doc.text("Native Medicus functions you plan to use", M, y); y += 6;
-    var colW = cw / 2;
+    var costed = on.filter(function (v) { return vendorCost(v) > 0; });
+    var est = costed.filter(function (v) { return !v.userCost; });
+    var own = costed.length - est.length;
+    doc.setFont("helvetica", "bold"); doc.setFontSize(11); col(INK); doc.text("Third-party add-ons retired", M, y);
+    y += 4;
+    var sh = 18;
+    fill(TINT); stroke(BORDER); doc.roundedRect(M, y, cw, sh, 2.5, 2.5, "FD");
+    eyebrow("Annual saving on add-ons", M + 6, y + 7, MUTED);
+    doc.setFont("times", "normal"); doc.setFontSize(18); col(INK);
+    doc.text(R.hasLic ? gbpExact(r.licVal) + " a year" : "No add-on costs entered", M + 6, y + 15);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(LIGHT);
+    var sum1 = costed.length + " of " + on.length + " selected functions carry an add-on cost";
+    var sum2 = R.hasLic
+      ? (est.length ? est.length + " estimated from list prices" : "") + (est.length && own ? ", " : "") + (own ? own + " entered by the practice" : "")
+      : "Enter the practice's own costs to see a figure";
+    doc.text(sum1, W - M - 6, y + 8.5, { align: "right" });
+    doc.text(sum2, W - M - 6, y + 13.5, { align: "right" });
+    y += sh + 6.5;
+
+    doc.setFont("helvetica", "bold"); doc.setFontSize(9.5); col(INK); doc.text("Native Medicus functions you plan to use", M, y);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(MUTED); doc.text("Add-on cost a year", W - M, y, { align: "right" });
+    y += 5.5;
+    var rows = Math.ceil(on.length / 2), colW = (cw - 8) / 2, lineH = 5.2;
     on.forEach(function (v, i) {
-      var x = M + (i % 2) * colW, yy = y + Math.floor(i / 2) * 5.5;
+      var c = i < rows ? 0 : 1, rI = i < rows ? i : i - rows;
+      var x = M + c * (colW + 8), yy = y + rI * lineH;
       fill(GREEN); doc.circle(x + 1.5, yy - 1, 1, "F");
-      doc.setFont("helvetica", "normal"); doc.setFontSize(9); col(TEXT); doc.text(v.name, x + 5, yy);
-      var c = vendorCost(v);
-      if (c > 0) { doc.setFontSize(8); col(MUTED); doc.text(gbpExact(c) + (v.userCost ? "" : " est.") + " a year", x + colW - 4, yy, { align: "right" }); }
+      doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); col(TEXT); doc.text(v.name, x + 5, yy);
+      var cost = vendorCost(v);
+      doc.setFontSize(7.5);
+      if (cost > 0) { col(v.userCost ? INK : LIGHT); doc.text(gbpExact(cost) + (v.userCost ? "" : " est."), x + colW, yy, { align: "right" }); }
+      else { col(MUTED); doc.text("no cost entered", x + colW, yy, { align: "right" }); }
     });
-    y += Math.ceil(on.length / 2) * 5.5 + 4;
+    y += rows * lineH + 1.5;
+    if (y + 11 <= FOOT - 3) {
+      rule(y);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(7); col(MUTED);
+      doc.text(doc.splitTextToSize("Estimates are list prices scaled to list size. Several add-ons are funded by the ICB, trust or pathology provider rather than the practice, so the saving may belong to the commissioner. Assumptions and sources are on page 2.", cw), M, y + 4.5);
+    }
 
-    /* Assumptions and basis */
-    stroke(BORDER); doc.line(M, y, W - M, y); y += 6;
-    eyebrow("Assumptions and basis", M, y, MUTED); y += 5;
-    y = para("Built from the real-world impact of Medicus at a live NHS practice of about 12,000 patients. " + nf2.format(a.downtimeMins) + " minutes saved in each clinical session and " +
-      nf2.format(a.loginMins) + " minutes at each of " + nf2.format(a.loginsPerDay) + " daily logins; " + nf3.format(a.adminPer10k) + " admin FTE released per 10,000 patients; " +
-      nf2.format(a.daysPerWeek) + " clinical days and " + nf2.format(a.sessionsPerDay) + " sessions a day per FTE; " + nf2.format(a.weeks) + " working weeks. Clinical capacity is clinical hours divided by a " +
-      nf0.format(a.apptMins) + "-minute appointment and shows the scale of the time rather than a promise of extra appointments. Login and slowdown savings are counted separately and together should be read as an upper estimate. " +
-      "Add-on costs marked est. are list prices scaled to list size (AccuRx and PATCHS G-Cloud 14; SMS at 2.99p a fragment; Ardens, Engage and Little Green Button G-Cloud 15) and may be met by the ICB or trust rather than the practice.", M, y, cw, 7.2, LIGHT, 3.5);
+    /* ---------- Page 2: assumptions and basis ---------- */
+    y = newPage();
+    doc.setFont("helvetica", "bold"); doc.setFontSize(13); col(INK); doc.text("Assumptions and basis", M, y); y += 7;
+    y = para("Built from the real-world impact of Medicus at a live NHS practice of about 12,000 patients: " + WILMSLOW_ASSUMP.downtimeMins + " minutes saved in each clinical session, " +
+      WILMSLOW_ASSUMP.loginMins + " minutes at each login and 0.5 FTE of admin time released across 12,310 patients. Clinical hours are valued at the session rate divided by session length. " +
+      "Clinical capacity is clinical hours divided by one appointment length and shows the scale of the time rather than a promise of extra appointments. Login and slowdown savings are counted separately and together should be read as an upper estimate.",
+      M, y, cw, 8, LIGHT, 3.8);
+    y += 1;
 
-    /* Footer */
-    var fy = Math.max(y + 4, 283);
-    stroke(BORDER); doc.line(M, fy, W - M, fy);
-    doc.setFont("helvetica", "normal"); doc.setFontSize(7); col(MUTED);
-    doc.text("Illustrative estimate based on the stated assumptions. It indicates potential staff time released and is not a guarantee.", M, fy + 5);
+    /* Inputs and assumptions, laid out in two columns so the whole basis fits one page */
+    var gcw = (cw - 10) / 2;
+    function fieldRows(g) {
+      return g.fields.map(function (f) {
+        var v = a[f.key], w = WILMSLOW_ASSUMP[f.key];
+        var fmt = f.money ? money2 : nf3;
+        var val = (f.pre || "") + fmt.format(v) + (f.post ? " " + f.post : "");
+        var note = v === DEFAULTS[f.key] ? "" : "changed from " + (f.pre || "") + fmt.format(DEFAULTS[f.key]) + (f.post ? " " + f.post : "");
+        if (!note && DEFAULTS[f.key] !== w) note = "reference practice used " + (f.pre || "") + fmt.format(w) + (f.post ? " " + f.post : "");
+        return [f.label, val, note];
+      });
+    }
+    var practiceRows = [
+      ["Registered patients", nf0.format(state.patients), ""],
+      ["GPs (FTE)", nf1.format(s.gp), R.modeName],
+      ["Practice nurses (FTE)", nf1.format(s.nurse), R.modeName],
+      ["Clinical sessions a week", R.sessions, ""],
+      ["Admin time released (FTE)", nf2.format(Math.round(s.admin * 100) / 100), nf3.format(a.adminPer10k) + " FTE per 10,000 patients"]
+    ];
+    var leftGroups = [["This practice", practiceRows], [GROUPS.down.title, fieldRows(GROUPS.down)], [GROUPS.login.title, fieldRows(GROUPS.login)]];
+    var rightGroups = [[GROUPS.admin.title, fieldRows(GROUPS.admin)], [GROUPS.value.title, fieldRows(GROUPS.value)]];
+    function drawColumn(groups, x, y0) {
+      var yy = y0;
+      groups.forEach(function (g) {
+        yy += 4; eyebrow(g[0], x, yy, MUTED); yy += 2;
+        g[1].forEach(function (row) {
+          stroke(BORDER); doc.line(x, yy, x + gcw, yy); yy += 4.2;
+          doc.setFont("helvetica", "normal"); doc.setFontSize(8); col(TEXT); doc.text(row[0], x, yy);
+          doc.setFont("helvetica", "bold"); col(INK); doc.text(row[1], x + gcw, yy, { align: "right" });
+          if (row[2]) { yy += 3.3; doc.setFont("helvetica", "normal"); doc.setFontSize(6.8); col(MUTED); doc.text(row[2], x, yy); yy += 1.6; }
+          else { yy += 1.6; }
+        });
+        stroke(BORDER); doc.line(x, yy, x + gcw, yy); yy += 2;
+      });
+      return yy;
+    }
+    var yl = drawColumn(leftGroups, M, y);
+    var yr = drawColumn(rightGroups, M + gcw + 10, y);
+    y = Math.max(yl, yr) + 2;
 
+    function groupTitle(t) { y = ensure(y, 14); y += 4; eyebrow(t, M, y, MUTED); y += 2.5; }
+
+    /* Add-ons in two columns: name and cost, then the basis on up to two lines */
+    groupTitle("Third-party add-ons");
+    var arows = Math.ceil(on.length / 2), entryH = 12.4;
+    y = ensure(y, Math.min(arows, 3) * entryH);
+    var ay0 = y;
+    on.forEach(function (v, i) {
+      var c = i < arows ? 0 : 1, rI = i < arows ? i : i - arows;
+      var x = M + c * (gcw + 10), yy = ay0 + rI * entryH;
+      if (yy + entryH > FOOT - 4) { return; }
+      stroke(BORDER); doc.line(x, yy, x + gcw, yy); yy += 4.2;
+      doc.setFont("helvetica", "bold"); doc.setFontSize(8); col(INK); doc.text(v.name, x, yy);
+      var cost = vendorCost(v);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(cost > 0 ? INK : MUTED);
+      doc.text(cost > 0 ? gbpExact(cost) + (v.userCost ? " (practice's figure)" : " (est.)") : "no cost entered", x + gcw, yy, { align: "right" });
+      yy += 3.2;
+      doc.setFontSize(6.6); col(MUTED);
+      var basisLines = doc.splitTextToSize(v.custom ? "Added by the practice" : (v.desc + (v.basis ? ". " + v.basis : "")), gcw).slice(0, 2);
+      doc.text(basisLines, x, yy);
+    });
+    y = ay0 + arows * entryH;
+    rule(y); y += 5;
+
+    y = ensure(y, 22);
+    eyebrow("Sources", M, y, MUTED); y += 4.5;
+    y = para("NHS England, General Practice Workforce, 28 February 2026; NHS England, Patients Registered at a GP Practice, February 2026; National Living Wage from April 2026; " +
+      "Accurx and PATCHS (OneAdvanced) pricing on G-Cloud 14; Ardens, Engage Health Systems, Little Green Button, EDGEALERT and Healthtech-1 pricing documents on G-Cloud 15; " +
+      "NECS, Optimising GP messaging across North East and North Cumbria ICB. Links to each are in the calculator's Basis and limits section.", M, y, cw, 7, LIGHT, 3.5);
+    y += 2.5;
+    doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(MUTED);
+    doc.text("Model version 1.0  ·  assumptions reviewed October 2026  ·  report generated " + today, M, y);
+
+    /* Footers, once the page count is known */
+    var pages = doc.getNumberOfPages();
+    for (var pn = 1; pn <= pages; pn++) {
+      doc.setPage(pn);
+      rule(FOOT);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(7); col(MUTED);
+      doc.text("Illustrative estimate based on the stated assumptions. It indicates potential staff time released and is not a guarantee.", M, FOOT + 5);
+      doc.text("Page " + pn + " of " + pages, W - M, FOOT + 5, { align: "right" });
+    }
+    doc.setPage(1);
     return doc;
   }
 
