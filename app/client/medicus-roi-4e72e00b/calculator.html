@@ -319,11 +319,13 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 .hero .eyebrow { color: var(--green); }
 .hero .big {
   font-family: var(--font-display);
+  font-weight: 700;
   font-size: clamp(44px, 3rem + 2vw, 64px);
   line-height: 1.05;
+  margin-top: 12px;
   font-variant-numeric: tabular-nums lining-nums;
 }
-.hero .big small { font-size: .42em; margin-left: 8px; font-family: var(--font-body); }
+.hero .big small { font-size: .42em; font-weight: 400; margin-left: 8px; font-family: var(--font-body); }
 .hero p { color: #DBE4EF; max-width: 60ch; }
 
 .tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0; }
@@ -339,8 +341,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 .tile .ic.c { background: var(--coral-light); color: var(--coral); }
 .tile svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .tile dt { font-size: 13px; color: var(--text-light); }
-.tile dd { margin: 0; font-family: var(--font-display); font-size: 27px; line-height: 1.15; color: var(--ink); font-variant-numeric: tabular-nums lining-nums; }
-.tile dd small { display: block; font-family: var(--font-body); font-size: 13px; line-height: 1.4; color: var(--muted); margin-top: 2px; }
+.tile dd { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 27px; line-height: 1.15; color: var(--ink); font-variant-numeric: tabular-nums lining-nums; }
+.tile dd small { display: block; font-family: var(--font-body); font-weight: 400; font-size: 13px; line-height: 1.4; color: var(--muted); margin-top: 2px; }
 
 .section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
 
@@ -401,7 +403,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
   display: grid; gap: 10px; background: var(--bg);
 }
 .money .row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-.money .amt { font-family: var(--font-display); font-size: 27px; color: var(--ink); font-variant-numeric: tabular-nums lining-nums; }
+.money .amt { font-family: var(--font-display); font-weight: 700; font-size: 27px; color: var(--ink); font-variant-numeric: tabular-nums lining-nums; }
 .money .sub { font-size: 13px; color: var(--text-light); }
 .money .lic { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; border-top: 1px solid var(--border); padding-top: 10px; }
 .money .lic strong { color: var(--ink); font-variant-numeric: tabular-nums; }
@@ -1381,8 +1383,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 
     /* Hero */
     var y = 54;
-    eyebrow("Time returned to the practice", M, y); y += 11;
-    doc.setFont("times", "normal"); doc.setFontSize(40); col(INK);
+    eyebrow("Time returned to the practice", M, y); y += 15;
+    doc.setFont("times", "bold"); doc.setFontSize(40); col(INK);
     var big = nf1.format(r.weekHrs);
     doc.text(big, M, y);
     var bw = doc.getTextWidth(big);
@@ -1393,7 +1395,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       " registered patients with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE practice nurses (" + R.modeName + ").", M, y, cw, 10, LIGHT, 5);
 
     /* Tiles */
-    y += 3;
+    y += 1;
     var tw = (cw - 8) / 3, th = 22;
     [["Per clinician, each day", nf0.format(r.perClinDay), "minutes back"],
      ["Clinical capacity, each week", "about " + nf0.format(r.appts), nf0.format(a.apptMins) + "-minute appointments"],
@@ -1401,7 +1403,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       var x = M + i * (tw + 4);
       stroke(BORDER); fill([255, 255, 255]); doc.roundedRect(x, y, tw, th, 2.5, 2.5, "FD");
       doc.setFont("helvetica", "normal"); doc.setFontSize(8); col(LIGHT); doc.text(t[0], x + 5, y + 7);
-      doc.setFont("times", "normal"); doc.setFontSize(18); col(INK); doc.text(t[1], x + 5, y + 14.5);
+      doc.setFont("times", "bold"); doc.setFontSize(18); col(INK); doc.text(t[1], x + 5, y + 14.5);
       doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(MUTED); doc.text(t[2], x + 5, y + 19);
     });
     y += th + 9;
@@ -1435,7 +1437,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     var mh = 23;
     fill(BG); stroke(BORDER); doc.roundedRect(M, y, cw, mh, 2.5, 2.5, "FD");
     eyebrow("What that time is worth", M + 6, y + 7, MUTED);
-    doc.setFont("times", "normal"); doc.setFontSize(18); col(INK); doc.text(gbp(r.timeVal) + " a year", M + 6, y + 15);
+    doc.setFont("times", "bold"); doc.setFontSize(18); col(INK); doc.text(gbp(r.timeVal) + " a year", M + 6, y + 15);
     doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(LIGHT);
     doc.text(doc.splitTextToSize("Clinical time at " + gbpExact(a.gpSession) + " a GP session and " + gbpExact(a.nurseSession) + " a nurse session; admin at £" +
       money2.format(a.adminRate) + " an hour loaded; " + nf2.format(a.weeks) + " weeks a year.", cw - 12), M + 6, y + 20);
@@ -1451,7 +1453,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     var sh = 18;
     fill(TINT); stroke(BORDER); doc.roundedRect(M, y, cw, sh, 2.5, 2.5, "FD");
     eyebrow("Annual saving on add-ons", M + 6, y + 7, MUTED);
-    doc.setFont("times", "normal"); doc.setFontSize(18); col(INK);
+    doc.setFont("times", "bold"); doc.setFontSize(18); col(INK);
     doc.text(R.hasLic ? gbpExact(r.licVal) + " a year" : "No add-on costs entered", M + 6, y + 15);
     doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(LIGHT);
     var sum1 = costed.length + " of " + on.length + " selected functions carry an add-on cost";
