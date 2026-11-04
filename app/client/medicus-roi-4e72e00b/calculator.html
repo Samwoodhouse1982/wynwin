@@ -708,7 +708,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
         </div>
         <div class="tile">
           <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
-          <div><dt>Clinical capacity, each week<button type="button" class="info" data-tip="appts" aria-label="How we calculated this">i</button></dt><dd id="t-appts"></dd></div>
+          <div><dt>Estimated clinical capacity released each week<button type="button" class="info" data-tip="appts" aria-label="How we calculated this">i</button></dt><dd id="t-appts"></dd></div>
         </div>
         <div class="tile">
           <span class="ic c" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span>
@@ -1724,7 +1724,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     setNum("hc-val", c.timeVal, function (v, done) { return done ? gbp(v) : gbpExact(v); });
     $("m-cautious").textContent = "Cautious case: " + gbp(c.timeVal) + " a year, with " + (state.mode === "actual" ? "your own staffing" : "national-average staffing") + ", half the minutes saved and " + nf2.format(ca.weeks) + " weeks. Read the two as a range.";
     setNum("t-perclin", r.perClinDay, function (v) { return nf0.format(v) + "<small>minutes back</small>"; });
-    setNum("t-appts", r.appts, function (v) { return "≈ " + nf0.format(v) + "<small>" + nf0.format(a.apptMins) + "-minute appointments</small>"; });
+    setNum("t-appts", r.appts, function (v) { return nf0.format(v) + "<small>" + nf0.format(a.apptMins) + "-minute appointments</small>"; });
     var clinShare = r.weekHrs > 0 ? r.clinHrs / r.weekHrs : 0, sessPerHr = a.sessionHours > 0 ? 1 / a.sessionHours : 0;
     setNum("t-year", r.yearHrs, function (v) {
       var cy = v * clinShare, ay = v - cy;
@@ -1811,7 +1811,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
                 "Total: " + nf0.format(r.perClinDay) + " minutes back for each clinician on each clinical day.",
                 "~This is the same for every clinician, so it does not change with list size or team size."],
       appts: [hrs(r.clinHrs) + " of clinical time a week = " + nf0.format(r.clinHrs * 60) + " minutes.",
-              nf0.format(r.clinHrs * 60) + " ÷ " + nf0.format(a.apptMins) + "-minute appointments ≈ " + nf0.format(r.appts) + ".",
+              nf0.format(r.clinHrs * 60) + " ÷ " + nf0.format(a.apptMins) + "-minute appointments = " + nf0.format(r.appts) + (Math.abs(r.appts - Math.round(r.appts)) > 0.05 ? " (rounded)." : "."),
               "~This is the upper limit, if every saved minute became appointment time. Some of it will be a calmer day rather than extra slots."],
       year: [hrs(r.weekHrs) + " a week × " + wk + " = " + nf0.format(r.yearHrs) + " hours a year.",
              "Of that, " + hrs(r.clinHrs) + " × " + nf2.format(a.weeks) + " = " + nf0.format(r.clinHrs * a.weeks) + " clinical hours, which is about " + nf0.format(r.sessionsYear) + " sessions of " + nf2.format(a.sessionHours) + " hours.",
@@ -1851,7 +1851,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       "  Less manual admin: " + hrs(r.adminHrs) + " a week",
       "Cautious case: " + nf1.format(c.weekHrs) + " hours a week, about " + nf0.format(c.yearHrs) + " a year, worth " + gbp(c.timeVal) + " a year (" + (state.mode === "actual" ? "own staffing" : "national-average staffing") + ", half the minutes saved, " + nf2.format(ca.weeks) + " weeks)",
       "Per clinician: about " + nf0.format(r.perClinDay) + " minutes a day",
-      "Clinical capacity: about " + nf0.format(r.appts) + " " + nf0.format(a.apptMins) + "-minute appointments a week, or " + nf0.format(r.sessionsYear) + " clinical sessions a year",
+      "Estimated clinical capacity released: " + nf0.format(r.appts) + " " + nf0.format(a.apptMins) + "-minute appointments a week, or " + nf0.format(r.sessionsYear) + " clinical sessions a year",
       "",
       "What that time is worth: " + gbp(r.timeVal) + " a year",
       "Add-ons retired by native Medicus functions: " + (hasLic ? gbpExact(r.licVal) + " a year (" + costed.map(function (v) { return v.name + " " + gbpExact(vendorCost(v)) + (net ? " across " + nf0.format(vendorUsing(v)) + " practice" + (vendorUsing(v) === 1 ? "" : "s") : "") + (v.userCost ? "" : " est.") + (v.payer === "commissioner" ? " [ICB or other pays]" : ""); }).join(", ") + ")" : "no costs entered") +
@@ -2011,15 +2011,15 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 
     /* Tiles */
     y += 1;
-    var tw = (cw - 8) / 3, th = 22;
+    var tw = (cw - 8) / 3, th = 25;
     [["Per clinician, each day", nf0.format(r.perClinDay), "minutes back"],
-     ["Clinical capacity, each week", "about " + nf0.format(r.appts), nf0.format(a.apptMins) + "-minute appointments"],
+     ["Estimated clinical capacity released each week", nf0.format(r.appts), nf0.format(a.apptMins) + "-minute appointments"],
      ["Over a year", nf0.format(r.yearHrs), "hours, about " + nf0.format(r.sessionsYear) + " clinical sessions"]].forEach(function (t, i) {
       var x = M + i * (tw + 4);
       stroke(BORDER); fill([255, 255, 255]); doc.roundedRect(x, y, tw, th, 2.5, 2.5, "FD");
-      doc.setFont("helvetica", "normal"); doc.setFontSize(8); col(LIGHT); doc.text(t[0], x + 5, y + 7);
-      doc.setFont("times", "bold"); doc.setFontSize(18); col(INK); doc.text(t[1], x + 5, y + 14.5);
-      doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(MUTED); doc.text(t[2], x + 5, y + 19);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(8); col(LIGHT); doc.text(doc.splitTextToSize(t[0], tw - 10).slice(0, 2), x + 5, y + 6.5, { lineHeightFactor: 1.15 });
+      doc.setFont("times", "bold"); doc.setFontSize(18); col(INK); doc.text(t[1], x + 5, y + 17.5);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(MUTED); doc.text(t[2], x + 5, y + 22);
     });
     y += th + 7;
 
@@ -2164,7 +2164,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     /* How each figure is calculated, with this practice's numbers substituted (the same text as the page's tooltips) */
     y = ensure(y, 24); y += 3;
     eyebrow("How the figures are calculated", M, y, MUTED); y += 2;
-    [["Hours a week", "hero"], ["Per clinician, each clinical day", "perclin"], ["Clinical capacity", "appts"], ["Over a year", "year"],
+    [["Hours a week", "hero"], ["Per clinician, each clinical day", "perclin"], ["Clinical capacity released", "appts"], ["Over a year", "year"],
      ["Fewer slowdowns and downtime", "down"], ["Fewer logins", "login"], ["Less manual admin", "admin"], ["What that time is worth", "money"], ["Cautious case", "cautious"], ["Third-party add-ons retired", "lic"]].forEach(function (g) {
       var lines = (tipText[g[1]] || []).filter(function (l) { return l.charAt(0) !== "~"; });
       if (!lines.length) return;
