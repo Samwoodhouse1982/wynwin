@@ -7,7 +7,9 @@ robots or navigation.
 ## Files
 
 - `calculator.html` — the calculator itself: a self-contained page (styles and
-  script inline, jsPDF from cdnjs for the PDF report). This is the file to edit.
+  script inline). The PDF library is served from `public/vendor/jspdf-2.5.1.umd.min.js`
+  (MIT), with cdnjs as a fallback, because some NHS networks block CDNs. This is the
+  file to edit.
 - `build.mjs` — converts `calculator.html` into `calculator.ts`. Run
   `node app/client/medicus-roi-4e72e00b/build.mjs` after every edit and commit
   both files.
@@ -41,4 +43,9 @@ practices entered: staffing is estimated from the total list, admin time
 follows the total list, and each add-on is costed for a practice of average list
 size and multiplied by the number of practices using it (the "of N practices"
 field on the functions step). Leads carry `orgType` and `practices` alongside
-`patients`.
+`patients`, plus the add-on saving paid by the practice and the cautious-case figures.
+
+The inputs and current step are kept in the URL hash (`#s=`), so a results link
+can be shared, and in localStorage for a returning visitor. Add-on prices follow
+Accurx's G-Cloud 15 tiers by total list size; each add-on records who pays
+(practice, or ICB/trust/other) and the saving is split accordingly.
