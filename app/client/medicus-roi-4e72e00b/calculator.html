@@ -1446,8 +1446,6 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     basis = "wilmslow"; state.mode = "wilmslow";
     applyOrg("practice", true);
     setMode("wilmslow");
-    computedOnce = false;
-    try { sessionStorage.removeItem("medicus-roi-computed"); } catch (e) {}
   }
   $("reset-all").addEventListener("click", resetAll);
   $("start-over").addEventListener("click", function () { if (computing) return; resetAll(); goTo(1); });
@@ -2299,24 +2297,30 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     closeCalc();
     var wasLive = resultsLive;
     resultsLive = n === TOTAL_STEPS;
-    if (resultsLive && !wasLive && !initialising && !reduceMotion && !computedOnce) {
-      computedOnce = true;
-      try { sessionStorage.setItem("medicus-roi-computed", "1"); } catch (e) {}
+    if (resultsLive && !wasLive && !initialising && !reduceMotion) {
       runComputing(function () { render(); playResults(); });
     } else if (resultsLive && !wasLive) { render(); playResults(); }
     if (!initialising) {
-      var stage = document.querySelector(".stage");
-      var top = stage.getBoundingClientRect().top + window.pageYOffset - 16;
-      if (window.pageYOffset > top) window.scrollTo({ top: top, behavior: "smooth" });
+      bumpToStage(resultsLive && !wasLive);
       var h = steps[n - 1].querySelector("h2");
       if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); }
     }
     if (!initialising && !navigating) pushUrlState();
   }
-  /* "Computing" interstitial, shown once per session on the way into the results */
+  /* Scroll the card back into view on a step change. Always on the way into the results, so the computing screen is seen;
+     otherwise only when the visitor has scrolled past the top of the card. Inside an iframe the parent page does the scrolling,
+     so scrollIntoView is used there. */
+  function bumpToStage(force) {
+    var stage = document.querySelector(".stage");
+    var framed = false;
+    try { framed = window.top !== window; } catch (e) { framed = true; }
+    var top = stage.getBoundingClientRect().top + window.pageYOffset - 16;
+    if (!(force || framed || window.pageYOffset > top)) return;
+    if (framed) { try { stage.scrollIntoView({ behavior: "smooth", block: "start" }); return; } catch (e) {} }
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  }
+  /* "Computing" interstitial shown on the way into the results */
   var computing = false;
-  var computedOnce = false;
-  try { computedOnce = sessionStorage.getItem("medicus-roi-computed") === "1"; } catch (e) {}
   function runComputing(done) {
     if (computing) return;
     computing = true;
