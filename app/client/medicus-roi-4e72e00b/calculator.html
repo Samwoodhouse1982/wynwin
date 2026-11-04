@@ -846,6 +846,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 (function () {
   "use strict";
 
+  var MODEL_VERSION = "1.1", MODEL_REVIEWED = "November 2026";   /* shown on the page, in the report footer and on its basis page */
   var REF = { patients: 12310, gp: 8, nurse: 3, admin: 0.5 };
   var RATIOS = {
     wilmslow: { gp: REF.patients / REF.gp, nurse: REF.patients / REF.nurse },
@@ -2173,7 +2174,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       "NECS, Optimising GP messaging across North East and North Cumbria ICB; BMA, doctors' time lost to inadequate IT systems. Links to each are in the calculator's Basis and limits section.", M, y, cw, 7, LIGHT, 3.5);
     y += 2.5;
     doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(MUTED);
-    doc.text("Model version 1.1  ·  prices and assumptions reviewed November 2026  ·  report generated " + today, M, y);
+    doc.text("Model version " + MODEL_VERSION + "  ·  prices and assumptions reviewed " + MODEL_REVIEWED + "  ·  report generated " + today, M, y);
     y += 7;
 
     /* Important information */
@@ -2221,6 +2222,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       doc.setFont("helvetica", "normal"); doc.setFontSize(7); col(MUTED);
       doc.text("Illustrative estimate based on the stated assumptions. It indicates potential staff time released and is not a guarantee.", M, FOOT + 5);
       doc.text("Page " + pn + " of " + pages, W - M, FOOT + 5, { align: "right" });
+      if (pn === 1) doc.text("Model version " + MODEL_VERSION + "  ·  report generated " + today, M, FOOT + 9);
     }
     doc.setPage(1);
     return doc;
