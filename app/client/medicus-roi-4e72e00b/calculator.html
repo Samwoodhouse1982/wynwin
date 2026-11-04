@@ -794,7 +794,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       <details class="more">
         <summary>Basis and limits</summary>
         <ul class="basis">
-          <li><strong>Source</strong><p>Built from the measured impact of Medicus at a live NHS practice (the reference practice) with 8 FTE GPs, 3 FTE practice nurses and 0.5 FTE of admin time released across 12,310 registered patients. Time saved per login and per session, and the admin time released, are that practice's own figures.</p></li>
+          <li><strong>Source</strong><p>Built from the measured impact of Medicus at a live NHS practice (the reference practice) with 8 FTE GPs, 3 FTE practice nurses and 0.5 FTE of admin time released across 12,310 registered patients. Time saved per login and per session, and the admin time released, are that practice's own figures. A session is a four-hour clinic (a half day of about 24 ten-minute appointments), not a single consultation, and the ten minutes per session is the practice's own conservative estimate of time lost to slow screens and system waits rather than a timed measurement. It is the least evidenced of the three inputs, which is why the cautious case halves it.</p></li>
           <li><strong>Staffing presets</strong><p>Reference practice ratios give one GP FTE per 1,539 patients and one practice nurse FTE per 4,103. The national average preset uses NHS England's general practice workforce figures for February 2026 (28,895 FTE fully qualified GPs and 16,728 FTE nurses, a count that includes nurse practitioners and nursing associates) against 63,789,531 registered patients, or about 2,210 patients per GP and 3,810 per nurse. The reference practice is better staffed than average, so its ratios give the higher figure: a single practice starts from the reference ratios, and a network or region starts from the national average because no whole system can be assumed to match one well-staffed practice. Other clinical staff (pharmacists, physiotherapists, paramedics and the other ARRS roles, plus healthcare assistants) are not counted, which makes the clinical time figure conservative, particularly for a PCN. NHS England counts an FTE as 37.5 hours; the model follows the reference practice in counting one as four clinical days.</p></li>
           <li><strong>Networks and regions</strong><p>For a PCN, federation or ICB the same model is applied to the total registered population and the number of practices entered, and assumes every practice entered moves to Medicus, so count only the practices in scope. The result is a steady state once they are all live, not a phased figure. Clinical staffing is estimated from the total list at the chosen ratio (national average by default), admin time released follows the total list, and add-on costs are estimated for a practice of average list size and multiplied by the number of practices using each tool; Accurx add-ons are priced at the G-Cloud 15 tier for the whole list in scope, as a network or ICB would buy. Practices within a network vary widely in size, systems and funding, so the result is an aggregate, not a sum of individual practice figures.</p></li>
           <li><strong>Cautious case</strong><p>Every result is shown twice: on the reference assumptions as entered, and as a cautious case that keeps the same inputs but applies national-average staffing (unless the practice's own figures were entered), halves the minutes saved per session and per login, and counts no more than 45 working weeks. Admin hours and add-on savings are the same in both. The two figures should be read as a range, with the reference practice's own experience at the top of it.</p></li>
@@ -858,7 +858,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
   };
   var DEFAULTS = Object.assign({}, WILMSLOW_ASSUMP, { adminRate: 15 });
   var GROUPS = {
-    down: { title: "Slowdowns and downtime", note: "The reference practice counted a conservative ten minutes saved in every clinical session.", fields: [
+    down: { title: "Slowdowns and downtime", note: "The reference practice's own conservative estimate: ten minutes of slowdowns and waits avoided in each four-hour clinical session (a half-day clinic, not an appointment).", fields: [
       { key: "downtimeMins", label: "Minutes saved per session", post: "min", step: 1 },
       { key: "sessionsPerDay", label: "Sessions per clinical day", step: 1 },
       { key: "daysPerWeek", label: "Clinical days per FTE a week", step: 0.5 }
@@ -1746,7 +1746,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     setNum("l-down", r.downHrs, function (v) { return hrs(v) + "<small>a week · " + sh[0] + "%</small>"; });
     setNum("l-login", r.loginHrs, function (v) { return hrs(v) + "<small>a week · " + sh[1] + "%</small>"; });
     setNum("l-admin", r.adminHrs, function (v) { return hrs(v) + "<small>a week · " + sh[2] + "%</small>"; });
-    $("d-down").textContent = nf2.format(a.downtimeMins) + " min saved in each of " + sessions + " clinical sessions a week";
+    var downWho = a.downtimeMins === DEFAULTS.downtimeMins ? "the reference practice's estimate" : "your figure";
+    $("d-down").textContent = nf2.format(a.downtimeMins) + " min of slowdowns and waits avoided per " + nf2.format(a.sessionHours) + "-hour session (" + downWho + "), across " + sessions + " sessions a week";
     $("d-login").textContent = nf2.format(a.loginMins) + " min × " + nf2.format(a.loginsPerDay) + " logins a day × " + nf2.format(a.daysPerWeek) + " days, across " + nf1.format(r.clinicians) + " clinicians";
     $("d-admin").textContent = nf2.format(Math.round(s.admin * 100) / 100) + " FTE of admin time at " + nf2.format(a.adminHours) + " hrs a week";
 
@@ -1789,7 +1790,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
         : [nf0.format(state.patients) + " patients ÷ " + nf0.format(ratio.nurse) + " patients per nurse = " + nf1.format(s.nurse) + " FTE.", "~" + nf0.format(ratio.nurse) + " patients per nurse is " + ratioNote + ". Move the slider to use " + (net ? "your own total" : "the practice's own figure") + "."],
       sessions: [nf1.format(s.gp) + " GPs × " + nf2.format(a.daysPerWeek) + " clinical days × " + nf2.format(a.sessionsPerDay) + " sessions = " + nfx.format(gpSess) + " GP sessions.",
                  nf1.format(s.nurse) + " nurses × " + nf2.format(a.daysPerWeek) + " × " + nf2.format(a.sessionsPerDay) + " = " + nfx.format(nSess) + " nurse sessions.",
-                 "Total: " + sessions + " clinical sessions a week."],
+                 "Total: " + sessions + " clinical sessions a week.",
+                 "~A session is a " + nf2.format(a.sessionHours) + "-hour clinic, not a single appointment; one FTE works " + nf2.format(a.daysPerWeek * a.sessionsPerDay) + " a week."],
       admin: [nf0.format(state.patients) + " patients ÷ 10,000 × " + nf3.format(a.adminPer10k) + " = " + nf2.format(Math.round(s.admin * 100) / 100) + " FTE of admin time released.",
               nf2.format(Math.round(s.admin * 100) / 100) + " FTE × " + nf2.format(a.adminHours) + " hours a week = " + hrs(r.adminHrs) + " a week, which is " + sh[2] + "% of the total.",
               "Worth " + gbpExact(r.adminVal) + " a year at £" + money2.format(a.adminRate) + " an hour × " + wk + ".",
@@ -1821,7 +1823,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
              sessions + " sessions × " + nf2.format(a.downtimeMins) + " minutes saved = " + nf0.format(r.downHrs * 60) + " minutes = " + hrs(r.downHrs) + " a week.",
              "Share of the total: " + hrs(r.downHrs) + " ÷ " + hrs(r.weekHrs) + " = " + sh[0] + "%.",
              "Worth " + gbpExact(r.downVal) + " a year: GP time at " + gbpRate(gpRate) + " an hour (" + gbpExact(a.gpSession) + " ÷ " + nf2.format(a.sessionHours) + "-hour session) and nurse time at " + gbpRate(nurseRate) + " an hour, × " + wk + ".",
-             "~The " + nf2.format(a.downtimeMins) + " minutes a session is the reference practice's conservative estimate of time lost to slow screens and system waits."],
+             "~A session is a " + nf2.format(a.sessionHours) + "-hour clinic of about " + nf0.format(a.apptMins > 0 ? a.sessionHours * 60 / a.apptMins : 0) + " " + nf2.format(a.apptMins) + "-minute appointments, so " + nf2.format(a.downtimeMins) + " minutes a session is about " + nf0.format(a.apptMins > 0 ? a.downtimeMins * 60 / (a.sessionHours * 60 / a.apptMins) : 0) + " seconds an appointment.",
+             "~The " + nf2.format(a.downtimeMins) + " minutes is the reference practice's own conservative estimate of time lost to slow screens and system waits, not a timed measurement. It is the least evidenced input, which is why the cautious case halves it."],
       login: ["Clinicians: " + nf1.format(s.gp) + " GPs + " + nf1.format(s.nurse) + " nurses = " + nf1.format(r.clinicians) + ".",
               nf1.format(r.clinicians) + " × " + nf2.format(a.daysPerWeek) + " clinical days × " + nf2.format(a.loginsPerDay) + " logins × " + nf2.format(a.loginMins) + " minutes = " + nf0.format(r.loginHrs * 60) + " minutes = " + hrs(r.loginHrs) + " a week.",
               "Share of the total: " + hrs(r.loginHrs) + " ÷ " + hrs(r.weekHrs) + " = " + sh[1] + "%.",
@@ -1858,7 +1861,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
         (uncosted.length ? "; selected without a cost: " + uncosted.map(function (v) { return v.name + (net && vendorUsing(v) === 0 ? " (no practices using it)" : ""); }).join(", ") : ""),
       hasLic ? "  Of which paid by " + payerWho + " today: " + gbpExact(vt.practice) + "; paid by an ICB, trust or other commissioner: " + gbpExact(vt.commissioner) + " (that part of the saving belongs to the payer)" : null,
       "",
-      "Assumptions: " + nf2.format(a.downtimeMins) + " min saved per session, " + nf2.format(a.loginMins) + " min × " + nf2.format(a.loginsPerDay) + " logins a day, " +
+      "Assumptions: " + nf2.format(a.downtimeMins) + " min saved per " + nf2.format(a.sessionHours) + "-hour session, " + nf2.format(a.loginMins) + " min × " + nf2.format(a.loginsPerDay) + " logins a day, " +
         nf3.format(a.adminPer10k) + " admin FTE released per 10,000 patients, " + nf2.format(a.daysPerWeek) + " clinical days × " + nf2.format(a.sessionsPerDay) + " sessions per FTE, " +
         nf2.format(a.weeks) + " weeks a year; GP session " + gbpExact(a.gpSession) + ", nurse session " + gbpExact(a.nurseSession) + ", " + nf2.format(a.sessionHours) + " hr sessions, admin £" + money2.format(a.adminRate) + "/hr loaded.",
       "Model basis: the real-world impact of Medicus at a live NHS practice of about 12,000 patients.",
@@ -2033,7 +2036,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       fill(seg[1]); doc.rect(bx, y, sw, bh, "F"); bx += sw + 0.8;
     });
     y += bh + 5;
-    [["Fewer slowdowns and downtime", nf2.format(a.downtimeMins) + " min saved in each of " + R.sessions + " clinical sessions a week", r.downHrs, BLUE_DK],
+    [["Fewer slowdowns and downtime", nf2.format(a.downtimeMins) + " min of slowdowns and waits avoided per " + nf2.format(a.sessionHours) + "-hour session (" + (a.downtimeMins === DEFAULTS.downtimeMins ? "the reference practice's estimate" : "your figure") + ") x " + R.sessions + " sessions a week", r.downHrs, BLUE_DK],
      ["Fewer logins", nf2.format(a.loginMins) + " min x " + nf2.format(a.loginsPerDay) + " logins a day across " + nf1.format(r.clinicians) + " clinicians", r.loginHrs, BLUE],
      ["Less manual admin", nf2.format(Math.round(s.admin * 100) / 100) + " FTE of admin time at " + nf2.format(a.adminHours) + " hrs a week", r.adminHrs, BLUE_LT]].forEach(function (row, rowIndex) {
       rule(y); y += 5.5;
@@ -2106,7 +2109,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     /* ---------- Page 2: assumptions and basis ---------- */
     y = newPage();
     doc.setFont("helvetica", "bold"); doc.setFontSize(13); col(INK); doc.text("Assumptions and basis", M, y); y += 7;
-    y = para("Built from the real-world impact of Medicus at a live NHS practice of about 12,000 patients: " + WILMSLOW_ASSUMP.downtimeMins + " minutes saved in each clinical session, " +
+    y = para("Built from the real-world impact of Medicus at a live NHS practice of about 12,000 patients: " + WILMSLOW_ASSUMP.downtimeMins + " minutes of slowdowns and waits avoided in each four-hour clinical session (the practice's own conservative estimate), " +
       WILMSLOW_ASSUMP.loginMins + " minutes at each login and 0.5 FTE of admin time released across 12,310 patients. Login and slowdown savings are counted separately, so read the two together as an upper estimate.",
       M, y, cw, 8, LIGHT, 3.8);
     y += 2;
@@ -2314,7 +2317,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     var ticked = state.vendors.filter(function (v) { return v.on; }).length;
     var lines = [
       ["Scaling the model to " + nf0.format(state.patients) + " registered patients" + (isNetwork() ? " across " + nf0.format(state.practices) + " practices" : ""), nf1.format(s.gp + s.nurse) + " FTE clinicians"],
-      ["Modelling " + nf0.format(Math.round(r.gpSessions + r.nurseSessions)) + " clinical sessions a week", nf2.format(state.a.downtimeMins) + " min each"],
+      ["Modelling " + nf0.format(Math.round(r.gpSessions + r.nurseSessions)) + " clinical sessions a week", nf2.format(state.a.downtimeMins) + " min per " + nf2.format(state.a.sessionHours) + "-hr session"],
       ["Counting " + nf0.format(Math.round((s.gp + s.nurse) * state.a.daysPerWeek * state.a.loginsPerDay)) + " clinician logins a week", nf2.format(state.a.loginMins) + " min each"],
       ["Releasing admin time from document handling", nf2.format(Math.round(s.admin * 100) / 100) + " FTE"],
       ["Checking " + ticked + " native Medicus functions against add-ons", ticked ? nf0.format(ticked) + " selected" : "none"],
