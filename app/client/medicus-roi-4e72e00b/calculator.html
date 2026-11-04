@@ -445,6 +445,12 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 .basis p { color: var(--text-light); font-size: 14px; max-width: 70ch; }
 .actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 .foot { font-size: 12px; letter-spacing: .02em; color: var(--muted); border-top: 1px solid var(--border); padding-top: 14px; }
+.legal { border-top: 1px solid var(--border); padding-top: 16px; display: grid; gap: 10px; }
+.legal h3 { font-size: 14px; }
+.legal ol { margin: 0; padding-left: 18px; display: grid; gap: 7px; }
+.legal li { font-size: 13px; line-height: 1.55; color: var(--text-light); }
+.legal li strong { color: var(--ink); font-weight: 700; }
+.legal a { color: var(--blue); }
 
 /* Lead capture */
 .lead {
@@ -719,7 +725,21 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
         <p class="hint">Sources: <a href="https://digital.nhs.uk/data-and-information/publications/statistical/general-and-personal-medical-services/28-february-2026" target="_blank" rel="noopener">NHS England, General Practice Workforce, 28 February 2026</a> · <a href="https://digital.nhs.uk/data-and-information/publications/statistical/patients-registered-at-a-gp-practice/february-2026" target="_blank" rel="noopener">NHS England, Patients Registered at a GP Practice, February 2026</a> · <a href="https://www.acs.org.uk/news/national-living-wage-rise-ps1271-april-2026" target="_blank" rel="noopener">National Living Wage, April 2026</a> · <a href="https://assets.applytosupply.digitalmarketplace.service.gov.uk/g-cloud-14/documents/708675/281422867192066-pricing-document-2025-02-27-0730.pdf" target="_blank" rel="noopener">Accurx G-Cloud 14 pricing document</a> · <a href="https://www.necsu.nhs.uk/optimising-gp-messaging-reducing-sms-costs-across-nenc-icb/" target="_blank" rel="noopener">NECS, Optimising GP messaging across NENC ICB</a> · <a href="https://assets.applytosupply.digitalmarketplace.service.gov.uk/g-cloud-15/documents/721020/439216584756241-pricing-document-2026-01-14-1235.pdf" target="_blank" rel="noopener">Little Green Button G-Cloud 15 pricing</a> · <a href="https://assets.applytosupply.digitalmarketplace.service.gov.uk/g-cloud-15/documents/703888/689977716756343-pricing-document-2026-01-19-1810.pdf" target="_blank" rel="noopener">EDGEALERT G-Cloud 15 pricing</a> · <a href="https://www.applytosupply.digitalmarketplace.service.gov.uk/g-cloud/services/644875981716958" target="_blank" rel="noopener">PATCHS Online Consultation, G-Cloud 14</a> · <a href="https://assets.applytosupply.digitalmarketplace.service.gov.uk/g-cloud-15/documents/704481/268573260259887-pricing-document-2026-01-29-1908.pdf" target="_blank" rel="noopener">Ardens G-Cloud 15 pricing</a> · <a href="https://assets.applytosupply.digitalmarketplace.service.gov.uk/g-cloud-15/documents/717701/318126969885787-pricing-document-2026-01-28-1352.pdf" target="_blank" rel="noopener">Engage Health Systems G-Cloud 15 pricing</a> · <a href="https://assets.applytosupply.digitalmarketplace.service.gov.uk/g-cloud-15/documents/722505/792761232297242-pricing-document-2026-01-27-1155.pdf" target="_blank" rel="noopener">Healthtech-1 G-Cloud 15 pricing</a></p>
       </details>
 
-      <p class="foot">Illustrative estimate based on the stated assumptions. It indicates potential staff time released and is not a guarantee.</p>
+      <section class="legal" aria-labelledby="h-legal">
+        <h3 id="h-legal">Important information</h3>
+        <ol>
+          <li><strong>What this is.</strong> An illustrative estimate of the staff time a GP practice might release, and the value of that time, if it moved to Medicus. It is a planning aid, not a quotation, forecast, offer or guarantee, and it does not form part of any contract.</li>
+          <li><strong>Where the figures come from.</strong> The time saved per login, per clinical session and in administrative work is the reported experience of one NHS practice of about 12,000 patients that uses Medicus. It has not been independently audited. Results for other practices are scaled from it in proportion to the figures entered and will vary with list size, staffing, hardware, network and ways of working.</li>
+          <li><strong>Time, not cash.</strong> Hours are valued at the stated session and hourly rates to show what the time is worth. That is not a cash saving unless hours, overtime or locum spend actually fall. Appointment figures show the scale of the time released, not a commitment that it will become extra appointments.</li>
+          <li><strong>Third-party costs.</strong> Add-on prices marked "est." are publicly listed prices (Crown Commercial Service G-Cloud and supplier price lists, dated in Basis and limits) scaled to list size. Actual costs depend on the practice's own contracts and may be lower, higher, or paid by an ICB, trust or other commissioner rather than the practice, in which case any saving belongs to whoever pays. Figures typed in are used as entered and are not verified.</li>
+          <li><strong>Third-party names.</strong> AccuRx, Docman, Patchs, eConsult, Ardens, Healthtech-1, Little Green Button, EDGEALERT, Engage and ICE are trademarks of their respective owners, which are not connected with Medicus. They are named only to identify systems a practice may already use. Whether Medicus replaces a given system for a given practice depends on that practice's requirements and should be confirmed before any decision.</li>
+          <li><strong>Your inputs.</strong> Results depend on the figures entered and any assumptions changed, all of which are recorded in the PDF report. Check them before relying on the output.</li>
+          <li><strong>Not advice.</strong> Nothing here is financial, procurement, clinical or legal advice. Any business case should be built on the practice's own measured data and follow the practice's and its ICB's governance.</li>
+          <li><strong>Accuracy and liability.</strong> Reasonable care has been taken in building the model, but Medicus and the authors of this calculator accept no liability for decisions made in reliance on it. Figures are correct to the dates stated in Basis and limits and may change. Model version 1.0, assumptions reviewed October 2026.</li>
+          <li><strong>Your details.</strong> Details entered to request the report are used to prepare it and, where you have agreed, to follow up. See the <a href="/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a>.</li>
+        </ol>
+        <p class="foot">Illustrative estimate based on the stated assumptions. It indicates potential staff time released and is not a guarantee.</p>
+      </section>
     </section>
 
     <section class="computing" id="computing" hidden aria-live="polite">
@@ -1436,7 +1456,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
         nf3.format(a.adminPer10k) + " admin FTE released per 10,000 patients, " + nf2.format(a.daysPerWeek) + " clinical days × " + nf2.format(a.sessionsPerDay) + " sessions per FTE, " +
         nf2.format(a.weeks) + " weeks a year; GP session " + gbpExact(a.gpSession) + ", nurse session " + gbpExact(a.nurseSession) + ", " + nf2.format(a.sessionHours) + " hr sessions, admin £" + money2.format(a.adminRate) + "/hr loaded.",
       "Model basis: the real-world impact of Medicus at a live NHS practice of about 12,000 patients.",
-      "Illustrative estimate, not a guarantee."
+      "Important: illustrative estimate, not a quotation, forecast or guarantee. Time savings are the reported experience of one NHS practice, not independently audited. Hours are valued at stated rates and are not cash unless hours or locum spend fall. Add-on prices marked est. are public list prices scaled to list size and may be paid by an ICB or trust rather than the practice. Third-party names are trademarks of their owners. Not financial, procurement, clinical or legal advice."
     ].join("\n");
   }
 
@@ -1761,6 +1781,38 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     y += 2.5;
     doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(MUTED);
     doc.text("Model version 1.0  ·  assumptions reviewed October 2026  ·  report generated " + today, M, y);
+    y += 7;
+
+    /* Important information */
+    var legal = [
+      ["What this is.", "An illustrative estimate of the staff time a GP practice might release, and the value of that time, if it moved to Medicus. It is a planning aid, not a quotation, forecast, offer or guarantee, and it does not form part of any contract."],
+      ["Where the figures come from.", "The time saved per login, per clinical session and in administrative work is the reported experience of one NHS practice of about 12,000 patients that uses Medicus. It has not been independently audited. Results for other practices are scaled from it in proportion to the figures entered and will vary with list size, staffing, hardware, network and ways of working."],
+      ["Time, not cash.", "Hours are valued at the stated session and hourly rates to show what the time is worth. That is not a cash saving unless hours, overtime or locum spend actually fall. Appointment figures show the scale of the time released, not a commitment that it will become extra appointments."],
+      ["Third-party costs.", "Add-on prices marked est. are publicly listed prices (Crown Commercial Service G-Cloud and supplier price lists, as dated above) scaled to list size. Actual costs depend on the practice's own contracts and may be lower, higher, or paid by an ICB, trust or other commissioner rather than the practice, in which case any saving belongs to whoever pays. Figures entered by the practice are used as given and are not verified."],
+      ["Third-party names.", "AccuRx, Docman, Patchs, eConsult, Ardens, Healthtech-1, Little Green Button, EDGEALERT, Engage and ICE are trademarks of their respective owners, which are not connected with Medicus. They are named only to identify systems a practice may already use. Whether Medicus replaces a given system for a given practice depends on that practice's requirements and should be confirmed before any decision."],
+      ["Your inputs.", "Results depend on the figures entered and any assumptions changed, all of which are recorded in this report. Check them before relying on the output."],
+      ["Not advice.", "Nothing in this report is financial, procurement, clinical or legal advice. Any business case should be built on the practice's own measured data and follow the practice's and its ICB's governance."],
+      ["Accuracy and liability.", "Reasonable care has been taken in building the model, but Medicus and the authors of this calculator accept no liability for decisions made in reliance on it. Figures are correct to the dates stated and may change."],
+      ["Your details.", "Details entered to request this report are used to prepare it and, where you have agreed, to follow up, as described in the privacy policy at wynwin.co.uk/privacy."]
+    ];
+    /* Each item: bold lead-in, then the body starting on the same line and wrapping to full width below it */
+    var legalLayout = legal.map(function (item) {
+      doc.setFont("helvetica", "bold"); doc.setFontSize(6.8);
+      var lw = doc.getTextWidth(item[0]) + 1.5;
+      doc.setFont("helvetica", "normal");
+      var first = doc.splitTextToSize(item[1], cw - lw)[0] || "";
+      var rest = doc.splitTextToSize(item[1].slice(first.length).trim(), cw);
+      if (!rest.length || rest[0] === "") rest = [];
+      return { lead: item[0], lw: lw, first: first, rest: rest, h: (1 + rest.length) * 3 + 1.4 };
+    });
+    y = ensure(y, legalLayout.reduce(function (h, it) { return h + it.h; }, 0) + 8);
+    eyebrow("Important information", M, y, MUTED); y += 4.5;
+    legalLayout.forEach(function (it) {
+      doc.setFont("helvetica", "bold"); doc.setFontSize(6.8); col(INK); doc.text(it.lead, M, y);
+      doc.setFont("helvetica", "normal"); col(LIGHT); doc.text(it.first, M + it.lw, y);
+      if (it.rest.length) doc.text(it.rest, M, y + 3);
+      y += it.h;
+    });
 
     /* Footers, once the page count is known */
     var pages = doc.getNumberOfPages();
