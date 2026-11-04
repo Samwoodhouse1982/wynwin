@@ -534,6 +534,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
   padding: 16px 32px; border-top: 1px solid var(--border);
   background: var(--bg); border-radius: 0 0 var(--radius) var(--radius);
 }
+.navbar .btn-ghost { margin-right: auto; }
+.navbar .btn-ghost:disabled { opacity: .5; cursor: default; text-decoration: none; }
 
 @media (max-width: 700px) {
   .tiles { grid-template-columns: minmax(0, 1fr); }
@@ -835,6 +837,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     </section>
 
     <div class="navbar">
+      <button type="button" class="btn-ghost" id="start-over" aria-describedby="start-over-note">Start over</button>
+      <span class="visually-hidden" id="start-over-note">Clears every input and returns to the first step</span>
       <button type="button" class="btn outline" id="back">Back</button>
       <button type="button" class="btn" id="next">Next</button>
     </div>
@@ -1432,7 +1436,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     $(id).addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); addVendor(); } });
   });
 
-  $("reset-all").addEventListener("click", function () {
+  function resetAll() {
     state.a = Object.assign({}, DEFAULTS);
     resetAssumptionFields();
     state.patients = REF.patients;
@@ -1444,7 +1448,9 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     setMode("wilmslow");
     computedOnce = false;
     try { sessionStorage.removeItem("medicus-roi-computed"); } catch (e) {}
-  });
+  }
+  $("reset-all").addEventListener("click", resetAll);
+  $("start-over").addEventListener("click", function () { if (computing) return; resetAll(); goTo(1); });
 
   /* ---------- Shareable state: the inputs and the current step travel in the URL hash, with localStorage as a fallback ---------- */
   var canUseUrl = (function () { try { return window.top === window && typeof history.replaceState === "function"; } catch (e) { return false; } })();
@@ -2336,7 +2342,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     });
     steps.forEach(function (st) { st.hidden = true; });
     $("computing").hidden = false;
-    $("back").disabled = true; $("next").disabled = true;
+    $("back").disabled = true; $("next").disabled = true; $("start-over").disabled = true;
     $("comp-fill").style.width = "4%";
     var i = 0, per = 380;
     function tick() {
@@ -2352,7 +2358,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
         setTimeout(function () {
           $("computing").hidden = true;
           steps.forEach(function (st) { st.hidden = +st.dataset.step !== TOTAL_STEPS; });
-          $("back").disabled = false; $("next").disabled = false;
+          $("back").disabled = false; $("next").disabled = false; $("start-over").disabled = false;
           computing = false;
           done();
         }, 420);
