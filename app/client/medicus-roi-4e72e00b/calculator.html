@@ -2100,7 +2100,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     if (y + 11 <= FOOT - 3) {
       rule(y);
       doc.setFont("helvetica", "normal"); doc.setFontSize(7); col(MUTED);
-      doc.text(doc.splitTextToSize("Estimates are list prices scaled to list size. Add-ons marked (ICB) are recorded as paid by an ICB, trust or other commissioner, so that saving belongs to the payer rather than the practice. Assumptions and sources are on page 2.", cw), M, y + 4.5);
+      doc.text(doc.splitTextToSize("Estimates are list prices scaled to list size. Add-ons marked (ICB) are recorded as paid by an ICB, trust or other commissioner, so that saving belongs to the payer rather than the practice. Assumptions and sources are on page 2; the working for every figure is in the calculator's \"how we calculated this\" notes.", cw), M, y + 4.5);
     }
 
     /* ---------- Page 2: assumptions and basis ---------- */
@@ -2161,57 +2161,17 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     var yr = drawColumn(rightGroups, M + gcw + 10, y);
     y = Math.max(yl, yr) + 2;
 
-    /* How each figure is calculated, with this practice's numbers substituted (the same text as the page's tooltips) */
-    y = ensure(y, 24); y += 3;
-    eyebrow("How the figures are calculated", M, y, MUTED); y += 2;
-    [["Hours a week", "hero"], ["Per clinician, each clinical day", "perclin"], ["Clinical capacity released", "appts"], ["Over a year", "year"],
-     ["Fewer slowdowns and downtime", "down"], ["Fewer logins", "login"], ["Less manual admin", "admin"], ["What that time is worth", "money"], ["Cautious case", "cautious"], ["Third-party add-ons retired", "lic"]].forEach(function (g) {
-      var lines = (tipText[g[1]] || []).filter(function (l) { return l.charAt(0) !== "~"; });
-      if (!lines.length) return;
-      var wrapped = [];
-      lines.forEach(function (l) { doc.setFontSize(7.2); wrapped = wrapped.concat(doc.splitTextToSize(l.replace(/≈/g, "about"), cw - 48)); });
-      y = ensure(y, 4 + wrapped.length * 2.75 + 1);
-      rule(y); y += 3.4;
-      doc.setFont("helvetica", "bold"); doc.setFontSize(7.5); col(INK); doc.text(g[0], M, y);
-      doc.setFont("helvetica", "normal"); doc.setFontSize(7.2); col(TEXT);
-      doc.text(wrapped, M + 46, y, { lineHeightFactor: 1.1 });
-      y += wrapped.length * 2.75 + 0.5;
-    });
-    rule(y); y += 3;
-
-    function groupTitle(t) { y = ensure(y, 14); y += 4; eyebrow(t, M, y, MUTED); y += 2.5; }
-
-    /* Add-ons in two columns: name and cost, then the basis on up to two lines */
-    groupTitle("Third-party add-ons");
-    var arows = Math.ceil(on.length / 2), entryH = 11.2;
-    y = ensure(y, Math.min(arows, 3) * entryH);
-    var ay0 = y;
-    on.forEach(function (v, i) {
-      var c = i < arows ? 0 : 1, rI = i < arows ? i : i - arows;
-      var x = M + c * (gcw + 10), yy = ay0 + rI * entryH;
-      if (yy + entryH > FOOT - 4) { return; }
-      stroke(BORDER); doc.line(x, yy, x + gcw, yy); yy += 4.2;
-      doc.setFont("helvetica", "bold"); doc.setFontSize(8); col(INK); doc.text(v.name, x, yy);
-      var cost = vendorCost(v);
-      doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(cost > 0 ? INK : MUTED);
-      doc.text(cost > 0 ? (R.net ? gbpExact(vendorUnitCost(v)) + " × " + nf0.format(vendorUsing(v)) + " = " : "") + gbpExact(cost) + (v.userCost ? " (own figure)" : " (est.)") : (R.net && vendorUsing(v) === 0 ? "no practices using it" : "no cost entered"), x + gcw, yy, { align: "right" });
-      yy += 3.2;
-      doc.setFontSize(6.6); col(MUTED);
-      var basisLines = doc.splitTextToSize("Paid by " + (v.payer === "commissioner" ? "an ICB, trust or other. " : (R.net ? "the practices. " : "the practice. ")) + (v.custom ? "Added by you" : (v.desc + (v.basis ? ". " + v.basis : ""))), gcw).slice(0, 2);
-      doc.text(basisLines, x, yy);
-    });
-    y = ay0 + arows * entryH;
-    rule(y); y += 4;
+    y += 6;
 
     y = ensure(y, 22);
-    eyebrow("Sources", M, y, MUTED); y += 4.2;
+    eyebrow("Sources", M, y, MUTED); y += 4.5;
     y = para("NHS England, General Practice Workforce, 28 February 2026; NHS England, Patients Registered at a GP Practice, February 2026; National Living Wage from April 2026; " +
       "Accurx pricing on G-Cloud 15 (September 2026); PATCHS (OneAdvanced) pricing on G-Cloud 14; Ardens, Engage Health Systems, Little Green Button, EDGEALERT and Healthtech-1 pricing documents on G-Cloud 15; " +
-      "NECS, Optimising GP messaging across North East and North Cumbria ICB; BMA, doctors' time lost to inadequate IT systems. Links to each are in the calculator's Basis and limits section.", M, y, cw, 7, LIGHT, 3.3);
-    y += 2;
+      "NECS, Optimising GP messaging across North East and North Cumbria ICB; BMA, doctors' time lost to inadequate IT systems. Links to each are in the calculator's Basis and limits section.", M, y, cw, 7, LIGHT, 3.5);
+    y += 2.5;
     doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(MUTED);
     doc.text("Model version 1.1  ·  prices and assumptions reviewed November 2026  ·  report generated " + today, M, y);
-    y += 5.5;
+    y += 7;
 
     /* Important information */
     var legal = [
@@ -2233,15 +2193,20 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       var first = doc.splitTextToSize(item[1], cw - lw)[0] || "";
       var rest = doc.splitTextToSize(item[1].slice(first.length).trim(), cw);
       if (!rest.length || rest[0] === "") rest = [];
-      return { lead: item[0], lw: lw, first: first, rest: rest, h: (1 + rest.length) * 2.8 + 1.3 };
+      return { lead: item[0], lw: lw, first: first, rest: rest, lines: 1 + rest.length };
     });
+    /* Line spacing tightens a little if that is what keeps the whole report on two pages */
+    var totalLines = legalLayout.reduce(function (n, it) { return n + it.lines; }, 0);
+    var lh = 3, gap = 1.6;
+    if (y + 4.5 + totalLines * lh + legalLayout.length * gap > FOOT - 6) { lh = 2.75; gap = 1.2; }
+    legalLayout.forEach(function (it) { it.h = it.lines * lh + gap; });
     y = ensure(y, 4.5 + legalLayout[0].h + legalLayout[1].h);
     eyebrow("Important information", M, y, MUTED); y += 4.5;
     legalLayout.forEach(function (it) {
       y = ensure(y, it.h);
       doc.setFont("helvetica", "bold"); doc.setFontSize(6.8); col(INK); doc.text(it.lead, M, y);
       doc.setFont("helvetica", "normal"); col(LIGHT); doc.text(it.first, M + it.lw, y);
-      if (it.rest.length) doc.text(it.rest, M, y + 2.8, { lineHeightFactor: 1.12 });
+      if (it.rest.length) doc.text(it.rest, M, y + lh, { lineHeightFactor: lh / 2.4 });
       y += it.h;
     });
 
