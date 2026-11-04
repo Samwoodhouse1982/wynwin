@@ -341,6 +341,27 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 .tile .ic.c { background: var(--coral-light); color: var(--coral); }
 .tile svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .tile dt { font-size: 13px; color: var(--text-light); }
+
+/* "How we calculated this" buttons and the shared popover they open */
+.info {
+  display: inline-grid; place-items: center; width: 16px; height: 16px; margin-left: 6px; padding: 0;
+  border-radius: 50%; border: 1px solid currentColor; background: transparent;
+  font: 700 10px/1 var(--font-body); color: var(--muted); cursor: pointer; vertical-align: middle; opacity: .85;
+}
+.info:hover, .info:focus-visible, .info[aria-expanded="true"] { color: var(--blue); border-color: var(--blue); opacity: 1; outline: none; }
+.info:focus-visible { box-shadow: 0 0 0 3px var(--tint2); }
+.hero .info { color: #DBE4EF; }
+.hero .info:hover, .hero .info:focus-visible, .hero .info[aria-expanded="true"] { color: var(--green); border-color: var(--green); }
+.hero .big .info { width: 18px; height: 18px; margin-left: 10px; font-size: 11px; vertical-align: middle; }
+.calc {
+  position: fixed; z-index: 30; width: 360px; max-width: calc(100vw - 32px);
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: 0 8px 28px rgba(9, 28, 57, .18); padding: 12px 14px; display: grid; gap: 6px;
+}
+.calc .pop-title { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.calc p { font-size: 12.5px; line-height: 1.5; color: var(--text); margin: 0; }
+.calc p.note { color: var(--muted); }
+.calc p strong { color: var(--ink); font-variant-numeric: tabular-nums; }
 .tile dd { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 27px; line-height: 1.15; color: var(--ink); font-variant-numeric: tabular-nums lining-nums; }
 .tile dd small { display: block; font-family: var(--font-body); font-weight: 400; font-size: 13px; line-height: 1.4; color: var(--muted); margin-top: 2px; }
 
@@ -407,6 +428,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 .money .sub { font-size: 13px; color: var(--text-light); }
 .money .lic { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; border-top: 1px solid var(--border); padding-top: 10px; }
 .money .lic strong { color: var(--ink); font-variant-numeric: tabular-nums; }
+.money .lic > span:last-child { white-space: nowrap; }
 
 .more { border-top: 1px solid var(--border); }
 .more summary {
@@ -546,14 +568,14 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 
       <div class="block">
         <div class="label-row">
-          <label class="label" for="gp-actual">GPs (FTE)</label>
+          <label class="label" for="gp-actual">GPs (FTE)<button type="button" class="info" data-tip="gp" aria-label="How we calculated this">i</button></label>
           <span class="tag" id="staff-tag">Estimated from list size</span>
         </div>
         <div class="slider-row">
           <input class="num-input" id="gp-actual" type="number" min="0" step="0.5" value="8">
           <div class="range-wrap slim"><input type="range" id="gp-range" min="0.5" max="40" step="0.5" value="8" aria-label="GPs FTE slider"><div class="range-ends" aria-hidden="true"><span>0.5</span><span>40</span></div></div>
         </div>
-        <div class="label-row"><label class="label" for="nurse-actual">Practice Nurses (FTE)</label></div>
+        <div class="label-row"><label class="label" for="nurse-actual">Practice Nurses (FTE)<button type="button" class="info" data-tip="nurse" aria-label="How we calculated this">i</button></label></div>
         <div class="slider-row">
           <input class="num-input" id="nurse-actual" type="number" min="0" step="0.5" value="3">
           <div class="range-wrap slim"><input type="range" id="nurse-range" min="0" max="20" step="0.5" value="3" aria-label="Practice nurses FTE slider"><div class="range-ends" aria-hidden="true"><span>0</span><span>20</span></div></div>
@@ -563,8 +585,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 
       <div class="block">
         <dl class="staff-list">
-          <div class="staff-row"><dt>Clinical sessions a week</dt><dd id="sc-sessions">88</dd></div>
-          <div class="staff-row"><dt>Admin time released</dt><dd id="sc-admin">0.5 FTE</dd></div>
+          <div class="staff-row"><dt>Clinical sessions a week<button type="button" class="info" data-tip="sessions" aria-label="How we calculated this">i</button></dt><dd id="sc-sessions">88</dd></div>
+          <div class="staff-row"><dt>Admin time released<button type="button" class="info" data-tip="admin" aria-label="How we calculated this">i</button></dt><dd id="sc-admin">0.5 FTE</dd></div>
         </dl>
         <p class="hint" id="admin-share"></p>
       </div>
@@ -592,7 +614,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     <section class="step" data-step="4" aria-labelledby="h-step4" hidden>
       <div class="hero">
         <span class="eyebrow">Time returned to the practice</span>
-        <div class="big"><span id="hero-hrs">19.1</span><small>hours a week</small></div>
+        <div class="big"><span id="hero-hrs">19.1</span><small>hours a week</small><button type="button" class="info" data-tip="hero" aria-label="How we calculated this">i</button></div>
         <p id="hero-sub"></p>
         <h2 class="visually-hidden" id="h-step4">Results</h2>
       </div>
@@ -600,21 +622,21 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       <dl class="tiles">
         <div class="tile">
           <span class="ic g" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
-          <div><dt>Per clinician, each day</dt><dd id="t-perclin"></dd></div>
+          <div><dt>Per clinician, each clinical day<button type="button" class="info" data-tip="perclin" aria-label="How we calculated this">i</button></dt><dd id="t-perclin"></dd></div>
         </div>
         <div class="tile">
           <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
-          <div><dt>Clinical capacity, each week</dt><dd id="t-appts"></dd></div>
+          <div><dt>Clinical capacity, each week<button type="button" class="info" data-tip="appts" aria-label="How we calculated this">i</button></dt><dd id="t-appts"></dd></div>
         </div>
         <div class="tile">
           <span class="ic c" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span>
-          <div><dt>Over a year</dt><dd id="t-year"></dd></div>
+          <div><dt>Over a year<button type="button" class="info" data-tip="year" aria-label="How we calculated this">i</button></dt><dd id="t-year"></dd></div>
         </div>
       </dl>
 
       <div class="block">
         <div class="section-head">
-          <h3>Where the time comes from</h3>
+          <h3>Where the time comes from<button type="button" class="info" data-tip="hero" aria-label="How we calculated this">i</button></h3>
           <span class="hint" id="bar-caption"></span>
         </div>
         <div class="bar" id="bar">
@@ -626,19 +648,19 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
         <dl class="lines">
           <div class="line">
             <span class="sw s-1"></span>
-            <dt class="what"><strong>Fewer slowdowns and downtime</strong><span id="d-down"></span></dt>
+            <dt class="what"><strong>Fewer slowdowns and downtime<button type="button" class="info" data-tip="down" aria-label="How we calculated this">i</button></strong><span id="d-down"></span></dt>
             <dd class="hrs" id="l-down"></dd>
             <details class="adj" data-group="down"><summary>Adjust</summary><div class="pop"></div></details>
           </div>
           <div class="line">
             <span class="sw s-2"></span>
-            <dt class="what"><strong>Fewer logins</strong><span id="d-login"></span></dt>
+            <dt class="what"><strong>Fewer logins<button type="button" class="info" data-tip="login" aria-label="How we calculated this">i</button></strong><span id="d-login"></span></dt>
             <dd class="hrs" id="l-login"></dd>
             <details class="adj" data-group="login"><summary>Adjust</summary><div class="pop"></div></details>
           </div>
           <div class="line">
             <span class="sw s-3"></span>
-            <dt class="what"><strong>Less manual admin</strong><span id="d-admin"></span></dt>
+            <dt class="what"><strong>Less manual admin<button type="button" class="info" data-tip="admin" aria-label="How we calculated this">i</button></strong><span id="d-admin"></span></dt>
             <dd class="hrs" id="l-admin"></dd>
             <details class="adj" data-group="admin"><summary>Adjust</summary><div class="pop"></div></details>
           </div>
@@ -648,13 +670,13 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       <div class="money">
         <div class="row">
           <div>
-            <span class="label">What that time is worth</span>
+            <span class="label">What that time is worth<button type="button" class="info" data-tip="money" aria-label="How we calculated this">i</button></span>
             <div class="amt" id="m-total"></div>
             <div class="sub" id="m-sub"></div>
           </div>
           <details class="adj" data-group="value"><summary>Adjust</summary><div class="pop"></div></details>
         </div>
-        <div class="lic"><span id="m-lic-label"></span><strong id="m-lic"></strong></div>
+        <div class="lic"><span id="m-lic-label"></span><span><strong id="m-lic"></strong><button type="button" class="info" data-tip="lic" aria-label="How we calculated this" id="lic-info">i</button></span></div>
       </div>
 
       <form class="lead" id="lead-form" novalidate>
@@ -714,6 +736,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       <button type="button" class="btn" id="next">Next</button>
     </div>
   </div>
+  <div class="calc" id="calc" role="tooltip" hidden><div class="pop-title">How we calculated this</div><div id="calc-body"></div></div>
 </div>
 
 <script>
@@ -775,10 +798,40 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
   function ardensEstimate(patients) { return Math.round(Math.max(1119, patients * 0.29) / 10) * 10; }
   function checkinEstimate(patients) { return screensFor(patients) * 249; }
   function callEstimate(patients) { return screensFor(patients) * 149; }
+  function panicDevices(patients) { return Math.max(5, Math.round(patients / 500)); }
+  function panicMonthly(devices) { return devices <= 10 ? 4.16 : devices <= 25 ? 3.30 : devices <= 50 ? 2.50 : devices <= 200 ? 2.00 : devices <= 500 ? 1.75 : 1.50; }
   function panicEstimate(patients) {
-    var devices = Math.max(5, Math.round(patients / 500));
-    var monthly = devices <= 10 ? 4.16 : devices <= 25 ? 3.30 : devices <= 50 ? 2.50 : devices <= 200 ? 2.00 : devices <= 500 ? 1.75 : 1.50;
-    return Math.round(devices * monthly * 12 / 10) * 10;
+    var devices = panicDevices(patients);
+    return Math.round(devices * panicMonthly(devices) * 12 / 10) * 10;
+  }
+  /* Plain-English working for each estimate, shown in its "How we calculated this" tooltip. */
+  function explainVendor(v, patients) {
+    var P = nf0.format(patients);
+    if (v.perPatient != null) {
+      var raw = v.perPatient * patients;
+      var est1 = vendorEstimate(v);
+      return ["£" + money2.format(v.perPatient) + " per patient a year × " + P + " patients = " + gbpExact(raw) + (Math.round(raw) === est1 ? "." : ", rounded to the nearest £10: " + gbpExact(est1) + "."),
+              "~" + v.basis + "."];
+    }
+    if (v.id === "templates") {
+      var raw2 = 0.29 * patients;
+      return ["29p per patient a year × " + P + " patients = " + gbpExact(raw2) + ".",
+              (raw2 < 1119 ? "That is below Ardens' minimum licence of £1,119, so the minimum applies." : "Ardens' minimum licence is £1,119; this practice is above it.") + (Math.round(Math.max(1119, raw2)) === vendorEstimate(v) ? "" : " Rounded to the nearest £10: " + gbpExact(vendorEstimate(v)) + "."),
+              "~Ardens Starter on G-Cloud 15, ex VAT. The one-off setup fee is not included."];
+    }
+    if (v.id === "checkin" || v.id === "callscreen") {
+      var sc = screensFor(patients), unit = v.id === "checkin" ? 249 : 149;
+      return ["One screen for every 8,000 patients: " + P + " ÷ 8,000 ≈ " + sc + (sc === 1 ? " screen." : " screens."),
+              sc + " × £" + unit + " a screen a year = " + gbpExact(sc * unit) + ".",
+              "~Engage Health Systems' G-Cloud 15 software price. Hardware and support are extra, so a practice with kiosk hardware will usually pay more."];
+    }
+    if (v.id === "panic") {
+      var d = panicDevices(patients), m = panicMonthly(d);
+      return ["One device for every 500 patients: " + P + " ÷ 500 ≈ " + d + " devices (minimum 5).",
+              "At " + d + " devices Little Green Button charges £" + money2.format(m) + " a device a month: " + d + " × £" + money2.format(m) + " × 12 months = " + gbpExact(d * m * 12) + (Math.round(d * m * 12) === vendorEstimate(v) ? "." : ", rounded to " + gbpExact(vendorEstimate(v)) + "."),
+              "~Little Green Button's G-Cloud 15 price list, billed annually. EDGEALERT is a flat £195 a site instead."];
+    }
+    return [];
   }
 
   var state = {
@@ -796,6 +849,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
   var money2 = new Intl.NumberFormat("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   function gbp(v) { return "£" + nf0.format(Math.round(v / 100) * 100); }
   function gbpExact(v) { return "£" + nf0.format(Math.round(v)); }
+  function gbpRate(v) { return "£" + (Math.abs(v - Math.round(v)) < 0.005 ? nf0.format(Math.round(v)) : money2.format(v)); }
+  var nfx = new Intl.NumberFormat("en-GB", { minimumFractionDigits: 0, maximumFractionDigits: 1 });
   function hrs(v) { return nf1.format(v) + " hrs"; }
   function $(id) { return document.getElementById(id); }
 
@@ -1011,6 +1066,11 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
         '<input type="checkbox" id="v-' + v.id + '" data-id="' + v.id + '"' + (v.on ? " checked" : "") + '>' +
         '<div class="v-name"><label for="v-' + v.id + '"></label><small class="v-desc"></small><small class="v-basis"></small></div>' +
         '<div class="v-cost"><span class="input-shell"><span class="unit">£</span><input type="number" min="0" step="10" placeholder="a year" data-id="' + v.id + '" aria-label="Annual cost of ' + v.name.replace(/"/g, "") + '"' + (c != null ? ' value="' + c + '"' : "") + '></span><span class="v-tag"></span></div>';
+      if (!v.custom && (v.perPatient != null || v.estimate)) {
+        var ib = document.createElement("button");
+        ib.type = "button"; ib.className = "info"; ib.dataset.tip = "v-" + v.id; ib.setAttribute("aria-label", "How we calculated this"); ib.textContent = "i";
+        row.querySelector(".v-cost").appendChild(ib);
+      }
       row.querySelector("label").textContent = v.name;
       row.querySelector(".v-desc").textContent = v.custom ? "" : v.desc;
       row.querySelector(".v-basis").textContent = v.custom ? "" : v.basis;
@@ -1115,6 +1175,16 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     el.addEventListener("blur", hideTip);
   });
   function pct(part, total) { return total > 0 ? Math.round(part / total * 100) + "%" : "0%"; }
+  /* Whole-number shares that add up to 100 (largest-remainder rounding), so the breakdown never reads 101%. */
+  function shares(parts) {
+    var total = parts.reduce(function (x, y) { return x + y; }, 0);
+    if (total <= 0) return parts.map(function () { return 0; });
+    var raw = parts.map(function (v) { return v / total * 100; });
+    var out = raw.map(Math.floor);
+    var left = 100 - out.reduce(function (x, y) { return x + y; }, 0);
+    raw.map(function (v, i) { return [v - Math.floor(v), i]; }).sort(function (x, y) { return y[0] - x[0]; }).slice(0, left).forEach(function (p) { out[p[1]]++; });
+    return out;
+  }
 
   /* Copy */
   var lastSummary = "";
@@ -1137,6 +1207,49 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(lastSummary).then(function () { done(true); }, fallback);
     else fallback();
   });
+
+  /* "How we calculated this": one shared popover, opened by the small i buttons. Hover or focus shows it; a click pins it. */
+  var tipText = {}, calcFor = null, calcPinned = false;
+  var calcEl = $("calc"), calcBody = $("calc-body");
+  function openCalc(btn, pin) {
+    var lines = tipText[btn.dataset.tip];
+    if (!lines || !lines.length) return;
+    calcBody.innerHTML = "";
+    lines.forEach(function (l) {
+      var pEl = document.createElement("p");
+      if (l.charAt(0) === "~") { pEl.className = "note"; l = l.slice(1); }
+      pEl.textContent = l;
+      calcBody.appendChild(pEl);
+    });
+    if (calcFor && calcFor !== btn) calcFor.setAttribute("aria-expanded", "false");
+    calcEl.hidden = false;
+    btn.setAttribute("aria-expanded", "true");
+    calcFor = btn; calcPinned = !!pin;
+    placeCalc(btn);
+  }
+  function placeCalc(btn) {
+    var b = btn.getBoundingClientRect();
+    var left = Math.max(16, Math.min(window.innerWidth - calcEl.offsetWidth - 16, b.left - 10));
+    var top = b.bottom + 8;
+    if (top + calcEl.offsetHeight > window.innerHeight - 12) top = Math.max(8, b.top - calcEl.offsetHeight - 8);
+    calcEl.style.left = left + "px"; calcEl.style.top = top + "px";
+  }
+  function closeCalc() {
+    if (calcFor) calcFor.setAttribute("aria-expanded", "false");
+    calcEl.hidden = true; calcFor = null; calcPinned = false;
+  }
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest(".info");
+    if (btn) { e.preventDefault(); if (calcFor === btn && calcPinned) closeCalc(); else openCalc(btn, true); return; }
+    if (!e.target.closest("#calc")) closeCalc();
+  });
+  document.addEventListener("mouseover", function (e) { var btn = e.target.closest(".info"); if (btn && !calcPinned && calcFor !== btn) openCalc(btn, false); });
+  document.addEventListener("mouseout", function (e) { var btn = e.target.closest(".info"); if (btn && !calcPinned && calcFor === btn) closeCalc(); });
+  document.addEventListener("focusin", function (e) { var btn = e.target.closest(".info"); if (btn && !calcPinned) openCalc(btn, false); });
+  document.addEventListener("focusout", function (e) { var btn = e.target.closest(".info"); if (btn && !calcPinned && calcFor === btn) closeCalc(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && calcFor) { var b = calcFor; closeCalc(); b.focus(); } });
+  window.addEventListener("scroll", function () { if (calcFor) placeCalc(calcFor); }, { passive: true });
+  window.addEventListener("resize", function () { if (calcFor) placeCalc(calcFor); });
 
   /* Count-up animation for result figures: fast start, long ease into the final value */
   var anim = {};
@@ -1209,25 +1322,29 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       nf0.format(state.patients) + " patients with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE nurses.";
     setNum("t-perclin", r.perClinDay, function (v) { return nf0.format(v) + "<small>minutes back</small>"; });
     setNum("t-appts", r.appts, function (v) { return "≈ " + nf0.format(v) + "<small>" + nf0.format(a.apptMins) + "-minute appointments</small>"; });
-    var sessRatio = r.yearHrs > 0 ? r.sessionsYear / r.yearHrs : 0;
-    setNum("t-year", r.yearHrs, function (v) { return nf0.format(v) + "<small>hours, about " + nf0.format(v * sessRatio) + " clinical sessions</small>"; });
+    var clinShare = r.weekHrs > 0 ? r.clinHrs / r.weekHrs : 0, sessPerHr = a.sessionHours > 0 ? 1 / a.sessionHours : 0;
+    setNum("t-year", r.yearHrs, function (v) {
+      var cy = v * clinShare, ay = v - cy;
+      return nf0.format(v) + "<small>" + nf0.format(cy) + " clinical hours (about " + nf0.format(cy * sessPerHr) + " sessions) and " + nf0.format(ay) + " admin hours</small>";
+    });
+    var sh = shares([r.downHrs, r.loginHrs, r.adminHrs]);
 
     /* bar in hours */
     var w = r.weekHrs || 1;
     $("seg-down").style.flex = "0 0 calc(" + (r.downHrs / w * 100) + "% - 2px)";
     $("seg-login").style.flex = "0 0 calc(" + (r.loginHrs / w * 100) + "% - 2px)";
     $("seg-admin").style.flex = "1 1 0";
-    segInfo["seg-down"] = "Fewer slowdowns and downtime · " + hrs(r.downHrs) + " a week · " + pct(r.downHrs, r.weekHrs);
-    segInfo["seg-login"] = "Fewer logins · " + hrs(r.loginHrs) + " a week · " + pct(r.loginHrs, r.weekHrs);
-    segInfo["seg-admin"] = "Less manual admin · " + hrs(r.adminHrs) + " a week · " + pct(r.adminHrs, r.weekHrs);
+    segInfo["seg-down"] = "Fewer slowdowns and downtime · " + hrs(r.downHrs) + " a week · " + sh[0] + "%";
+    segInfo["seg-login"] = "Fewer logins · " + hrs(r.loginHrs) + " a week · " + sh[1] + "%";
+    segInfo["seg-admin"] = "Less manual admin · " + hrs(r.adminHrs) + " a week · " + sh[2] + "%";
     Object.keys(segInfo).forEach(function (id) { $(id).setAttribute("aria-label", segInfo[id]); });
     setNum("bar-caption", r.weekHrs, function (v) { return hrs(v) + " a week in total"; });
 
-    setNum("l-down", r.downHrs, function (v) { return hrs(v) + "<small>a week · " + pct(r.downHrs, r.weekHrs) + "</small>"; });
-    setNum("l-login", r.loginHrs, function (v) { return hrs(v) + "<small>a week · " + pct(r.loginHrs, r.weekHrs) + "</small>"; });
-    setNum("l-admin", r.adminHrs, function (v) { return hrs(v) + "<small>a week · " + pct(r.adminHrs, r.weekHrs) + "</small>"; });
+    setNum("l-down", r.downHrs, function (v) { return hrs(v) + "<small>a week · " + sh[0] + "%</small>"; });
+    setNum("l-login", r.loginHrs, function (v) { return hrs(v) + "<small>a week · " + sh[1] + "%</small>"; });
+    setNum("l-admin", r.adminHrs, function (v) { return hrs(v) + "<small>a week · " + sh[2] + "%</small>"; });
     $("d-down").textContent = nf2.format(a.downtimeMins) + " min saved in each of " + sessions + " clinical sessions a week";
-    $("d-login").textContent = nf2.format(a.loginMins) + " min × " + nf2.format(a.loginsPerDay) + " logins a day across " + nf1.format(r.clinicians) + " clinicians";
+    $("d-login").textContent = nf2.format(a.loginMins) + " min × " + nf2.format(a.loginsPerDay) + " logins a day × " + nf2.format(a.daysPerWeek) + " days, across " + nf1.format(r.clinicians) + " clinicians";
     $("d-admin").textContent = nf2.format(Math.round(s.admin * 100) / 100) + " FTE of admin time at " + nf2.format(a.adminHours) + " hrs a week";
 
     /* money, second */
@@ -1241,7 +1358,63 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 
     setRangeFill();
 
-    lastResult = { s: s, r: r, a: a, modeName: modeName, costed: costed, uncosted: uncosted, hasLic: hasLic, sessions: sessions };
+    lastResult = { s: s, r: r, a: a, modeName: modeName, costed: costed, uncosted: uncosted, hasLic: hasLic, sessions: sessions, shares: sh };
+    $("lic-info").hidden = !hasLic;
+
+    /* "How we calculated this" text for every figure. Lines starting with ~ are notes. */
+    var gpRate = a.sessionHours > 0 ? a.gpSession / a.sessionHours : 0, nurseRate = a.sessionHours > 0 ? a.nurseSession / a.sessionHours : 0;
+    var gpSess = s.gp * a.daysPerWeek * a.sessionsPerDay, nSess = s.nurse * a.daysPerWeek * a.sessionsPerDay;
+    var loginMinDay = a.loginMins * a.loginsPerDay;
+    var ratio = state.mode === "national" ? RATIOS.national : RATIOS.wilmslow;
+    var basisName = state.mode === "national" ? "NHS England's national average" : "the reference practice";
+    var wk = nf2.format(a.weeks) + " weeks";
+    tipText = {
+      gp: state.mode === "actual"
+        ? ["This is the practice's own figure, entered on this page.", "~The estimate would be " + nf0.format(state.patients) + " ÷ " + nf0.format(ratio.gp) + " patients per GP = " + nf1.format(state.patients / ratio.gp) + " FTE at " + basisName + "'s ratio."]
+        : [nf0.format(state.patients) + " patients ÷ " + nf0.format(ratio.gp) + " patients per GP = " + nf1.format(s.gp) + " FTE.", "~" + nf0.format(ratio.gp) + " patients per GP is " + basisName + "'s ratio. Move the slider to use the practice's own figure."],
+      nurse: state.mode === "actual"
+        ? ["This is the practice's own figure, entered on this page.", "~The estimate would be " + nf0.format(state.patients) + " ÷ " + nf0.format(ratio.nurse) + " patients per nurse = " + nf1.format(state.patients / ratio.nurse) + " FTE at " + basisName + "'s ratio."]
+        : [nf0.format(state.patients) + " patients ÷ " + nf0.format(ratio.nurse) + " patients per nurse = " + nf1.format(s.nurse) + " FTE.", "~" + nf0.format(ratio.nurse) + " patients per nurse is " + basisName + "'s ratio. Move the slider to use the practice's own figure."],
+      sessions: [nf1.format(s.gp) + " GPs × " + nf2.format(a.daysPerWeek) + " clinical days × " + nf2.format(a.sessionsPerDay) + " sessions = " + nfx.format(gpSess) + " GP sessions.",
+                 nf1.format(s.nurse) + " nurses × " + nf2.format(a.daysPerWeek) + " × " + nf2.format(a.sessionsPerDay) + " = " + nfx.format(nSess) + " nurse sessions.",
+                 "Total: " + sessions + " clinical sessions a week."],
+      admin: [nf0.format(state.patients) + " patients ÷ 10,000 × " + nf3.format(a.adminPer10k) + " = " + nf2.format(Math.round(s.admin * 100) / 100) + " FTE of admin time released.",
+              nf2.format(Math.round(s.admin * 100) / 100) + " FTE × " + nf2.format(a.adminHours) + " hours a week = " + hrs(r.adminHrs) + " a week, which is " + sh[2] + "% of the total.",
+              "Worth " + gbpExact(r.adminVal) + " a year at £" + money2.format(a.adminRate) + " an hour × " + wk + ".",
+              "~The " + nf3.format(a.adminPer10k) + " per 10,000 patients comes from the reference practice, which released 0.5 FTE across 12,310 patients through streamlined document handling."],
+      hero: ["Fewer slowdowns and downtime " + hrs(r.downHrs) + " + fewer logins " + hrs(r.loginHrs) + " = " + hrs(r.clinHrs) + " of clinical time a week.",
+             "Less manual admin: " + hrs(r.adminHrs) + " of admin time a week.",
+             hrs(r.clinHrs) + " + " + hrs(r.adminHrs) + " = " + hrs(r.weekHrs) + " a week in total.",
+             "~Clinical and admin time are different kinds of time, so the breakdown below keeps them separate."],
+      perclin: ["Logins: " + nf2.format(a.loginMins) + " minutes × " + nf2.format(a.loginsPerDay) + " a day = " + nf0.format(loginMinDay) + " minutes.",
+                "Slowdowns: " + nf2.format(a.downtimeMins) + " minutes × " + nf2.format(a.sessionsPerDay) + " sessions a day = " + nf0.format(a.sessionsPerDay * a.downtimeMins) + " minutes.",
+                "Total: " + nf0.format(r.perClinDay) + " minutes back for each clinician on each clinical day.",
+                "~This is the same for every clinician, so it does not change with list size or team size."],
+      appts: [hrs(r.clinHrs) + " of clinical time a week = " + nf0.format(r.clinHrs * 60) + " minutes.",
+              nf0.format(r.clinHrs * 60) + " ÷ " + nf0.format(a.apptMins) + "-minute appointments ≈ " + nf0.format(r.appts) + ".",
+              "~This is the upper limit, if every saved minute became appointment time. Some of it will be a calmer day rather than extra slots."],
+      year: [hrs(r.weekHrs) + " a week × " + wk + " = " + nf0.format(r.yearHrs) + " hours a year.",
+             "Of that, " + hrs(r.clinHrs) + " × " + nf2.format(a.weeks) + " = " + nf0.format(r.clinHrs * a.weeks) + " clinical hours, which is about " + nf0.format(r.sessionsYear) + " sessions of " + nf2.format(a.sessionHours) + " hours.",
+             "And " + hrs(r.adminHrs) + " × " + nf2.format(a.weeks) + " = " + nf0.format(r.adminHrs * a.weeks) + " admin hours.",
+             "~" + nf2.format(a.weeks) + " weeks assumes no allowance for leave or bank holidays; 45 is more cautious. Change it under Adjust in the valuation box."],
+      down: ["Clinical sessions a week: " + nf1.format(s.gp) + " GPs × " + nf2.format(a.daysPerWeek) + " days × " + nf2.format(a.sessionsPerDay) + " = " + nfx.format(gpSess) + ", plus " + nf1.format(s.nurse) + " nurses × " + nf2.format(a.daysPerWeek) + " × " + nf2.format(a.sessionsPerDay) + " = " + nfx.format(nSess) + ", so " + sessions + ".",
+             sessions + " sessions × " + nf2.format(a.downtimeMins) + " minutes saved = " + nf0.format(r.downHrs * 60) + " minutes = " + hrs(r.downHrs) + " a week.",
+             "Share of the total: " + hrs(r.downHrs) + " ÷ " + hrs(r.weekHrs) + " = " + sh[0] + "%.",
+             "Worth " + gbpExact(r.downVal) + " a year: GP time at " + gbpRate(gpRate) + " an hour (" + gbpExact(a.gpSession) + " ÷ " + nf2.format(a.sessionHours) + "-hour session) and nurse time at " + gbpRate(nurseRate) + " an hour, × " + wk + ".",
+             "~The " + nf2.format(a.downtimeMins) + " minutes a session is the reference practice's conservative estimate of time lost to slow screens and system waits."],
+      login: ["Clinicians: " + nf1.format(s.gp) + " GPs + " + nf1.format(s.nurse) + " nurses = " + nf1.format(r.clinicians) + ".",
+              nf1.format(r.clinicians) + " × " + nf2.format(a.daysPerWeek) + " clinical days × " + nf2.format(a.loginsPerDay) + " logins × " + nf2.format(a.loginMins) + " minutes = " + nf0.format(r.loginHrs * 60) + " minutes = " + hrs(r.loginHrs) + " a week.",
+              "Share of the total: " + hrs(r.loginHrs) + " ÷ " + hrs(r.weekHrs) + " = " + sh[1] + "%.",
+              "Worth " + gbpExact(r.loginVal) + " a year at " + gbpRate(gpRate) + " an hour for GPs and " + gbpRate(nurseRate) + " for nurses, × " + wk + ".",
+              "~Some login time may already sit inside the slowdown figure, so read the two together as an upper estimate."],
+      money: ["Fewer slowdowns " + gbpExact(r.downVal) + " + fewer logins " + gbpExact(r.loginVal) + " + less manual admin " + gbpExact(r.adminVal) + " = " + gbpExact(r.timeVal) + " a year, shown rounded to the nearest £100.",
+              "Hourly rates: GP " + gbpExact(a.gpSession) + " ÷ " + nf2.format(a.sessionHours) + " = " + gbpRate(gpRate) + "; nurse " + gbpExact(a.nurseSession) + " ÷ " + nf2.format(a.sessionHours) + " = " + gbpRate(nurseRate) + "; admin £" + money2.format(a.adminRate) + " loaded (pay plus employer costs). All × " + wk + ".",
+              "~This is the value of the time at those rates. It only becomes cash if hours, overtime or locum spend actually fall."],
+      lic: (hasLic ? ["Ticked functions with a cost: " + costed.map(function (v) { return v.name + " " + gbpExact(vendorCost(v)) + (v.userCost ? "" : " (est.)"); }).join(" + ") + " = " + gbpExact(r.licVal) + " a year."] : ["No ticked function has a cost yet."]).concat(
+             ["~Estimates are list prices scaled to this list size; a figure you type replaces the estimate. The working for each estimate is on the functions step."])
+    };
+    state.vendors.forEach(function (v) { if (!v.custom && (v.perPatient != null || v.estimate)) tipText["v-" + v.id] = explainVendor(v, state.patients); });
+    if (calcFor) openCalc(calcFor, calcPinned);
 
     lastSummary = [
       "Medicus practice time estimate",
@@ -1420,12 +1593,12 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     y += bh + 5;
     [["Fewer slowdowns and downtime", nf2.format(a.downtimeMins) + " min saved in each of " + R.sessions + " clinical sessions a week", r.downHrs, BLUE_DK],
      ["Fewer logins", nf2.format(a.loginMins) + " min x " + nf2.format(a.loginsPerDay) + " logins a day across " + nf1.format(r.clinicians) + " clinicians", r.loginHrs, BLUE],
-     ["Less manual admin", nf2.format(Math.round(s.admin * 100) / 100) + " FTE of admin time at " + nf2.format(a.adminHours) + " hrs a week", r.adminHrs, BLUE_LT]].forEach(function (row) {
+     ["Less manual admin", nf2.format(Math.round(s.admin * 100) / 100) + " FTE of admin time at " + nf2.format(a.adminHours) + " hrs a week", r.adminHrs, BLUE_LT]].forEach(function (row, rowIndex) {
       rule(y); y += 5.5;
       fill(row[3]); doc.roundedRect(M, y - 2.6, 3, 3, .6, .6, "F");
       doc.setFont("helvetica", "bold"); doc.setFontSize(9.5); col(INK); doc.text(row[0], M + 6, y);
       doc.text(hrs(row[2]) + " a week", W - M, y, { align: "right" });
-      doc.setFont("helvetica", "normal"); doc.setFontSize(8); col(MUTED); doc.text(pct(row[2], r.weekHrs), W - M - 34, y, { align: "right" });
+      doc.setFont("helvetica", "normal"); doc.setFontSize(8); col(MUTED); doc.text(R.shares[rowIndex] + "%", W - M - 34, y, { align: "right" });
       y += 4.2;
       doc.setFont("helvetica", "normal"); doc.setFontSize(8); col(LIGHT); doc.text(row[1], M + 6, y);
       y += 3.5;
@@ -1489,10 +1662,26 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     y = newPage();
     doc.setFont("helvetica", "bold"); doc.setFontSize(13); col(INK); doc.text("Assumptions and basis", M, y); y += 7;
     y = para("Built from the real-world impact of Medicus at a live NHS practice of about 12,000 patients: " + WILMSLOW_ASSUMP.downtimeMins + " minutes saved in each clinical session, " +
-      WILMSLOW_ASSUMP.loginMins + " minutes at each login and 0.5 FTE of admin time released across 12,310 patients. Clinical hours are valued at the session rate divided by session length. " +
-      "Clinical capacity is clinical hours divided by one appointment length and shows the scale of the time rather than a promise of extra appointments. Login and slowdown savings are counted separately and together should be read as an upper estimate.",
+      WILMSLOW_ASSUMP.loginMins + " minutes at each login and 0.5 FTE of admin time released across 12,310 patients. Login and slowdown savings are counted separately, so read the two together as an upper estimate.",
       M, y, cw, 8, LIGHT, 3.8);
-    y += 1;
+    y += 2;
+
+    /* How each figure is calculated, with this practice's numbers substituted (the same text as the page's tooltips) */
+    eyebrow("How the figures are calculated", M, y, MUTED); y += 2;
+    [["Hours a week", "hero"], ["Per clinician, each clinical day", "perclin"], ["Clinical capacity", "appts"], ["Over a year", "year"],
+     ["Fewer slowdowns and downtime", "down"], ["Fewer logins", "login"], ["Less manual admin", "admin"], ["What that time is worth", "money"], ["Third-party add-ons retired", "lic"]].forEach(function (g) {
+      var lines = (tipText[g[1]] || []).filter(function (l) { return l.charAt(0) !== "~"; });
+      if (!lines.length) return;
+      var wrapped = [];
+      lines.forEach(function (l) { doc.setFontSize(7.2); wrapped = wrapped.concat(doc.splitTextToSize(l.replace(/≈/g, "about"), cw - 48)); });
+      y = ensure(y, 4 + wrapped.length * 2.9 + 1);
+      rule(y); y += 3.4;
+      doc.setFont("helvetica", "bold"); doc.setFontSize(7.5); col(INK); doc.text(g[0], M, y);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(7.2); col(TEXT);
+      doc.text(wrapped, M + 46, y, { lineHeightFactor: 1.15 });
+      y += wrapped.length * 2.9 + 0.5;
+    });
+    rule(y); y += 3;
 
     /* Inputs and assumptions, laid out in two columns so the whole basis fits one page */
     var gcw = (cw - 10) / 2;
@@ -1518,18 +1707,24 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     function drawColumn(groups, x, y0) {
       var yy = y0;
       groups.forEach(function (g) {
-        yy += 4; eyebrow(g[0], x, yy, MUTED); yy += 2;
+        yy += 3.6; eyebrow(g[0], x, yy, MUTED); yy += 1.8;
         g[1].forEach(function (row) {
           stroke(BORDER); doc.line(x, yy, x + gcw, yy); yy += 4.2;
           doc.setFont("helvetica", "normal"); doc.setFontSize(8); col(TEXT); doc.text(row[0], x, yy);
           doc.setFont("helvetica", "bold"); col(INK); doc.text(row[1], x + gcw, yy, { align: "right" });
-          if (row[2]) { yy += 3.3; doc.setFont("helvetica", "normal"); doc.setFontSize(6.8); col(MUTED); doc.text(row[2], x, yy); yy += 1.6; }
-          else { yy += 1.6; }
+          if (row[2]) { yy += 3.1; doc.setFont("helvetica", "normal"); doc.setFontSize(6.8); col(MUTED); doc.text(row[2], x, yy); yy += 1.3; }
+          else { yy += 1.5; }
         });
         stroke(BORDER); doc.line(x, yy, x + gcw, yy); yy += 2;
       });
       return yy;
     }
+    function columnHeight(groups) {
+      var h = 0;
+      groups.forEach(function (g) { h += 5.4; g[1].forEach(function (row) { h += 4.2 + (row[2] ? 4.4 : 1.5); }); h += 2; });
+      return h;
+    }
+    y = ensure(y, Math.max(columnHeight(leftGroups), columnHeight(rightGroups)) + 2);
     var yl = drawColumn(leftGroups, M, y);
     var yr = drawColumn(rightGroups, M + gcw + 10, y);
     y = Math.max(yl, yr) + 2;
@@ -1642,6 +1837,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     $("back").disabled = n === 1;
     $("next").textContent = n === TOTAL_STEPS - 1 ? "See results" : (n === TOTAL_STEPS ? "Start again" : "Next");
     document.querySelectorAll(".adj[open]").forEach(function (o) { o.open = false; });
+    closeCalc();
     var wasLive = resultsLive;
     resultsLive = n === TOTAL_STEPS;
     if (resultsLive && !wasLive && !initialising && !reduceMotion) {
