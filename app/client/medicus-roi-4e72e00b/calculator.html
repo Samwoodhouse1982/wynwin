@@ -312,7 +312,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
   background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 0 8px;
 }
 .input-shell:focus-within { border-color: var(--blue); }
-.input-shell.bad { border-color: var(--warn); }
+.input-shell.bad, .input-shell:has(input[aria-invalid="true"]) { border-color: var(--warn); }
 .input-shell .unit { font-size: 13px; color: var(--muted); }
 .input-shell input {
   width: 76px; font: inherit; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums;
@@ -922,7 +922,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     practice: { name: "GP practice", group: "practice", label: "the practice", field: "Practice", practices: null,
       patients: [1000, 40000, 10, REF.patients, 20000], hero: "Time returned to the practice",
       sizeTitle: "How many registered patients does the practice have?", patientsLabel: "Registered patients",
-      sizeIntro: "Type a figure or use the slider. Lists above 40,000 can be typed in." },
+      sizeIntro: "Every figure that follows scales with the registered list, so use the practice's current list size.", sizeHint: "Type a figure or use the slider. Lists above 40,000 can be typed in." },
     pcn: { name: "Primary Care Network", group: "network", label: "the network", field: "PCN",
       practices: [2, 12, 1, 5, 7], patients: [20000, 120000, 500, 50000, 70000], hero: "Time returned across the network",
       sizeTitle: "How big is the network?", patientsLabel: "Registered patients in total",
@@ -1159,6 +1159,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       : "This step is optional. We have estimated the clinical team from list size; move the sliders if you know the practice's own numbers, or press Next to keep the estimate.";
     $("lead-practice-label").textContent = o.field;
     $("h1-who").textContent = o.practices ? "your practices" : "your practice";
+    $("vendor-new-cost").placeholder = o.practices ? "a year, per practice" : "a year";
+    $("vendor-new-cost").setAttribute("aria-label", o.practices ? "Annual cost of that add-on for one practice" : "Annual cost of that add-on");
     $("func-intro").textContent = o.practices
       ? "Each of these is built into Medicus, so practices can retire the external add-ons they currently pay for. Tick the functions you expect to use and say how many of the " + o.group + "'s practices currently use each add-on. Costs are estimated per practice at the average list size; overwrite with a known per-practice figure, or clear the field to go back to the estimate."
       : "Each of these is built into Medicus, so the practice can retire the external add-on it currently pays for. Tick the functions you expect to use. Where the add-on has a public price its cost is estimated from list size; overwrite it with the practice's own figure, or clear the field to go back to the estimate.";
@@ -1246,7 +1248,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       row.innerHTML =
         '<input type="checkbox" id="v-' + v.id + '" data-id="' + v.id + '"' + (v.on ? " checked" : "") + '>' +
         '<div class="v-name"><label for="v-' + v.id + '"></label><small class="v-desc"></small><small class="v-basis"></small></div>' +
-        '<div class="v-using"' + (isNetwork() ? "" : " hidden") + '><span class="input-shell"><input type="number" min="0" step="1" data-using="' + v.id + '" aria-label="Practices using ' + v.name.replace(/"/g, "") + '"></span><span class="v-pct"></span></div>' +
+        '<div class="v-using"' + (isNetwork() ? "" : " hidden") + '><span class="input-shell"><input type="text" inputmode="numeric" autocomplete="off" data-using="' + v.id + '" aria-label="Practices using ' + v.name.replace(/"/g, "") + ', as a number or a percentage" title="A number of practices, or a percentage such as 60%"></span><span class="v-pct"></span></div>' +
         '<div class="v-cost"><span class="input-shell"><span class="unit">£</span><input type="number" min="0" step="10" placeholder="a year" data-id="' + v.id + '" aria-label="Annual cost of ' + v.name.replace(/"/g, "") + (isNetwork() ? " per practice" : "") + '"' + (c != null ? ' value="' + c + '"' : "") + '></span><span class="v-tag"></span></div>';
       if (!v.custom && (v.perPatient != null || v.estimate)) {
         var ib = document.createElement("button");
@@ -1282,7 +1284,6 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       if (net) {
         var n = vendorUsing(v);
         if (document.activeElement !== usingInput) usingInput.value = n;
-        usingInput.max = state.practices;
         row.querySelector(".v-pct").textContent = "of " + nf0.format(state.practices) + " practices · " + Math.round(n / Math.max(1, state.practices) * 100) + "%";
       }
     });
@@ -1296,18 +1297,27 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     t.closest(".vendor").classList.toggle("off", !v.on);
     render();
   });
+  /* "Practices using": a whole number, or a percentage of the practices ("60%"). Empty means all of them. */
+  function parseUsing(text) {
+    var m = String(text).trim().match(/^(\d+(?:\.\d+)?)\s*(%?)$/);
+    if (!m) return null;
+    var n = parseFloat(m[1]);
+    if (m[2]) return Math.round(Math.min(100, n) / 100 * state.practices);
+    return Math.min(Math.round(n), state.practices);
+  }
   vendorsEl.addEventListener("input", function (e) {
     var t = e.target;
-    if (t.type !== "number") return;
     if (t.dataset.using) {
       var vu = state.vendors.find(function (x) { return x.id === t.dataset.using; });
       if (!vu) return;
-      var k = parseInt(t.value, 10);
-      if (t.value === "" || isNaN(k) || k < 0) { vu.usingAll = true; }
-      else { vu.usingAll = false; vu.using = Math.min(k, state.practices); }
+      var k = parseUsing(t.value);
+      if (t.value.trim() === "") { vu.usingAll = true; t.removeAttribute("aria-invalid"); }
+      else if (k == null) { t.setAttribute("aria-invalid", "true"); return; }
+      else { vu.usingAll = false; vu.using = k; t.removeAttribute("aria-invalid"); }
       render();
       return;
     }
+    if (t.type !== "number") return;
     var v = state.vendors.find(function (x) { return x.id === t.dataset.id; });
     if (!v) return;
     var n = parseFloat(t.value);
@@ -1316,7 +1326,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     else { v.userCost = true; v.cost = n; }
     render();
   });
-  vendorsEl.addEventListener("focusout", function (e) { if (e.target.type === "number") syncVendorRows(); });
+  vendorsEl.addEventListener("focusout", function (e) { if (e.target.type === "number" || e.target.dataset.using) { e.target.removeAttribute("aria-invalid"); syncVendorRows(); } });
   vendorsEl.addEventListener("click", function (e) {
     var id = e.target.dataset && e.target.dataset.remove;
     if (!id) return;
@@ -1512,7 +1522,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     var o = ORG[state.org], net = isNetwork();
     $("patients-hint").textContent = net
       ? "That is an average of " + nf0.format(avgPractice()) + " patients a practice. Larger figures can be typed in."
-      : o.sizeIntro;
+      : o.sizeHint;
     setPracticesFill();
 
     /* staffing */
