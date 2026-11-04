@@ -9,6 +9,7 @@ import { z } from 'zod';
 
 export const leadSchema = z.object({
   name: z.string().trim().min(2).max(100),
+  // The organisation the estimate is for: a practice, PCN, federation or ICB name.
   practice: z.string().trim().min(2).max(150),
   email: z.email().max(200),
   role: z.string().trim().max(100).optional().default(''),
@@ -19,10 +20,14 @@ export const leadSchema = z.object({
   _gotcha: z.string().max(200).optional(),
 
   submittedAt: z.string().max(40),
-  patients: z.number().int().min(1).max(1_000_000),
+  // Who the estimate is for. A practice always has practices = 1; a network
+  // or region carries its practice count alongside the total list size.
+  orgType: z.enum(['practice', 'pcn', 'federation', 'icb']).optional().default('practice'),
+  practices: z.number().int().min(1).max(5000).optional().default(1),
+  patients: z.number().int().min(1).max(20_000_000),
   staffingBasis: z.string().max(60),
-  gpFte: z.number().min(0).max(1000),
-  nurseFte: z.number().min(0).max(1000),
+  gpFte: z.number().min(0).max(20_000),
+  nurseFte: z.number().min(0).max(20_000),
   hoursPerWeek: z.number().min(0),
   hoursPerYear: z.number().min(0),
   valuePerYear: z.number().min(0),

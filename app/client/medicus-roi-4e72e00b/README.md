@@ -33,3 +33,12 @@ the report.
 Assumptions, prices and the basis for each are in the `WILMSLOW_ASSUMP`,
 `DEFAULTS` and `VENDORS` blocks near the top of the script in
 `calculator.html`. Sources are linked in the page's "Basis and limits" section.
+
+The first step asks who the estimate is for: a practice, a PCN, a federation or
+an ICB. The `ORG` block holds the slider ranges and wording for each. For a
+network or region the same model runs on the total list and the number of
+practices entered: staffing is estimated from the total list, admin time
+follows the total list, and each add-on is costed for a practice of average list
+size and multiplied by the number of practices using it (the "of N practices"
+field on the functions step). Leads carry `orgType` and `practices` alongside
+`patients`.

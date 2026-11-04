@@ -15,7 +15,7 @@
 <title>Medicus Practice Time Calculator</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-/* Layout: masthead, four-step stepper, one card per step; results lead with hours returned, money second. Brand: Medicus Brand Guidelines v1.0 (July 2026). */
+/* Layout: masthead, five-step stepper, one card per step; results lead with hours returned, money second. Brand: Medicus Brand Guidelines v1.0 (July 2026). */
 :root {
   --bg: #F4F5F7;          /* Background */
   --surface: #FFFFFF;     /* Surface */
@@ -140,7 +140,7 @@ h3 { font-family: var(--font-body); font-size: 17px; font-weight: 700; color: va
 /* Stepper */
 .stepper {
   list-style: none; margin: 0; padding: 0;
-  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px;
+  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px;
 }
 .stepper button {
   width: 100%; font: inherit; background: none; border: 0; padding: 0 0 10px; cursor: pointer;
@@ -271,10 +271,25 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 }
 .num-input[aria-invalid="true"] { border-color: var(--warn); }
 
+/* Organisation picker */
+.org-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.org {
+  position: relative; display: grid; gap: 4px; padding: 16px 18px; cursor: pointer;
+  border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface);
+}
+.org input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.org .org-name { font-weight: 700; color: var(--ink); font-size: 15px; }
+.org .org-desc { font-size: 13px; color: var(--text-light); line-height: 1.5; }
+.org:hover { border-color: var(--blue); }
+.org:has(input:checked) { border-color: var(--blue); box-shadow: inset 0 0 0 1px var(--blue); background: var(--tint); }
+.org:has(input:focus-visible) { outline: 2px solid var(--blue); outline-offset: 2px; }
+.hero .hero-per { color: #FFFFFF; font-weight: 700; }
+[hidden] { display: none !important; }
+
 /* Vendors */
 .vendors { display: grid; }
 .vendor {
-  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: center;
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 12px; align-items: center;
   padding: 10px 0; border-bottom: 1px solid var(--border);
 }
 .vendor input[type="checkbox"] { width: 18px; height: 18px; margin: 0; accent-color: var(--blue); cursor: pointer; }
@@ -284,6 +299,10 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 .vendor .v-name .v-basis { color: var(--muted); }
 .vendor.off .v-name label { color: var(--muted); font-weight: 400; }
 .vendor .v-cost { display: grid; gap: 3px; justify-items: end; }
+.vendor .v-using { display: grid; gap: 3px; justify-items: end; }
+.vendor .v-using .input-shell input { width: 52px; }
+.vendor .v-using .v-pct { font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.vendor.off .v-using { opacity: .45; }
 .vendor .v-tag { font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .vendor .v-tag.own { color: var(--blue); }
 .vendor.off .v-tag { visibility: hidden; }
@@ -508,10 +527,17 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
   .line .adj { grid-column: 2 / -1; }
   .pop { right: auto; left: 0; }
 }
+@media (max-width: 640px) {
+  .vendors.net .vendor { grid-template-columns: auto minmax(0, 1fr) auto; row-gap: 8px; }
+  .vendors.net .v-name { grid-column: 2 / -1; }
+  .vendors.net .v-using { grid-column: 2; justify-items: start; }
+  .vendors.net .v-cost { grid-column: 3; }
+  .org-grid { grid-template-columns: minmax(0, 1fr); }
+}
 @media (max-width: 560px) {
   .stepper button .t { display: none; }
   .stepper button[aria-current="step"] .t { display: block; }
-  .stepper { grid-template-columns: repeat(4, auto); justify-content: start; gap: 12px; }
+  .stepper { grid-template-columns: repeat(5, auto); justify-content: start; gap: 12px; }
   .step { padding: 22px 18px; min-height: 0; }
   .navbar { padding: 14px 18px; }
   .hero { padding: 22px 18px 20px; }
@@ -524,41 +550,66 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 <div class="wrap">
   <header class="masthead">
     <span class="eyebrow">Medicus · Practice time calculator</span>
-    <h1>How much time would Medicus give your practice back<span class="dot">.</span></h1>
+    <h1>How much time would Medicus give <span id="h1-who">your practice</span> back<span class="dot">.</span></h1>
   </header>
 
   <ol class="stepper" id="stepper" aria-label="Steps">
-    <li><button type="button" data-go="1" aria-current="step"><span class="n">01</span><span class="t">Practice size</span></button></li>
-    <li><button type="button" data-go="2"><span class="n">02</span><span class="t">Staffing</span></button></li>
-    <li><button type="button" data-go="3"><span class="n">03</span><span class="t">Medicus functions</span></button></li>
-    <li><button type="button" data-go="4"><span class="n">04</span><span class="t">Results</span></button></li>
+    <li><button type="button" data-go="1" aria-current="step"><span class="n">01</span><span class="t">Who it's for</span></button></li>
+    <li><button type="button" data-go="2"><span class="n">02</span><span class="t">Size</span></button></li>
+    <li><button type="button" data-go="3"><span class="n">03</span><span class="t">Staffing</span></button></li>
+    <li><button type="button" data-go="4"><span class="n">04</span><span class="t">Medicus functions</span></button></li>
+    <li><button type="button" data-go="5"><span class="n">05</span><span class="t">Results</span></button></li>
   </ol>
 
   <div class="stage">
 
-    <section class="step" data-step="1" aria-labelledby="h-step1">
+    <section class="step" data-step="1" aria-labelledby="h-step-org">
+      <div class="step-head">
+        <h2 id="h-step-org">Who is this estimate for?</h2>
+        <p class="step-intro">The figures and assumptions behind the calculator come from the real-world impact of Medicus at a live NHS practice with around 12,000 patients. For a network or region the same model is applied to the total patient population and the number of practices.</p>
+      </div>
+      <div class="org-grid" role="radiogroup" aria-label="Organisation type">
+        <label class="org"><input type="radio" name="org" value="practice" checked><span class="org-name">A GP practice</span><span class="org-desc">One practice and its registered list.</span></label>
+        <label class="org"><input type="radio" name="org" value="pcn"><span class="org-name">A Primary Care Network</span><span class="org-desc">A group of neighbouring practices, typically 30,000 to 50,000 patients.</span></label>
+        <label class="org"><input type="radio" name="org" value="federation"><span class="org-name">A GP Federation</span><span class="org-desc">A larger group of practices working together across a locality.</span></label>
+        <label class="org"><input type="radio" name="org" value="icb"><span class="org-name">An Integrated Care Board</span><span class="org-desc">All the practices in an ICB area.</span></label>
+      </div>
+    </section>
+
+    <section class="step" data-step="2" aria-labelledby="h-step1" hidden>
       <div class="step-head">
         <h2 id="h-step1">How many registered patients does the practice have?</h2>
-        <p class="step-intro">The figures and assumptions behind the calculator come from the real-world impact of Medicus at a live NHS practice with around 12,000 patients.</p>
+        <p class="step-intro" id="size-intro">Type a figure or use the slider. Lists above the slider's range can be typed in.</p>
+      </div>
+      <div class="block" id="practices-block" hidden>
+        <div class="label-row">
+          <label class="label" for="practices">Practices</label>
+        </div>
+        <input class="patients-input" id="practices" type="text" inputmode="numeric" autocomplete="off" value="5" aria-describedby="practices-hint">
+        <div class="range-wrap">
+          <input type="range" id="practices-range" min="2" max="12" step="1" value="5" aria-label="Number of practices slider">
+          <div class="range-ends" aria-hidden="true"><span id="pr-min">2</span><span class="mid" id="pr-mid">7</span><span id="pr-max">12</span></div>
+        </div>
+        <p class="hint" id="practices-hint">The number of GP practices in the network or area.</p>
       </div>
       <div class="block">
         <div class="label-row">
-          <label class="label" for="patients">Registered patients</label>
+          <label class="label" for="patients" id="patients-label">Registered patients</label>
           <button class="btn-ghost" id="reset-patients" type="button">Reset to default</button>
         </div>
         <input class="patients-input" id="patients" type="text" inputmode="numeric" autocomplete="off" value="12,310" aria-describedby="patients-hint">
         <div class="range-wrap">
           <input type="range" id="patients-range" min="1000" max="40000" step="10" value="12310" aria-label="Registered patients slider">
-          <div class="range-ends" aria-hidden="true"><span>1,000</span><span class="mid">20,000</span><span>40,000</span></div>
+          <div class="range-ends" aria-hidden="true"><span id="pt-min">1,000</span><span class="mid" id="pt-mid">20,000</span><span id="pt-max">40,000</span></div>
         </div>
         <p class="hint" id="patients-hint">Type a figure or use the slider. Lists above 40,000 can be typed in.</p>
       </div>
     </section>
 
-    <section class="step" data-step="2" aria-labelledby="h-step2" hidden>
+    <section class="step" data-step="3" aria-labelledby="h-step2" hidden>
       <div class="step-head">
-        <h2 id="h-step2">How many GPs and nurses does the practice have?</h2>
-        <p class="step-intro">This step is optional. We have estimated the clinical team from list size; move the sliders if you know the practice's own numbers, or press Next to keep the estimate.</p>
+        <h2 id="h-step2">How many GPs and nurses are there?</h2>
+        <p class="step-intro" id="staff-intro">This step is optional. We have estimated the clinical team from list size; move the sliders if you know the practice's own numbers, or press Next to keep the estimate.</p>
       </div>
       <div class="block">
         <div class="label-row">
@@ -579,12 +630,12 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
         </div>
         <div class="slider-row">
           <input class="num-input" id="gp-actual" type="number" min="0" step="0.5" value="8">
-          <div class="range-wrap slim"><input type="range" id="gp-range" min="0.5" max="40" step="0.5" value="8" aria-label="GPs FTE slider"><div class="range-ends" aria-hidden="true"><span>0.5</span><span>40</span></div></div>
+          <div class="range-wrap slim"><input type="range" id="gp-range" min="0.5" max="40" step="0.5" value="8" aria-label="GPs FTE slider"><div class="range-ends" aria-hidden="true"><span>0.5</span><span id="gp-max">40</span></div></div>
         </div>
         <div class="label-row"><label class="label" for="nurse-actual">Practice Nurses (FTE)<button type="button" class="info" data-tip="nurse" aria-label="How we calculated this">i</button></label></div>
         <div class="slider-row">
           <input class="num-input" id="nurse-actual" type="number" min="0" step="0.5" value="3">
-          <div class="range-wrap slim"><input type="range" id="nurse-range" min="0" max="20" step="0.5" value="3" aria-label="Practice nurses FTE slider"><div class="range-ends" aria-hidden="true"><span>0</span><span>20</span></div></div>
+          <div class="range-wrap slim"><input type="range" id="nurse-range" min="0" max="20" step="0.5" value="3" aria-label="Practice nurses FTE slider"><div class="range-ends" aria-hidden="true"><span>0</span><span id="nurse-max">20</span></div></div>
         </div>
         <p class="hint">Count full-time equivalents, where one FTE is four clinical days of two sessions a week. Add up part-time GPs and nurses as fractions, so two GPs on half a week each count as 1.0.</p>
       </div>
@@ -597,10 +648,10 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
         <p class="hint" id="admin-share"></p>
       </div>
     </section>
-    <section class="step" data-step="3" aria-labelledby="h-step3" hidden>
+    <section class="step" data-step="4" aria-labelledby="h-step3" hidden>
       <div class="step-head">
         <h2 id="h-step3">Which native Medicus functions will you use?</h2>
-        <p class="step-intro">Each of these is built into Medicus, so the practice can retire the external add-on it currently pays for. Tick the functions you expect to use. Where the add-on has a public price its cost is estimated from list size; overwrite it with the practice's own figure, or clear the field to go back to the estimate.</p>
+        <p class="step-intro" id="func-intro">Each of these is built into Medicus, so the practice can retire the external add-on it currently pays for. Tick the functions you expect to use. Where the add-on has a public price its cost is estimated from list size; overwrite it with the practice's own figure, or clear the field to go back to the estimate.</p>
       </div>
       <div class="block">
         <div class="label-row">
@@ -617,11 +668,12 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       </div>
     </section>
 
-    <section class="step" data-step="4" aria-labelledby="h-step4" hidden>
+    <section class="step" data-step="5" aria-labelledby="h-step4" hidden>
       <div class="hero">
-        <span class="eyebrow">Time returned to the practice</span>
+        <span class="eyebrow" id="hero-eyebrow">Time returned to the practice</span>
         <div class="big"><span id="hero-hrs">19.1</span><small>hours a week</small><button type="button" class="info" data-tip="hero" aria-label="How we calculated this">i</button></div>
         <p id="hero-sub"></p>
+        <p id="hero-per" class="hero-per" hidden></p>
         <h2 class="visually-hidden" id="h-step4">Results</h2>
       </div>
 
@@ -689,11 +741,11 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
         <div class="lead-head">
           <span class="eyebrow">Take this with you</span>
           <h3>Get this estimate as a Medicus PDF report</h3>
-          <p class="hint">Tell us who it is for and we will build a one-page report with these figures. Medicus will only use your details to follow up on this estimate.</p>
+          <p class="hint">Tell us who it is for and we will build a short branded report with these figures. Medicus will only use your details to follow up on this estimate.</p>
         </div>
         <div class="lead-grid">
           <div class="lf"><label for="lead-name">Your name</label><input id="lead-name" type="text" autocomplete="name" required></div>
-          <div class="lf"><label for="lead-practice">Practice</label><input id="lead-practice" type="text" autocomplete="organization" required></div>
+          <div class="lf"><label for="lead-practice" id="lead-practice-label">Practice</label><input id="lead-practice" type="text" autocomplete="organization" required></div>
           <div class="lf"><label for="lead-email">Work email</label><input id="lead-email" type="email" autocomplete="email" inputmode="email" required></div>
           <div class="lf"><label for="lead-role">Role <span class="opt">(optional)</span></label><input id="lead-role" type="text" autocomplete="organization-title" placeholder="e.g. Practice Manager"></div>
         </div>
@@ -703,7 +755,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
           <button type="button" class="btn" id="lead-submit">Download PDF report</button>
           <span class="hint" id="lead-status" aria-live="polite"></span>
         </div>
-        <p class="hint">Your name, practice and email are used to prepare the report and to follow up on it. See the <a href="/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a>.</p>
+        <p class="hint">Your name, organisation and email are used to prepare the report and to follow up on it. See the <a href="/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a>.</p>
       </form>
 
       <div class="actions">
@@ -717,6 +769,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
         <ul class="basis">
           <li><strong>Source</strong><p>Built from the measured impact of Medicus at a live NHS practice (the reference practice) with 8 FTE GPs, 3 FTE practice nurses and 0.5 FTE of admin time released across 12,310 registered patients. Time saved per login and per session, and the admin time released, are that practice's own figures.</p></li>
           <li><strong>Staffing presets</strong><p>Reference practice ratios give one GP FTE per 1,539 patients and one practice nurse FTE per 4,103. The national average preset uses NHS England's general practice workforce figures for February 2026 (28,895 FTE fully qualified GPs and 16,728 FTE nurses) against 63,789,531 registered patients, or about 2,210 patients per GP and 3,810 per nurse. The reference practice is better staffed than average, so its ratios give the higher figure. NHS England counts an FTE as 37.5 hours; the model follows the reference practice in counting one as four clinical days.</p></li>
+          <li><strong>Networks and regions</strong><p>For a PCN, federation or ICB the same model is applied to the total registered population and the number of practices entered. Clinical staffing is estimated from the total list at the chosen ratio, admin time released follows the total list, and add-on costs are estimated for a practice of average list size and multiplied by the number of practices using each tool. Practices within a network vary widely in size, systems and funding, so the result is an aggregate, not a sum of individual practice figures.</p></li>
           <li><strong>Appointments</strong><p>Clinical capacity is clinical hours released divided by a ten-minute appointment. It shows the scale of the time, not a promise that every hour becomes an appointment; the reference practice's own view is that the larger benefit is a calmer working day.</p></li>
           <li><strong>Valuation</strong><p>Clinical hours are valued at the session rate divided by session length (a £400 GP session over four hours gives £100 an hour). Admin time uses a loaded hourly cost of £15: the National Living Wage rose to £12.71 in April 2026, and employer National Insurance and pension take it to about £15. The reference practice used £12.50. The model assumes 52 working weeks; 46 is more cautious.</p></li>
           <li><strong>Possible overlap</strong><p>Login time and session slowdowns are counted separately, as the reference practice counted them. Some of the login saving may already sit inside the slowdown figure, so the two together should be read as an upper estimate.</p></li>
@@ -728,8 +781,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       <section class="legal" aria-labelledby="h-legal">
         <h3 id="h-legal">Important information</h3>
         <ol>
-          <li><strong>What this is.</strong> An illustrative estimate of the staff time a GP practice might release, and the value of that time, if it moved to Medicus. It is a planning aid, not a quotation, forecast, offer or guarantee, and it does not form part of any contract.</li>
-          <li><strong>Where the figures come from.</strong> The time saved per login, per clinical session and in administrative work is the reported experience of one NHS practice of about 12,000 patients that uses Medicus. It has not been independently audited. Results for other practices are scaled from it in proportion to the figures entered and will vary with list size, staffing, hardware, network and ways of working.</li>
+          <li><strong>What this is.</strong> An illustrative estimate of the staff time a GP practice, or a group of practices, might release, and the value of that time, if it moved to Medicus. It is a planning aid, not a quotation, forecast, offer or guarantee, and it does not form part of any contract.</li>
+          <li><strong>Where the figures come from.</strong> The time saved per login, per clinical session and in administrative work is the reported experience of one NHS practice of about 12,000 patients that uses Medicus. It has not been independently audited. Results for other practices, and for networks and regions, are scaled from it in proportion to the figures entered and will vary with list size, staffing, hardware, network and ways of working. Figures for a PCN, federation or ICB are aggregates across its practices, not a prediction for any one of them.</li>
           <li><strong>Time, not cash.</strong> Hours are valued at the stated session and hourly rates to show what the time is worth. That is not a cash saving unless hours, overtime or locum spend actually fall. Appointment figures show the scale of the time released, not a commitment that it will become extra appointments.</li>
           <li><strong>Third-party costs.</strong> Add-on prices marked "est." are publicly listed prices (Crown Commercial Service G-Cloud and supplier price lists, dated in Basis and limits) scaled to list size. Actual costs depend on the practice's own contracts and may be lower, higher, or paid by an ICB, trust or other commissioner rather than the practice, in which case any saving belongs to whoever pays. Figures typed in are used as entered and are not verified.</li>
           <li><strong>Third-party names.</strong> AccuRx, Docman, Patchs, eConsult, Ardens, Healthtech-1, Little Green Button, EDGEALERT, Engage and ICE are trademarks of their respective owners, which are not connected with Medicus. They are named only to identify systems a practice may already use. Whether Medicus replaces a given system for a given practice depends on that practice's requirements and should be confirmed before any decision.</li>
@@ -827,6 +880,16 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
   /* Plain-English working for each estimate, shown in its "How we calculated this" tooltip. */
   function explainVendor(v, patients) {
     var P = nf0.format(patients);
+    var lines = explainVendorUnit(v, patients);
+    if (isNetwork() && lines.length) {
+      var n = vendorUsing(v), u = vendorUnitCost(v);
+      lines = ["Estimated for one practice of average size: " + nf0.format(state.patients) + " patients ÷ " + nf0.format(state.practices) + " practices = " + P + " patients."].concat(lines);
+      if (u != null) lines.push(gbpExact(u) + " a practice × " + nf0.format(n) + " of " + nf0.format(state.practices) + " practices using it = " + gbpExact(u * n) + " a year" + (n ? "." : ", so nothing is counted until a number of practices is entered."));
+    }
+    return lines;
+  }
+  function explainVendorUnit(v, patients) {
+    var P = nf0.format(patients);
     if (v.perPatient != null) {
       var raw = v.perPatient * patients;
       var est1 = vendorEstimate(v);
@@ -854,13 +917,38 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     return [];
   }
 
+  /* Who the estimate is for. Ranges are [min, max, step, default, slider mid-label]. */
+  var ORG = {
+    practice: { name: "GP practice", group: "practice", label: "the practice", field: "Practice", practices: null,
+      patients: [1000, 40000, 10, REF.patients, 20000], hero: "Time returned to the practice",
+      sizeTitle: "How many registered patients does the practice have?", patientsLabel: "Registered patients",
+      sizeIntro: "Type a figure or use the slider. Lists above 40,000 can be typed in." },
+    pcn: { name: "Primary Care Network", group: "network", label: "the network", field: "PCN",
+      practices: [2, 12, 1, 5, 7], patients: [20000, 120000, 500, 50000, 70000], hero: "Time returned across the network",
+      sizeTitle: "How big is the network?", patientsLabel: "Registered patients in total",
+      sizeIntro: "Enter the number of practices in the PCN and the registered list across all of them. Figures above the sliders' range can be typed in." },
+    federation: { name: "GP Federation", group: "federation", label: "the federation", field: "Federation",
+      practices: [5, 80, 1, 20, 42], patients: [50000, 800000, 1000, 200000, 425000], hero: "Time returned across the federation",
+      sizeTitle: "How big is the federation?", patientsLabel: "Registered patients in total",
+      sizeIntro: "Enter the number of member practices and the registered list across all of them. Figures above the sliders' range can be typed in." },
+    icb: { name: "Integrated Care Board", group: "ICB", label: "the ICB's practices", field: "ICB",
+      practices: [20, 400, 1, 150, 210], patients: [300000, 3500000, 10000, 1500000, 1900000], hero: "Time returned across the ICB's practices",
+      sizeTitle: "How big is the ICB's general practice footprint?", patientsLabel: "Registered patients in total",
+      sizeIntro: "Enter the number of GP practices in the ICB area and the registered list across all of them. Figures above the sliders' range can be typed in." }
+  };
+
   var state = {
+    org: "practice",
+    practices: 1,
     patients: REF.patients,
     mode: "wilmslow",
     actual: { gp: REF.gp, nurse: REF.nurse },
     a: Object.assign({}, DEFAULTS),
-    vendors: VENDORS.map(function (v) { return Object.assign({}, v); })
+    vendors: VENDORS.map(function (v) { return Object.assign({ using: 1, usingAll: true }, v); })
   };
+  function isNetwork() { return state.org !== "practice"; }
+  function avgPractice() { return isNetwork() ? state.patients / Math.max(1, state.practices) : state.patients; }
+  function vendorUsing(v) { return isNetwork() ? (v.usingAll ? state.practices : Math.max(0, Math.min(state.practices, v.using || 0))) : 1; }
 
   var nf0 = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 });
   var nf1 = new Intl.NumberFormat("en-GB", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
@@ -874,11 +962,14 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
   function hrs(v) { return nf1.format(v) + " hrs"; }
   function $(id) { return document.getElementById(id); }
 
+  /* Add-on costs are estimated per practice: for a network, at the average list size, then multiplied by the practices using the tool. */
   function vendorEstimate(v) {
-    if (v.estimate) return v.estimate(state.patients);
-    return v.perPatient == null ? null : Math.round(v.perPatient * state.patients / 10) * 10;
+    var pts = avgPractice();
+    if (v.estimate) return v.estimate(pts);
+    return v.perPatient == null ? null : Math.round(v.perPatient * pts / 10) * 10;
   }
-  function vendorCost(v) { return v.userCost ? v.cost : vendorEstimate(v); }
+  function vendorUnitCost(v) { return v.userCost ? v.cost : vendorEstimate(v); }
+  function vendorCost(v) { var u = vendorUnitCost(v); return u == null ? null : u * vendorUsing(v); }
   function vendorTotal() {
     return state.vendors.reduce(function (sum, v) { var c = vendorCost(v); return sum + (v.on && c > 0 ? c : 0); }, 0);
   }
@@ -997,21 +1088,85 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
   pInput.addEventListener("input", function () {
     var digits = pInput.value.replace(/[^\d]/g, "");
     var v = parseInt(digits, 10);
-    if (!digits || isNaN(v) || v < 100 || v > 200000) { pInput.setAttribute("aria-invalid", "true"); return; }
+    if (!digits || isNaN(v) || v < 100 || v > 20000000) { pInput.setAttribute("aria-invalid", "true"); return; }
     pInput.removeAttribute("aria-invalid");
     state.patients = v;
     pRange.value = Math.min(Math.max(v, +pRange.min), +pRange.max);
     render();
   });
   pInput.addEventListener("blur", function () { pInput.value = nf0.format(state.patients); pInput.removeAttribute("aria-invalid"); });
-  pInput.addEventListener("keydown", function (e) { if (e.key === "Enter" && !pInput.getAttribute("aria-invalid")) { pInput.blur(); goTo(2); } });
+  pInput.addEventListener("keydown", function (e) { if (e.key === "Enter" && !pInput.getAttribute("aria-invalid")) { pInput.blur(); goTo(3); } });
   $("reset-patients").addEventListener("click", function () {
-    state.patients = REF.patients;
-    pInput.value = nf0.format(REF.patients);
+    var o = ORG[state.org];
+    state.patients = o.patients[3];
+    pInput.value = nf0.format(state.patients);
     pInput.removeAttribute("aria-invalid");
-    pRange.value = REF.patients;
+    pRange.value = state.patients;
+    if (o.practices) { state.practices = o.practices[3]; prInput.value = nf0.format(state.practices); prRange.value = state.practices; }
     render();
   });
+
+  /* Practices (networks and regions only) */
+  var prInput = $("practices"), prRange = $("practices-range");
+  function setPracticesFill() {
+    var min = +prRange.min, max = +prRange.max;
+    var pct = (Math.min(Math.max(state.practices, min), max) - min) / (max - min) * 100;
+    prRange.style.setProperty("--pct", pct + "%");
+  }
+  prRange.addEventListener("input", function () {
+    state.practices = +prRange.value;
+    prInput.value = nf0.format(state.practices);
+    prInput.removeAttribute("aria-invalid");
+    render();
+  });
+  prInput.addEventListener("input", function () {
+    var digits = prInput.value.replace(/[^\d]/g, "");
+    var v = parseInt(digits, 10);
+    if (!digits || isNaN(v) || v < 1 || v > 5000) { prInput.setAttribute("aria-invalid", "true"); return; }
+    prInput.removeAttribute("aria-invalid");
+    state.practices = v;
+    prRange.value = Math.min(Math.max(v, +prRange.min), +prRange.max);
+    render();
+  });
+  prInput.addEventListener("blur", function () { prInput.value = nf0.format(state.practices); prInput.removeAttribute("aria-invalid"); });
+  prInput.addEventListener("keydown", function (e) { if (e.key === "Enter" && !prInput.getAttribute("aria-invalid")) { prInput.blur(); pInput.focus(); } });
+
+  /* Organisation type */
+  function setRange(rng, cfg, prefix) {
+    rng.min = cfg[0]; rng.max = cfg[1]; rng.step = cfg[2];
+    $(prefix + "-min").textContent = nf0.format(cfg[0]);
+    $(prefix + "-max").textContent = nf0.format(cfg[1]);
+    var mid = $(prefix + "-mid");
+    mid.textContent = nf0.format(cfg[4]);
+    mid.style.left = "calc(11px + " + ((cfg[4] - cfg[0]) / (cfg[1] - cfg[0])) + " * (100% - 22px))";
+  }
+  function applyOrg(type, resetSizes) {
+    state.org = type;
+    var o = ORG[type];
+    document.querySelectorAll('input[name="org"]').forEach(function (r) { r.checked = r.value === type; });
+    $("h-step1").textContent = o.sizeTitle;
+    $("size-intro").textContent = o.sizeIntro;
+    $("patients-label").textContent = o.patientsLabel;
+    $("practices-block").hidden = !o.practices;
+    setRange(pRange, o.patients, "pt");
+    if (o.practices) setRange(prRange, o.practices, "pr");
+    if (resetSizes) { state.patients = o.patients[3]; state.practices = o.practices ? o.practices[3] : 1; }
+    else state.practices = o.practices ? Math.max(1, state.practices) : 1;
+    pInput.value = nf0.format(state.patients); pRange.value = Math.min(Math.max(state.patients, +pRange.min), +pRange.max);
+    if (o.practices) { prInput.value = nf0.format(state.practices); prRange.value = Math.min(Math.max(state.practices, +prRange.min), +prRange.max); }
+    $("staff-intro").textContent = o.practices
+      ? "This step is optional. We have estimated the clinical team across all " + o.group + " practices from the total list size; move the sliders if you know the real totals, or press Next to keep the estimate."
+      : "This step is optional. We have estimated the clinical team from list size; move the sliders if you know the practice's own numbers, or press Next to keep the estimate.";
+    $("lead-practice-label").textContent = o.field;
+    $("h1-who").textContent = o.practices ? "your practices" : "your practice";
+    $("func-intro").textContent = o.practices
+      ? "Each of these is built into Medicus, so practices can retire the external add-ons they currently pay for. Tick the functions you expect to use and say how many of the " + o.group + "'s practices currently use each add-on. Costs are estimated per practice at the average list size; overwrite with a known per-practice figure, or clear the field to go back to the estimate."
+      : "Each of these is built into Medicus, so the practice can retire the external add-on it currently pays for. Tick the functions you expect to use. Where the add-on has a public price its cost is estimated from list size; overwrite it with the practice's own figure, or clear the field to go back to the estimate.";
+    state.vendors.forEach(function (v) { v.usingAll = true; v.using = state.practices; });
+    buildVendors();
+    if (state.mode === "actual") setMode(basis); else render();
+  }
+  document.querySelectorAll('input[name="org"]').forEach(function (r) { r.addEventListener("change", function () { if (r.checked) applyOrg(r.value, true); }); });
 
   /* Staffing */
   var HINTS = {
@@ -1042,9 +1197,14 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
   ["wilmslow", "national"].forEach(function (k) { $("mode-" + k).addEventListener("click", function () { setMode(k); }); });
   $("use-estimate").addEventListener("click", function () { setMode(basis); });
   function syncStaffControls(s) {
+    var est = { gp: state.patients / RATIOS[basis].gp, nurse: state.patients / RATIOS[basis].nurse };
     ["gp", "nurse"].forEach(function (k) {
       var v = Math.round(s[k] * 10) / 10;
       var num = $(k + "-actual"), rng = $(k + "-range");
+      /* the slider's top end follows the estimate so an ICB is not stuck at 40 GPs */
+      var top = Math.max(k === "gp" ? 40 : 20, Math.ceil(est[k] * 2.5 / 10) * 10);
+      rng.max = top; rng.step = top > 200 ? 5 : top > 60 ? 1 : 0.5;
+      $(k + "-max").textContent = nf0.format(top);
       if (document.activeElement !== num) num.value = v;
       rng.value = Math.min(Math.max(v, +rng.min), +rng.max);
       var pctv = (rng.value - rng.min) / (rng.max - rng.min) * 100;
@@ -1077,15 +1237,17 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
   var vendorsEl = $("vendors");
   function buildVendors() {
     vendorsEl.innerHTML = "";
+    vendorsEl.classList.toggle("net", isNetwork());
     state.vendors.forEach(function (v) {
       var row = document.createElement("div");
       row.className = "vendor" + (v.on ? "" : " off");
       row.dataset.id = v.id;
-      var c = vendorCost(v);
+      var c = vendorUnitCost(v);
       row.innerHTML =
         '<input type="checkbox" id="v-' + v.id + '" data-id="' + v.id + '"' + (v.on ? " checked" : "") + '>' +
         '<div class="v-name"><label for="v-' + v.id + '"></label><small class="v-desc"></small><small class="v-basis"></small></div>' +
-        '<div class="v-cost"><span class="input-shell"><span class="unit">£</span><input type="number" min="0" step="10" placeholder="a year" data-id="' + v.id + '" aria-label="Annual cost of ' + v.name.replace(/"/g, "") + '"' + (c != null ? ' value="' + c + '"' : "") + '></span><span class="v-tag"></span></div>';
+        '<div class="v-using"' + (isNetwork() ? "" : " hidden") + '><span class="input-shell"><input type="number" min="0" step="1" data-using="' + v.id + '" aria-label="Practices using ' + v.name.replace(/"/g, "") + '"></span><span class="v-pct"></span></div>' +
+        '<div class="v-cost"><span class="input-shell"><span class="unit">£</span><input type="number" min="0" step="10" placeholder="a year" data-id="' + v.id + '" aria-label="Annual cost of ' + v.name.replace(/"/g, "") + (isNetwork() ? " per practice" : "") + '"' + (c != null ? ' value="' + c + '"' : "") + '></span><span class="v-tag"></span></div>';
       if (!v.custom && (v.perPatient != null || v.estimate)) {
         var ib = document.createElement("button");
         ib.type = "button"; ib.className = "info"; ib.dataset.tip = "v-" + v.id; ib.setAttribute("aria-label", "How we calculated this"); ib.textContent = "i";
@@ -1108,12 +1270,21 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     state.vendors.forEach(function (v) {
       var row = vendorsEl.querySelector('.vendor[data-id="' + v.id + '"]');
       if (!row) return;
-      var input = row.querySelector('input[type="number"]');
+      var input = row.querySelector('input[data-id]');
       var tag = row.querySelector(".v-tag");
-      var c = vendorCost(v);
+      var c = vendorUnitCost(v);
       if (!v.userCost && document.activeElement !== input) input.value = c != null ? c : "";
-      tag.textContent = v.custom ? "" : (v.userCost ? "Your figure" : ((v.perPatient != null || v.estimate) ? "Estimate" : "Enter add-on cost"));
+      var net = isNetwork();
+      tag.textContent = v.custom ? (net ? "Per practice" : "") : (v.userCost ? (net ? "Your figure, per practice" : "Your figure") : ((v.perPatient != null || v.estimate) ? (net ? "Estimate per practice" : "Estimate") : "Enter add-on cost"));
       tag.className = "v-tag" + (v.userCost ? " own" : "");
+      var usingBox = row.querySelector(".v-using"), usingInput = row.querySelector("input[data-using]");
+      usingBox.hidden = !net;
+      if (net) {
+        var n = vendorUsing(v);
+        if (document.activeElement !== usingInput) usingInput.value = n;
+        usingInput.max = state.practices;
+        row.querySelector(".v-pct").textContent = "of " + nf0.format(state.practices) + " practices · " + Math.round(n / Math.max(1, state.practices) * 100) + "%";
+      }
     });
   }
   vendorsEl.addEventListener("change", function (e) {
@@ -1128,6 +1299,15 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
   vendorsEl.addEventListener("input", function (e) {
     var t = e.target;
     if (t.type !== "number") return;
+    if (t.dataset.using) {
+      var vu = state.vendors.find(function (x) { return x.id === t.dataset.using; });
+      if (!vu) return;
+      var k = parseInt(t.value, 10);
+      if (t.value === "" || isNaN(k) || k < 0) { vu.usingAll = true; }
+      else { vu.usingAll = false; vu.using = Math.min(k, state.practices); }
+      render();
+      return;
+    }
     var v = state.vendors.find(function (x) { return x.id === t.dataset.id; });
     if (!v) return;
     var n = parseFloat(t.value);
@@ -1150,7 +1330,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     if (!name) { nameEl.focus(); return; }
     var n = parseFloat(costEl.value);
     var hasCost = !(costEl.value === "" || isNaN(n) || n < 0);
-    state.vendors.push({ id: "c" + Date.now(), name: name, desc: "", on: true, cost: hasCost ? n : null, userCost: hasCost, perPatient: null, basis: "", custom: true });
+    state.vendors.push({ id: "c" + Date.now(), name: name, desc: "", on: true, cost: hasCost ? n : null, userCost: hasCost, perPatient: null, basis: "", custom: true, using: state.practices, usingAll: true });
     nameEl.value = ""; costEl.value = "";
     buildVendors();
     render();
@@ -1167,9 +1347,9 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     state.patients = REF.patients;
     pInput.value = nf0.format(REF.patients);
     pRange.value = REF.patients;
-    state.vendors = VENDORS.map(function (v) { return Object.assign({}, v); });
-    buildVendors();
+    state.vendors = VENDORS.map(function (v) { return Object.assign({ using: 1, usingAll: true }, v); });
     basis = "wilmslow"; state.mode = "wilmslow";
+    applyOrg("practice", true);
     setMode("wilmslow");
   });
 
@@ -1320,13 +1500,20 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     var s = staffing();
     var r = compute(state.patients, s, state.a, vendorTotal());
     var a = state.a;
-    var modeName = state.mode === "actual" ? "Practice's own staffing" : { wilmslow: "Reference practice ratios", national: "National average ratios" }[state.mode];
+    var modeName = state.mode === "actual" ? (isNetwork() ? "Own staffing totals" : "Practice's own staffing") : { wilmslow: "Reference practice ratios", national: "National average ratios" }[state.mode];
     var ticked = state.vendors.filter(function (v) { return v.on; });
     var costed = ticked.filter(function (v) { return vendorCost(v) > 0; });
     var estimated = costed.filter(function (v) { return !v.userCost; });
     var uncosted = ticked.filter(function (v) { return !(vendorCost(v) > 0); });
-    $("vendor-count").textContent = ticked.length + " of " + state.vendors.length + " selected · " + costed.length + " with an add-on cost" + (estimated.length ? " (" + estimated.length + " estimated)" : "");
+    $("vendor-count").textContent = ticked.length + " of " + state.vendors.length + " selected · " + costed.length + " with an add-on cost" + (estimated.length ? " (" + estimated.length + " estimated)" : "") + (isNetwork() ? " · " + nf0.format(state.practices) + " practices" : "");
     syncVendorRows();
+
+    /* size step */
+    var o = ORG[state.org], net = isNetwork();
+    $("patients-hint").textContent = net
+      ? "That is an average of " + nf0.format(avgPractice()) + " patients a practice. Larger figures can be typed in."
+      : o.sizeIntro;
+    setPracticesFill();
 
     /* staffing */
     syncStaffControls(s);
@@ -1337,9 +1524,15 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     $("sc-sessions").textContent = sessions;
 
     /* hero: time */
+    $("hero-eyebrow").textContent = o.hero;
     setNum("hero-hrs", r.weekHrs, function (v) { return nf1.format(v); });
-    $("hero-sub").textContent = nf1.format(r.clinHrs) + " clinical hours and " + nf1.format(r.adminHrs) + " admin hours a week, for a practice of " +
-      nf0.format(state.patients) + " patients with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE nurses.";
+    $("hero-sub").textContent = net
+      ? nf1.format(r.clinHrs) + " clinical hours and " + nf1.format(r.adminHrs) + " admin hours a week across " + nf0.format(state.practices) + " practices and " + nf0.format(state.patients) +
+        " patients, with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE practice nurses in total."
+      : nf1.format(r.clinHrs) + " clinical hours and " + nf1.format(r.adminHrs) + " admin hours a week, for a practice of " +
+        nf0.format(state.patients) + " patients with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE nurses.";
+    $("hero-per").hidden = !net;
+    if (net) $("hero-per").textContent = "An average of " + hrs(r.weekHrs / Math.max(1, state.practices)) + " a week for each practice.";
     setNum("t-perclin", r.perClinDay, function (v) { return nf0.format(v) + "<small>minutes back</small>"; });
     setNum("t-appts", r.appts, function (v) { return "≈ " + nf0.format(v) + "<small>" + nf0.format(a.apptMins) + "-minute appointments</small>"; });
     var clinShare = r.weekHrs > 0 ? r.clinHrs / r.weekHrs : 0, sessPerHr = a.sessionHours > 0 ? 1 / a.sessionHours : 0;
@@ -1372,13 +1565,13 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     $("m-sub").textContent = "Clinical time at " + gbpExact(a.gpSession) + " a GP session and " + gbpExact(a.nurseSession) + " a nurse session; admin at £" + money2.format(a.adminRate) + " an hour loaded; " + nf2.format(a.weeks) + " weeks.";
     var hasLic = r.licVal > 0;
     $("m-lic-label").textContent = hasLic
-      ? "Plus add-ons retired for " + costed.map(function (v) { return v.name + (v.userCost ? "" : " (est.)"); }).join(", ")
-      : "Add-ons retired: no costs entered" + (uncosted.length ? " for " + uncosted.map(function (v) { return v.name; }).join(", ") : "");
+      ? "Plus add-ons retired for " + costed.map(function (v) { return v.name + (net ? " (" + nf0.format(vendorUsing(v)) + " practice" + (vendorUsing(v) === 1 ? "" : "s") + ")" : "") + (v.userCost ? "" : " (est.)"); }).join(", ")
+      : "Add-ons retired: no costs entered" + (uncosted.length ? " for " + uncosted.map(function (v) { return v.name + (net && vendorUsing(v) === 0 ? " (no practices using it)" : ""); }).join(", ") : "");
     if (hasLic) setNum("m-lic", r.licVal, function (v) { return gbpExact(v) + " a year"; }); else { $("m-lic").textContent = ""; delete anim["m-lic"]; }
 
     setRangeFill();
 
-    lastResult = { s: s, r: r, a: a, modeName: modeName, costed: costed, uncosted: uncosted, hasLic: hasLic, sessions: sessions, shares: sh };
+    lastResult = { s: s, r: r, a: a, modeName: modeName, costed: costed, uncosted: uncosted, hasLic: hasLic, sessions: sessions, shares: sh, org: o, net: net };
     $("lic-info").hidden = !hasLic;
 
     /* "How we calculated this" text for every figure. Lines starting with ~ are notes. */
@@ -1386,15 +1579,15 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     var gpSess = s.gp * a.daysPerWeek * a.sessionsPerDay, nSess = s.nurse * a.daysPerWeek * a.sessionsPerDay;
     var loginMinDay = a.loginMins * a.loginsPerDay;
     var ratio = state.mode === "national" ? RATIOS.national : RATIOS.wilmslow;
-    var basisName = state.mode === "national" ? "NHS England's national average" : "the reference practice";
+    var ratioNote = state.mode === "national" ? "the NHS England national average for February 2026" : "the reference practice's ratio";
     var wk = nf2.format(a.weeks) + " weeks";
     tipText = {
       gp: state.mode === "actual"
-        ? ["This is the practice's own figure, entered on this page.", "~The estimate would be " + nf0.format(state.patients) + " ÷ " + nf0.format(ratio.gp) + " patients per GP = " + nf1.format(state.patients / ratio.gp) + " FTE at " + basisName + "'s ratio."]
-        : [nf0.format(state.patients) + " patients ÷ " + nf0.format(ratio.gp) + " patients per GP = " + nf1.format(s.gp) + " FTE.", "~" + nf0.format(ratio.gp) + " patients per GP is " + basisName + "'s ratio. Move the slider to use the practice's own figure."],
+        ? ["This is " + (net ? "your own figure" : "the practice's own figure") + ", entered on this page.", "~The estimate would be " + nf0.format(state.patients) + " ÷ " + nf0.format(ratio.gp) + " patients per GP = " + nf1.format(state.patients / ratio.gp) + " FTE at " + ratioNote + "."]
+        : [nf0.format(state.patients) + " patients ÷ " + nf0.format(ratio.gp) + " patients per GP = " + nf1.format(s.gp) + " FTE.", "~" + nf0.format(ratio.gp) + " patients per GP is " + ratioNote + ". Move the slider to use " + (net ? "your own total" : "the practice's own figure") + "."],
       nurse: state.mode === "actual"
-        ? ["This is the practice's own figure, entered on this page.", "~The estimate would be " + nf0.format(state.patients) + " ÷ " + nf0.format(ratio.nurse) + " patients per nurse = " + nf1.format(state.patients / ratio.nurse) + " FTE at " + basisName + "'s ratio."]
-        : [nf0.format(state.patients) + " patients ÷ " + nf0.format(ratio.nurse) + " patients per nurse = " + nf1.format(s.nurse) + " FTE.", "~" + nf0.format(ratio.nurse) + " patients per nurse is " + basisName + "'s ratio. Move the slider to use the practice's own figure."],
+        ? ["This is " + (net ? "your own figure" : "the practice's own figure") + ", entered on this page.", "~The estimate would be " + nf0.format(state.patients) + " ÷ " + nf0.format(ratio.nurse) + " patients per nurse = " + nf1.format(state.patients / ratio.nurse) + " FTE at " + ratioNote + "."]
+        : [nf0.format(state.patients) + " patients ÷ " + nf0.format(ratio.nurse) + " patients per nurse = " + nf1.format(s.nurse) + " FTE.", "~" + nf0.format(ratio.nurse) + " patients per nurse is " + ratioNote + ". Move the slider to use " + (net ? "your own total" : "the practice's own figure") + "."],
       sessions: [nf1.format(s.gp) + " GPs × " + nf2.format(a.daysPerWeek) + " clinical days × " + nf2.format(a.sessionsPerDay) + " sessions = " + nfx.format(gpSess) + " GP sessions.",
                  nf1.format(s.nurse) + " nurses × " + nf2.format(a.daysPerWeek) + " × " + nf2.format(a.sessionsPerDay) + " = " + nfx.format(nSess) + " nurse sessions.",
                  "Total: " + sessions + " clinical sessions a week."],
@@ -1404,7 +1597,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
               "~The " + nf3.format(a.adminPer10k) + " per 10,000 patients comes from the reference practice, which released 0.5 FTE across 12,310 patients through streamlined document handling."],
       hero: ["Fewer slowdowns and downtime " + hrs(r.downHrs) + " + fewer logins " + hrs(r.loginHrs) + " = " + hrs(r.clinHrs) + " of clinical time a week.",
              "Less manual admin: " + hrs(r.adminHrs) + " of admin time a week.",
-             hrs(r.clinHrs) + " + " + hrs(r.adminHrs) + " = " + hrs(r.weekHrs) + " a week in total.",
+             hrs(r.clinHrs) + " + " + hrs(r.adminHrs) + " = " + hrs(r.weekHrs) + " a week in total." + (net ? " Across " + nf0.format(state.practices) + " practices that is an average of " + hrs(r.weekHrs / Math.max(1, state.practices)) + " a week each." : ""),
              "~Clinical and admin time are different kinds of time, so the breakdown below keeps them separate."],
       perclin: ["Logins: " + nf2.format(a.loginMins) + " minutes × " + nf2.format(a.loginsPerDay) + " a day = " + nf0.format(loginMinDay) + " minutes.",
                 "Slowdowns: " + nf2.format(a.downtimeMins) + " minutes × " + nf2.format(a.sessionsPerDay) + " sessions a day = " + nf0.format(a.sessionsPerDay * a.downtimeMins) + " minutes.",
@@ -1430,18 +1623,20 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       money: ["Fewer slowdowns " + gbpExact(r.downVal) + " + fewer logins " + gbpExact(r.loginVal) + " + less manual admin " + gbpExact(r.adminVal) + " = " + gbpExact(r.timeVal) + " a year, shown rounded to the nearest £100.",
               "Hourly rates: GP " + gbpExact(a.gpSession) + " ÷ " + nf2.format(a.sessionHours) + " = " + gbpRate(gpRate) + "; nurse " + gbpExact(a.nurseSession) + " ÷ " + nf2.format(a.sessionHours) + " = " + gbpRate(nurseRate) + "; admin £" + money2.format(a.adminRate) + " loaded (pay plus employer costs). All × " + wk + ".",
               "~This is the value of the time at those rates. It only becomes cash if hours, overtime or locum spend actually fall."],
-      lic: (hasLic ? ["Ticked functions with a cost: " + costed.map(function (v) { return v.name + " " + gbpExact(vendorCost(v)) + (v.userCost ? "" : " (est.)"); }).join(" + ") + " = " + gbpExact(r.licVal) + " a year."] : ["No ticked function has a cost yet."]).concat(
-             ["~Estimates are list prices scaled to this list size; a figure you type replaces the estimate. The working for each estimate is on the functions step."])
+      lic: (hasLic ? ["Ticked functions with a cost: " + costed.map(function (v) { return v.name + " " + (net ? gbpExact(vendorUnitCost(v)) + " × " + nf0.format(vendorUsing(v)) + " = " : "") + gbpExact(vendorCost(v)) + (v.userCost ? "" : " (est.)"); }).join(" + ") + " = " + gbpExact(r.licVal) + " a year."] : ["No ticked function has a cost yet."]).concat(
+             [net ? "~Estimates are list prices for a practice of average list size, multiplied by the number of practices using each tool; a figure you type (per practice) replaces the estimate. The working for each estimate is on the functions step."
+                  : "~Estimates are list prices scaled to this list size; a figure you type replaces the estimate. The working for each estimate is on the functions step."])
     };
-    state.vendors.forEach(function (v) { if (!v.custom && (v.perPatient != null || v.estimate)) tipText["v-" + v.id] = explainVendor(v, state.patients); });
+    state.vendors.forEach(function (v) { if (!v.custom && (v.perPatient != null || v.estimate)) tipText["v-" + v.id] = explainVendor(v, avgPractice()); });
     if (calcFor) openCalc(calcFor, calcPinned);
 
     lastSummary = [
       "Medicus practice time estimate",
-      "Registered patients: " + nf0.format(state.patients),
+      "For: " + o.name + (net ? " of " + nf0.format(state.practices) + " practices" : ""),
+      "Registered patients: " + nf0.format(state.patients) + (net ? " (average " + nf0.format(avgPractice()) + " a practice)" : ""),
       "Staffing basis: " + modeName + " (GP " + nf1.format(s.gp) + " FTE, nurse " + nf1.format(s.nurse) + " FTE)",
       "",
-      "Time returned to the practice: " + nf1.format(r.weekHrs) + " hours a week, about " + nf0.format(r.yearHrs) + " a year",
+      o.hero + ": " + nf1.format(r.weekHrs) + " hours a week, about " + nf0.format(r.yearHrs) + " a year" + (net ? " (an average of " + hrs(r.weekHrs / Math.max(1, state.practices)) + " a week for each practice)" : ""),
       "  Fewer slowdowns and downtime: " + hrs(r.downHrs) + " a week",
       "  Fewer logins: " + hrs(r.loginHrs) + " a week",
       "  Less manual admin: " + hrs(r.adminHrs) + " a week",
@@ -1449,8 +1644,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       "Clinical capacity: about " + nf0.format(r.appts) + " " + nf0.format(a.apptMins) + "-minute appointments a week, or " + nf0.format(r.sessionsYear) + " clinical sessions a year",
       "",
       "What that time is worth: " + gbp(r.timeVal) + " a year",
-      "Add-ons retired by native Medicus functions: " + (hasLic ? gbpExact(r.licVal) + " a year (" + costed.map(function (v) { return v.name + " " + gbpExact(vendorCost(v)) + (v.userCost ? "" : " est."); }).join(", ") + ")" : "no costs entered") +
-        (uncosted.length ? "; selected without a cost: " + uncosted.map(function (v) { return v.name; }).join(", ") : ""),
+      "Add-ons retired by native Medicus functions: " + (hasLic ? gbpExact(r.licVal) + " a year (" + costed.map(function (v) { return v.name + " " + gbpExact(vendorCost(v)) + (net ? " across " + nf0.format(vendorUsing(v)) + " practice" + (vendorUsing(v) === 1 ? "" : "s") : "") + (v.userCost ? "" : " est."); }).join(", ") + ")" : "no costs entered") +
+        (uncosted.length ? "; selected without a cost: " + uncosted.map(function (v) { return v.name + (net && vendorUsing(v) === 0 ? " (no practices using it)" : ""); }).join(", ") : ""),
       "",
       "Assumptions: " + nf2.format(a.downtimeMins) + " min saved per session, " + nf2.format(a.loginMins) + " min × " + nf2.format(a.loginsPerDay) + " logins a day, " +
         nf3.format(a.adminPer10k) + " admin FTE released per 10,000 patients, " + nf2.format(a.daysPerWeek) + " clinical days × " + nf2.format(a.sessionsPerDay) + " sessions per FTE, " +
@@ -1490,6 +1685,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       consent: consent,
       _gotcha: $("lead-gotcha").value,
       submittedAt: new Date().toISOString(),
+      orgType: state.org,
+      practices: state.practices,
       patients: state.patients,
       staffingBasis: lastResult.modeName,
       gpFte: Math.round(lastResult.s.gp * 10) / 10,
@@ -1576,7 +1773,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 
     /* Hero */
     var y = 54;
-    eyebrow("Time returned to the practice", M, y); y += 15;
+    eyebrow(R.org.hero, M, y); y += 15;
     doc.setFont("times", "bold"); doc.setFontSize(40); col(INK);
     var big = nf1.format(r.weekHrs);
     doc.text(big, M, y);
@@ -1584,8 +1781,12 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     doc.setFont("helvetica", "normal"); doc.setFontSize(14); col(INK);
     doc.text("hours a week", M + bw + 3, y);
     y += 8;
-    y = para(nf1.format(r.clinHrs) + " clinical hours and " + nf1.format(r.adminHrs) + " admin hours a week, for a practice of " + nf0.format(state.patients) +
-      " registered patients with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE practice nurses (" + R.modeName + ").", M, y, cw, 10, LIGHT, 5);
+    y = para(R.net
+      ? nf1.format(r.clinHrs) + " clinical hours and " + nf1.format(r.adminHrs) + " admin hours a week across " + nf0.format(state.practices) + " practices and " + nf0.format(state.patients) +
+        " registered patients, with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE practice nurses in total (" + R.modeName + "). That is an average of " +
+        hrs(r.weekHrs / Math.max(1, state.practices)) + " a week for each practice."
+      : nf1.format(r.clinHrs) + " clinical hours and " + nf1.format(r.adminHrs) + " admin hours a week, for a practice of " + nf0.format(state.patients) +
+        " registered patients with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE practice nurses (" + R.modeName + ").", M, y, cw, 10, LIGHT, 5);
 
     /* Tiles */
     y += 1;
@@ -1649,10 +1850,10 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     doc.setFont("times", "bold"); doc.setFontSize(18); col(INK);
     doc.text(R.hasLic ? gbpExact(r.licVal) + " a year" : "No add-on costs entered", M + 6, y + 15);
     doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(LIGHT);
-    var sum1 = costed.length + " of " + on.length + " selected functions carry an add-on cost";
+    var sum1 = costed.length + " of " + on.length + " selected functions carry an add-on cost" + (R.net ? " across " + nf0.format(state.practices) + " practices" : "");
     var sum2 = R.hasLic
-      ? (est.length ? est.length + " estimated from list prices" : "") + (est.length && own ? ", " : "") + (own ? own + " entered by the practice" : "")
-      : "Enter the practice's own costs to see a figure";
+      ? (est.length ? est.length + " estimated from list prices" : "") + (est.length && own ? ", " : "") + (own ? own + " entered by you" : "")
+      : "Enter your own add-on costs to see a figure";
     doc.text(sum1, W - M - 6, y + 8.5, { align: "right" });
     doc.text(sum2, W - M - 6, y + 13.5, { align: "right" });
     y += sh + 6.5;
@@ -1668,8 +1869,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); col(TEXT); doc.text(v.name, x + 5, yy);
       var cost = vendorCost(v);
       doc.setFontSize(7.5);
-      if (cost > 0) { col(v.userCost ? INK : LIGHT); doc.text(gbpExact(cost) + (v.userCost ? "" : " est."), x + colW, yy, { align: "right" }); }
-      else { col(MUTED); doc.text("no cost entered", x + colW, yy, { align: "right" }); }
+      if (cost > 0) { col(v.userCost ? INK : LIGHT); doc.text((R.net ? nf0.format(vendorUsing(v)) + "/" + nf0.format(state.practices) + " · " : "") + gbpExact(cost) + (v.userCost ? "" : " est."), x + colW, yy, { align: "right" }); }
+      else { col(MUTED); doc.text(R.net && vendorUsing(v) === 0 ? "no practices using it" : "no cost entered", x + colW, yy, { align: "right" }); }
     });
     y += rows * lineH + 1.5;
     if (y + 11 <= FOOT - 3) {
@@ -1686,22 +1887,6 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       M, y, cw, 8, LIGHT, 3.8);
     y += 2;
 
-    /* How each figure is calculated, with this practice's numbers substituted (the same text as the page's tooltips) */
-    eyebrow("How the figures are calculated", M, y, MUTED); y += 2;
-    [["Hours a week", "hero"], ["Per clinician, each clinical day", "perclin"], ["Clinical capacity", "appts"], ["Over a year", "year"],
-     ["Fewer slowdowns and downtime", "down"], ["Fewer logins", "login"], ["Less manual admin", "admin"], ["What that time is worth", "money"], ["Third-party add-ons retired", "lic"]].forEach(function (g) {
-      var lines = (tipText[g[1]] || []).filter(function (l) { return l.charAt(0) !== "~"; });
-      if (!lines.length) return;
-      var wrapped = [];
-      lines.forEach(function (l) { doc.setFontSize(7.2); wrapped = wrapped.concat(doc.splitTextToSize(l.replace(/≈/g, "about"), cw - 48)); });
-      y = ensure(y, 4 + wrapped.length * 2.9 + 1);
-      rule(y); y += 3.4;
-      doc.setFont("helvetica", "bold"); doc.setFontSize(7.5); col(INK); doc.text(g[0], M, y);
-      doc.setFont("helvetica", "normal"); doc.setFontSize(7.2); col(TEXT);
-      doc.text(wrapped, M + 46, y, { lineHeightFactor: 1.15 });
-      y += wrapped.length * 2.9 + 0.5;
-    });
-    rule(y); y += 3;
 
     /* Inputs and assumptions, laid out in two columns so the whole basis fits one page */
     var gcw = (cw - 10) / 2;
@@ -1716,13 +1901,16 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       });
     }
     var practiceRows = [
-      ["Registered patients", nf0.format(state.patients), ""],
+      ["Estimate for", R.org.name, ""]].concat(R.net ? [
+      ["Practices", nf0.format(state.practices), ""],
+      ["Average list size", nf0.format(avgPractice()), "patients a practice"]] : []).concat([
+      ["Registered patients" + (R.net ? " in total" : ""), nf0.format(state.patients), ""],
       ["GPs (FTE)", nf1.format(s.gp), R.modeName],
       ["Practice nurses (FTE)", nf1.format(s.nurse), R.modeName],
       ["Clinical sessions a week", R.sessions, ""],
       ["Admin time released (FTE)", nf2.format(Math.round(s.admin * 100) / 100), nf3.format(a.adminPer10k) + " FTE per 10,000 patients"]
-    ];
-    var leftGroups = [["This practice", practiceRows], [GROUPS.down.title, fieldRows(GROUPS.down)], [GROUPS.login.title, fieldRows(GROUPS.login)]];
+    ]);
+    var leftGroups = [[R.net ? "This " + R.org.name.toLowerCase() : "This practice", practiceRows], [GROUPS.down.title, fieldRows(GROUPS.down)], [GROUPS.login.title, fieldRows(GROUPS.login)]];
     var rightGroups = [[GROUPS.admin.title, fieldRows(GROUPS.admin)], [GROUPS.value.title, fieldRows(GROUPS.value)]];
     function drawColumn(groups, x, y0) {
       var yy = y0;
@@ -1749,6 +1937,24 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     var yr = drawColumn(rightGroups, M + gcw + 10, y);
     y = Math.max(yl, yr) + 2;
 
+    /* How each figure is calculated, with this practice's numbers substituted (the same text as the page's tooltips) */
+    y = ensure(y, 24); y += 3;
+    eyebrow("How the figures are calculated", M, y, MUTED); y += 2;
+    [["Hours a week", "hero"], ["Per clinician, each clinical day", "perclin"], ["Clinical capacity", "appts"], ["Over a year", "year"],
+     ["Fewer slowdowns and downtime", "down"], ["Fewer logins", "login"], ["Less manual admin", "admin"], ["What that time is worth", "money"], ["Third-party add-ons retired", "lic"]].forEach(function (g) {
+      var lines = (tipText[g[1]] || []).filter(function (l) { return l.charAt(0) !== "~"; });
+      if (!lines.length) return;
+      var wrapped = [];
+      lines.forEach(function (l) { doc.setFontSize(7.2); wrapped = wrapped.concat(doc.splitTextToSize(l.replace(/≈/g, "about"), cw - 48)); });
+      y = ensure(y, 4 + wrapped.length * 2.9 + 1);
+      rule(y); y += 3.4;
+      doc.setFont("helvetica", "bold"); doc.setFontSize(7.5); col(INK); doc.text(g[0], M, y);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(7.2); col(TEXT);
+      doc.text(wrapped, M + 46, y, { lineHeightFactor: 1.15 });
+      y += wrapped.length * 2.9 + 0.5;
+    });
+    rule(y); y += 3;
+
     function groupTitle(t) { y = ensure(y, 14); y += 4; eyebrow(t, M, y, MUTED); y += 2.5; }
 
     /* Add-ons in two columns: name and cost, then the basis on up to two lines */
@@ -1764,10 +1970,10 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       doc.setFont("helvetica", "bold"); doc.setFontSize(8); col(INK); doc.text(v.name, x, yy);
       var cost = vendorCost(v);
       doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(cost > 0 ? INK : MUTED);
-      doc.text(cost > 0 ? gbpExact(cost) + (v.userCost ? " (practice's figure)" : " (est.)") : "no cost entered", x + gcw, yy, { align: "right" });
+      doc.text(cost > 0 ? (R.net ? gbpExact(vendorUnitCost(v)) + " × " + nf0.format(vendorUsing(v)) + " = " : "") + gbpExact(cost) + (v.userCost ? " (own figure)" : " (est.)") : (R.net && vendorUsing(v) === 0 ? "no practices using it" : "no cost entered"), x + gcw, yy, { align: "right" });
       yy += 3.2;
       doc.setFontSize(6.6); col(MUTED);
-      var basisLines = doc.splitTextToSize(v.custom ? "Added by the practice" : (v.desc + (v.basis ? ". " + v.basis : "")), gcw).slice(0, 2);
+      var basisLines = doc.splitTextToSize(v.custom ? "Added by you" : (v.desc + (v.basis ? ". " + v.basis : "")), gcw).slice(0, 2);
       doc.text(basisLines, x, yy);
     });
     y = ay0 + arows * entryH;
@@ -1785,8 +1991,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 
     /* Important information */
     var legal = [
-      ["What this is.", "An illustrative estimate of the staff time a GP practice might release, and the value of that time, if it moved to Medicus. It is a planning aid, not a quotation, forecast, offer or guarantee, and it does not form part of any contract."],
-      ["Where the figures come from.", "The time saved per login, per clinical session and in administrative work is the reported experience of one NHS practice of about 12,000 patients that uses Medicus. It has not been independently audited. Results for other practices are scaled from it in proportion to the figures entered and will vary with list size, staffing, hardware, network and ways of working."],
+      ["What this is.", "An illustrative estimate of the staff time a GP practice, or a group of practices, might release, and the value of that time, if it moved to Medicus. It is a planning aid, not a quotation, forecast, offer or guarantee, and it does not form part of any contract."],
+      ["Where the figures come from.", "The time saved per login, per clinical session and in administrative work is the reported experience of one NHS practice of about 12,000 patients that uses Medicus. It has not been independently audited. Results for other practices, and for networks and regions, are scaled from it in proportion to the figures entered and will vary with list size, staffing, hardware, network and ways of working. Figures for a PCN, federation or ICB are aggregates across its practices, not a prediction for any one of them."],
       ["Time, not cash.", "Hours are valued at the stated session and hourly rates to show what the time is worth. That is not a cash saving unless hours, overtime or locum spend actually fall. Appointment figures show the scale of the time released, not a commitment that it will become extra appointments."],
       ["Third-party costs.", "Add-on prices marked est. are publicly listed prices (Crown Commercial Service G-Cloud and supplier price lists, as dated above) scaled to list size. Actual costs depend on the practice's own contracts and may be lower, higher, or paid by an ICB, trust or other commissioner rather than the practice, in which case any saving belongs to whoever pays. Figures entered by the practice are used as given and are not verified."],
       ["Third-party names.", "AccuRx, Docman, Patchs, eConsult, Ardens, Healthtech-1, Little Green Button, EDGEALERT, Engage and ICE are trademarks of their respective owners, which are not connected with Medicus. They are named only to identify systems a practice may already use. Whether Medicus replaces a given system for a given practice depends on that practice's requirements and should be confirmed before any decision."],
@@ -1805,9 +2011,10 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       if (!rest.length || rest[0] === "") rest = [];
       return { lead: item[0], lw: lw, first: first, rest: rest, h: (1 + rest.length) * 3 + 1.4 };
     });
-    y = ensure(y, legalLayout.reduce(function (h, it) { return h + it.h; }, 0) + 8);
+    y = ensure(y, 4.5 + legalLayout[0].h + legalLayout[1].h);
     eyebrow("Important information", M, y, MUTED); y += 4.5;
     legalLayout.forEach(function (it) {
+      y = ensure(y, it.h);
       doc.setFont("helvetica", "bold"); doc.setFontSize(6.8); col(INK); doc.text(it.lead, M, y);
       doc.setFont("helvetica", "normal"); col(LIGHT); doc.text(it.first, M + it.lw, y);
       if (it.rest.length) doc.text(it.rest, M, y + 3);
@@ -1871,7 +2078,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
   $("lead-form").querySelectorAll("input").forEach(function (el) { el.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); submitLead(); } }); });
 
   /* Stepper */
-  var TOTAL_STEPS = 4;
+  var TOTAL_STEPS = 5;
   var current = 1;
   var steps = Array.prototype.slice.call(document.querySelectorAll(".step"));
   var stepBtns = Array.prototype.slice.call(document.querySelectorAll(".stepper button"));
@@ -1913,7 +2120,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     var r = compute(state.patients, s, state.a, vendorTotal());
     var ticked = state.vendors.filter(function (v) { return v.on; }).length;
     var lines = [
-      ["Scaling the model to " + nf0.format(state.patients) + " registered patients", nf1.format(s.gp + s.nurse) + " FTE clinicians"],
+      ["Scaling the model to " + nf0.format(state.patients) + " registered patients" + (isNetwork() ? " across " + nf0.format(state.practices) + " practices" : ""), nf1.format(s.gp + s.nurse) + " FTE clinicians"],
       ["Modelling " + nf0.format(Math.round(r.gpSessions + r.nurseSessions)) + " clinical sessions a week", nf2.format(state.a.downtimeMins) + " min each"],
       ["Counting " + nf0.format(Math.round((s.gp + s.nurse) * state.a.daysPerWeek * state.a.loginsPerDay)) + " clinician logins a week", nf2.format(state.a.loginMins) + " min each"],
       ["Releasing admin time from document handling", nf2.format(Math.round(s.admin * 100) / 100) + " FTE"],
@@ -1961,7 +2168,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
   stepBtns.forEach(function (b) { b.addEventListener("click", function () { goTo(+b.dataset.go); }); });
 
   buildPopovers();
-  buildVendors();
+  applyOrg("practice", false);
   setMode("wilmslow");
   var saved = 1;
   try { saved = parseInt(localStorage.getItem("medicus-roi-step"), 10) || 1; } catch (e) {}
