@@ -23,6 +23,8 @@ export const leadSchema = z.object({
   // Who the estimate is for. A practice always has practices = 1; a network
   // or region carries its practice count alongside the total list size.
   orgType: z.enum(['practice', 'pcn', 'federation', 'icb']).optional().default('practice'),
+  // Which layout produced the lead: A is the step-by-step calculator, B the single page with the live card.
+  variant: z.enum(['A', 'B']).optional().default('A'),
   practices: z.number().int().min(1).max(5000).optional().default(1),
   patients: z.number().int().min(1).max(20_000_000),
   staffingBasis: z.string().max(60),

@@ -49,3 +49,11 @@ The inputs and current step are kept in the URL hash (`#s=`), so a results link
 can be shared, and in localStorage for a returning visitor. Add-on prices follow
 Accurx's G-Cloud 15 tiers by total list size; each add-on records who pays
 (practice, or ICB/trust/other) and the saving is split accordingly.
+
+## Option B
+
+`option-b/` holds a second layout of the same calculator for comparison: one page,
+questions on the left, a results card on the right that sticks as you scroll and
+updates on every input (modelled on Doctolib's gain simulator). It shares the
+model, the report and the lead endpoint; leads from it carry `variant: 'B'`.
+Live at `/client/medicus-roi-4e72e00b/option-b`.

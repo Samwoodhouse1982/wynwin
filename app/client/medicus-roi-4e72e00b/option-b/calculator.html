@@ -1,0 +1,2069 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- Hidden client area: reachable only by direct link, never indexed. -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Private page.">
+<meta property="og:title" content="Private page">
+<meta property="og:description" content="Private page.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Private page">
+<meta name="twitter:description" content="Private page.">
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Medicus Time Calculator B</title>
+<script src="/vendor/jspdf-2.5.1.umd.min.js" onerror="var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';document.head.appendChild(s)"></script>
+<style>
+/* Option B: one page, inputs on the left, a sticky results card on the right that updates as you go. Brand: Medicus Brand Guidelines v1.0 (July 2026). */
+:root {
+  --bg: #F4F5F7; --surface: #FFFFFF; --ink: #091C39; --text: #212121; --text-light: #5B616B; --muted: #727780;
+  --border: #E5E7EB; --tint: #EBF1F8; --tint2: #DCE7F4; --green: #6EBA90; --green-tint: #E3F3EA; --green-ink: #2F6B4A;
+  --blue: #3D73AF; --blue-dark: #315B8A; --coral: #E16E7C; --coral-light: #FBDDE0;
+  --bar-1: #1F4F80; --bar-2: #3D73AF; --bar-3: #7FA6D1;
+  --btn-bg: #091C39; --btn-fg: #FFFFFF; --warn: #B3261E;
+  --cta: #091C39 radial-gradient(ellipse 80% 140% at 50% -10%, rgba(61,115,175,.55) 0%, transparent 70%);
+  --shadow: 0 1px 2px rgba(9, 28, 57, .04), 0 6px 20px rgba(9, 28, 57, .05);
+  --shadow-card: 0 2px 6px rgba(9, 28, 57, .06), 0 18px 48px rgba(9, 28, 57, .10);
+  --font-display: Georgia, "Times New Roman", serif;
+  --font-body: Arial, Helvetica, sans-serif;
+  --radius: 12px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #091C39; --surface: #263851; --ink: #FFFFFF; --text: #DBE4EF; --text-light: #DBE4EF; --muted: #9DB4CC;
+    --border: #315B8A; --tint: #1F3454; --tint2: #315B8A; --green-tint: #1F3A33; --green-ink: #9FD8BA;
+    --blue: #7FA6D1; --blue-dark: #9DB4CC; --bar-1: #3D73AF; --bar-2: #5A8FC7; --bar-3: #9DB4CC;
+    --btn-bg: #FFFFFF; --btn-fg: #091C39; --warn: #F2867E;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3); --shadow-card: 0 2px 6px rgba(0,0,0,.3), 0 18px 48px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #091C39; --surface: #263851; --ink: #FFFFFF; --text: #DBE4EF; --text-light: #DBE4EF; --muted: #9DB4CC;
+  --border: #315B8A; --tint: #1F3454; --tint2: #315B8A; --green-tint: #1F3A33; --green-ink: #9FD8BA;
+  --blue: #7FA6D1; --blue-dark: #9DB4CC; --bar-1: #3D73AF; --bar-2: #5A8FC7; --bar-3: #9DB4CC;
+  --btn-bg: #FFFFFF; --btn-fg: #091C39; --warn: #F2867E;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3); --shadow-card: 0 2px 6px rgba(0,0,0,.3), 0 18px 48px rgba(0,0,0,.35);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.6; }
+h1, h2, h3, p { margin: 0; }
+h1, h2, h3 { text-wrap: balance; }
+a { color: var(--blue); text-underline-offset: 3px; }
+[hidden] { display: none !important; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Top band */
+.topbar { background: #091C39; color: #FFFFFF; }   /* fixed navy in both themes */
+.topbar .inner {
+  max-width: 1120px; margin: 0 auto; min-height: 56px;
+  padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px));
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.topbar .brand { font-family: var(--font-display); font-size: 22px; letter-spacing: .01em; }
+.topbar .brand .dot { color: var(--green); }
+.topbar .brand small { font-family: var(--font-body); font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--green); margin-left: 12px; white-space: nowrap; }
+.topbar .actions { display: flex; gap: 6px; align-items: center; }
+.topbar .btn-ghost { color: #DBE4EF; }
+.topbar .btn-ghost:hover { color: #FFFFFF; }
+
+.wrap {
+  max-width: 1120px; margin: 0 auto;
+  padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px));
+  padding-block: 36px 120px; display: grid; gap: 28px;
+}
+.eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--green); }
+h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 1.8rem + 1.6vw, 44px); line-height: 1.1; color: var(--ink); max-width: 20ch; }
+.dot { color: var(--green); }
+.intro { display: grid; gap: 12px; }
+.lede { font-size: 17px; font-weight: 700; color: var(--blue-dark); max-width: 56ch; line-height: 1.5; }
+.lede-note { color: var(--text-light); max-width: 64ch; font-size: 14px; }
+
+/* Two columns */
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 416px; gap: 48px; align-items: start; }
+.col { display: grid; gap: 34px; min-width: 0; }
+.panel { display: grid; gap: 30px; min-width: 0; }
+.side { position: sticky; top: 16px; min-width: 0; }
+
+/* Questions */
+.q { display: grid; gap: 10px; padding-bottom: 26px; border-bottom: 1px solid var(--border); }
+.q:last-child { border-bottom: 0; padding-bottom: 0; }
+.q-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.q-label { font-size: 16px; font-weight: 700; color: var(--ink); line-height: 1.35; }
+.q-help { font-size: 13.5px; line-height: 1.6; color: var(--text-light); max-width: 60ch; }
+.q-count { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); line-height: 1.4; text-align: right; max-width: 100%; }
+.hint { font-size: 13px; line-height: 1.6; color: var(--muted); }
+
+/* Segmented controls (Doctolib-style toggle: tinted track, white raised pill for the chosen option) */
+.segment {
+  display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 4px;
+  background: var(--tint); border-radius: 10px; padding: 4px;
+}
+.segment > label, .segment > button {
+  position: relative; display: grid; place-items: center; text-align: center; min-height: 40px; padding: 6px 8px;
+  font: inherit; font-size: 13.5px; font-weight: 700; color: var(--blue-dark); line-height: 1.2;
+  background: transparent; border: 0; border-radius: 8px; cursor: pointer;
+}
+.segment > label input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.segment > label:has(input:checked), .segment > button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 2px 6px rgba(9, 28, 57, .12); }
+.segment > label:has(input:focus-visible), .segment > button:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.segment > label:hover, .segment > button:hover { color: var(--ink); }
+.segment.org > label span { display: grid; gap: 1px; }
+.segment.org > label small { font-weight: 400; font-size: 11px; color: var(--muted); }
+
+/* Number fields */
+.input-shell { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0 10px; }
+.input-shell:focus-within { border-color: var(--blue); box-shadow: 0 0 0 3px var(--tint2); }
+.input-shell.bad, .input-shell:has(input[aria-invalid="true"]) { border-color: var(--warn); }
+.input-shell .unit { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.input-shell input { width: 76px; font: inherit; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); background: transparent; border: 0; padding: 8px 0; }
+.input-shell input:focus-visible { outline: none; }
+.input-shell.big input { width: 110px; font-size: 18px; font-family: var(--font-display); }
+.num-input { width: 84px; font: inherit; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; }
+.num-input:focus-visible { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px var(--tint2); }
+.num-input[aria-invalid="true"] { border-color: var(--warn); }
+
+/* Sliders with end and mid labels */
+.range-wrap { position: relative; padding-top: 4px; padding-bottom: 24px; --thumb: 22px; }
+.range-wrap.slim { padding-bottom: 18px; }
+input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: var(--thumb); background: transparent; margin: 0; cursor: pointer; }
+input[type="range"]::-webkit-slider-runnable-track { height: 5px; border-radius: 3px; background: linear-gradient(to right, var(--blue) 0 var(--pct, 0%), var(--tint2) var(--pct, 0%) 100%); }
+input[type="range"]::-moz-range-track { height: 5px; border-radius: 3px; background: var(--tint2); }
+input[type="range"]::-moz-range-progress { height: 5px; border-radius: 3px; background: var(--blue); }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: var(--thumb); height: var(--thumb); margin-top: -8.5px; border-radius: 50%; background: var(--surface); border: 2px solid var(--blue); box-shadow: 0 1px 4px rgba(0,0,0,.22); }
+input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--surface); border: 2px solid var(--blue); box-shadow: 0 1px 4px rgba(0,0,0,.22); }
+input[type="range"]:focus-visible { outline: none; }
+input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px var(--tint2); }
+.range-ends { position: absolute; left: 0; right: 0; bottom: 2px; display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 700; letter-spacing: .03em; color: var(--muted); }
+.range-ends .mid { position: absolute; left: calc(11px + 0.487 * (100% - 22px)); transform: translateX(-50%); }
+
+/* Staffing rows */
+.staff-row { display: grid; grid-template-columns: minmax(0, 1fr) 84px; gap: 10px 14px; align-items: center; }
+.staff-row > label { font-size: 14px; font-weight: 700; color: var(--ink); }
+.staff-row .range-wrap { grid-column: 1 / -1; }
+.tag { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.tag.own { color: var(--blue); }
+.staff-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0; }
+.staff-facts > div { background: var(--tint); border-radius: 10px; padding: 10px 12px; display: grid; gap: 2px; }
+.staff-facts dt { font-size: 12px; color: var(--text-light); }
+.staff-facts dd { margin: 0; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+.staff-facts dd small { font-weight: 400; color: var(--muted); font-size: 12px; margin-left: 4px; }
+
+/* Buttons */
+.btn { font: inherit; font-size: 14px; font-weight: 700; background: var(--btn-bg); color: var(--btn-fg); border: 1px solid var(--btn-bg); border-radius: 8px; padding: 11px 18px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.btn:hover { opacity: .92; }
+.btn.outline { background: transparent; color: var(--ink); border-color: var(--ink); }
+.btn.outline:hover { background: var(--tint); opacity: 1; }
+.btn.small { padding: 7px 12px; font-size: 13px; }
+.btn.wide { width: 100%; }
+.btn-ghost { font: inherit; font-size: 13px; font-weight: 700; color: var(--blue); background: none; border: 0; padding: 4px 0; cursor: pointer; }
+.btn-ghost:hover { color: var(--blue-dark); text-decoration: underline; text-underline-offset: 3px; }
+.btn[disabled] { opacity: .35; cursor: default; pointer-events: none; }
+.btn:focus-visible, .btn-ghost:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+/* Functions and add-ons (two rows per item so the column can stay narrow) */
+.using-all { display: grid; grid-template-columns: auto auto auto; justify-content: start; gap: 8px 12px; align-items: center; padding: 10px 12px; background: var(--tint); border-radius: 10px; font-size: 13px; }
+.using-all label { font-weight: 700; color: var(--ink); }
+.using-all .input-shell input { width: 110px; }
+.using-all .hint { grid-column: 1 / -1; margin: 0; }
+.vendors { display: grid; }
+.vendor { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 6px 12px; align-items: start; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.vendor:last-child { border-bottom: 0; }
+.vendor input[type="checkbox"] { width: 18px; height: 18px; margin: 3px 0 0; accent-color: var(--blue); cursor: pointer; }
+.vendor .v-name { display: grid; gap: 1px; min-width: 0; grid-column: 2 / -1; }
+.vendor .v-name label { font-weight: 700; color: var(--ink); cursor: pointer; font-size: 14.5px; }
+.vendor .v-name small { font-size: 12px; line-height: 1.5; color: var(--text-light); }
+.vendor .v-name .v-basis { color: var(--muted); }
+.vendor.off .v-name label { color: var(--muted); font-weight: 400; }
+.vendor .v-using { grid-column: 2; display: flex; align-items: center; gap: 8px; }
+.vendor .v-using .input-shell input { width: 52px; }
+.vendor .v-using .v-pct { font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.vendor .v-cost { grid-column: 3; display: flex; align-items: center; gap: 8px; justify-self: end; }
+.vendor .v-cost .v-tag { order: -1; }
+.vendor .v-tag { font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.vendor .v-tag.own { color: var(--blue); }
+.vendor.off .v-using, .vendor.off .input-shell { opacity: .45; }
+.vendor.off .v-tag, .vendor.off .v-payer { visibility: hidden; }
+.vendor .v-payer { display: inline-flex; align-items: center; gap: 6px; margin-top: 5px; font-size: 12px; color: var(--text-light); }
+.vendor .v-payer select { font: inherit; font-size: 12px; color: var(--ink); background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 3px 6px; cursor: pointer; }
+.vendor .v-remove { font: inherit; font-size: 12px; color: var(--muted); background: none; border: 0; padding: 0; cursor: pointer; text-align: left; }
+.vendor .v-remove:hover { color: var(--coral); text-decoration: underline; }
+.vendor-add { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; align-items: center; margin-top: 6px; }
+.vendor-add input[type="text"] { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 9px 10px; min-width: 0; }
+
+/* Assumption groups, inline rather than as popovers */
+.adj { border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+.adj > summary { list-style: none; cursor: pointer; font-size: 14px; font-weight: 700; color: var(--ink); padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.adj > summary::-webkit-details-marker { display: none; }
+.adj > summary::after { content: "+"; color: var(--muted); font-weight: 400; font-size: 18px; line-height: 1; }
+.adj[open] > summary::after { content: "−"; }
+.adj > summary:hover { color: var(--blue-dark); }
+.adj .pop { padding: 0 14px 14px; display: grid; gap: 10px; }
+.pop .pop-title { display: none; }
+.pop .pop-note { font-size: 12.5px; color: var(--text-light); line-height: 1.5; }
+.field { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; }
+.field label { font-size: 13px; color: var(--text); }
+.field .def { grid-column: 1 / -1; font-size: 11px; color: var(--muted); margin-top: -8px; }
+.field .def.changed { color: var(--blue); }
+
+/* Results card */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow-card); overflow: hidden; display: grid; max-height: calc(100vh - 32px); overflow-y: auto; }
+.card-hero { background: var(--cta); color: #FFFFFF; padding: 20px 22px 16px; display: grid; gap: 5px; }
+.card-hero .eyebrow { color: var(--green); }
+.card-hero .big { font-family: var(--font-display); font-weight: 700; font-size: clamp(38px, 2rem + 1vw, 46px); line-height: 1.05; margin-top: 4px; font-variant-numeric: tabular-nums lining-nums; }
+.card-hero .big small { font-size: .4em; font-weight: 400; margin-left: 8px; font-family: var(--font-body); }
+.card-hero p { color: #DBE4EF; font-size: 12.5px; line-height: 1.5; }
+.card-hero .hero-per { color: #FFFFFF; font-weight: 700; }
+.hero-range { margin-top: 8px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.18); display: flex; flex-wrap: wrap; gap: 2px 14px; align-items: baseline; font-size: 13px; color: #DBE4EF; }
+.hero-range .hr-label { font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--green); font-weight: 700; }
+.hero-range strong { color: #FFFFFF; font-variant-numeric: tabular-nums lining-nums; }
+.hero-range .info { margin-left: 6px; vertical-align: middle; }
+.card-body { padding: 14px 22px 18px; display: grid; gap: 12px; }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0; }
+.stats > div { display: grid; gap: 1px; background: var(--tint); border-radius: 10px; padding: 8px 10px 7px; min-width: 0; align-content: start; }
+.stats dt { font-size: 10.5px; line-height: 1.3; color: var(--text-light); }
+.stats dd { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 21px; line-height: 1.1; color: var(--ink); font-variant-numeric: tabular-nums lining-nums; }
+.stats dd small { display: block; font-family: var(--font-body); font-weight: 400; font-size: 11px; line-height: 1.35; color: var(--muted); margin-top: 2px; }
+.section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+h3 { font-family: var(--font-body); font-size: 14px; font-weight: 700; color: var(--ink); line-height: 1.3; }
+.bar { display: flex; gap: 2px; height: 10px; position: relative; }
+.bar .s { height: 100%; min-width: 2px; outline: none; transition: flex-basis .25s ease; cursor: default; }
+.bar .s:first-child { border-radius: 4px 0 0 4px; }
+.bar .s:last-of-type { border-radius: 0 4px 4px 0; }
+.bar .s:hover, .bar .s:focus-visible { filter: brightness(1.12); }
+.bar .s:focus-visible { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--ink); }
+.s-1 { background: var(--bar-1); } .s-2 { background: var(--bar-2); } .s-3 { background: var(--bar-3); }
+.tip { position: absolute; bottom: calc(100% + 8px); transform: translateX(-50%); background: var(--ink); color: var(--bg); font-size: 12px; padding: 5px 9px; border-radius: 6px; white-space: nowrap; pointer-events: none; z-index: 2; }
+.lines { display: grid; gap: 6px; margin: 0; }
+.line { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 12px; align-items: center; }
+.side .line .what span, .side #m-cautious, .side .stats dd small, .side #bar-caption { display: none; }   /* the card keeps to the figures; the "i" buttons carry the working */
+.line .sw { display: none; }
+.line .hrs { grid-row: 1 / span 2; align-self: center; background: var(--green-tint); color: var(--green-ink); font-weight: 700; font-size: 12.5px; border-radius: 8px; padding: 4px 8px; font-variant-numeric: tabular-nums; white-space: nowrap; text-align: center; min-width: 86px; }
+.line .hrs small { display: block; font-weight: 400; font-size: 10.5px; color: var(--green-ink); opacity: .85; }
+.line .what { display: contents; }
+.line .what strong { color: var(--ink); font-size: 13.5px; line-height: 1.3; }
+.line .what span { font-size: 12px; color: var(--text-light); line-height: 1.45; }
+.money { border-top: 1px solid var(--border); padding-top: 14px; display: grid; gap: 6px; }
+.money .label { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.money .amt { font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--ink); line-height: 1.1; font-variant-numeric: tabular-nums lining-nums; }
+.money .sub { font-size: 12px; color: var(--text-light); line-height: 1.5; }
+.money .lic { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; border-top: 1px solid var(--border); padding-top: 10px; margin-top: 4px; }
+.money .lic strong { color: var(--ink); font-variant-numeric: tabular-nums; }
+.money .lic > span:last-child { white-space: nowrap; }
+.money .lic-split { margin: 0; font-size: 12px; line-height: 1.5; color: var(--text-light); }
+.money .lic-split strong { color: var(--ink); }
+.card-cta { border-top: 1px solid var(--border); padding-top: 12px; display: grid; gap: 8px; }
+.side .card-cta .hint { display: none; }
+.card-cta .hint { max-width: none; }
+.card-cta .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+/* "How we calculated this" buttons and the shared popover */
+.info { display: inline-grid; place-items: center; width: 16px; height: 16px; margin-left: 6px; padding: 0; border-radius: 50%; border: 1px solid currentColor; background: transparent; font: 700 10px/1 var(--font-body); color: var(--muted); cursor: pointer; vertical-align: middle; opacity: .85; }
+.info:hover, .info:focus-visible, .info[aria-expanded="true"] { color: var(--blue); border-color: var(--blue); opacity: 1; outline: none; }
+.info:focus-visible { box-shadow: 0 0 0 3px var(--tint2); }
+.card-hero .info { color: #DBE4EF; }
+.card-hero .info:hover, .card-hero .info:focus-visible, .card-hero .info[aria-expanded="true"] { color: var(--green); border-color: var(--green); }
+.card-hero .big .info { width: 18px; height: 18px; margin-left: 10px; font-size: 11px; }
+.calc { position: fixed; z-index: 60; width: 360px; max-width: calc(100vw - 32px); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 8px 28px rgba(9, 28, 57, .18); padding: 12px 14px; display: grid; gap: 6px; }
+.calc .pop-title { display: block; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.calc p { font-size: 12.5px; line-height: 1.5; color: var(--text); margin: 0; }
+.calc p.note { color: var(--muted); }
+.calc p strong { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+/* Mobile summary bar */
+.mini { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: none; align-items: center; justify-content: space-between; gap: 12px; padding: 10px max(16px, env(safe-area-inset-right, 0px)) max(10px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); background: #091C39; color: #FFFFFF; box-shadow: 0 -6px 24px rgba(9, 28, 57, .25); border-top: 1px solid rgba(255,255,255,.12); }
+.mini .eyebrow { font-size: 10px; display: block; }
+.mini strong { font-family: var(--font-display); font-size: 20px; font-variant-numeric: tabular-nums lining-nums; }
+.mini .btn { background: #FFFFFF; color: #091C39; border-color: #FFFFFF; }
+.mini.off { display: none; }
+
+/* Report dialog */
+dialog.lead-dialog { border: 0; border-radius: 16px; padding: 0; width: min(640px, calc(100vw - 32px)); background: var(--surface); color: var(--text); box-shadow: 0 24px 64px rgba(9, 28, 57, .3); }
+dialog.lead-dialog::backdrop { background: rgba(9, 28, 57, .55); }
+.lead { padding: 26px 28px 24px; display: grid; gap: 16px; position: relative; }
+.lead-close { position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface); color: var(--ink); font: 700 16px/1 var(--font-body); cursor: pointer; }
+.lead-close:hover { background: var(--tint); }
+.lead-head { display: grid; gap: 6px; padding-right: 40px; }
+.lead-head h3 { font-family: var(--font-display); font-weight: 400; font-size: 24px; }
+.lead-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; }
+.lf { display: grid; gap: 4px; }
+.lf label { font-size: 13px; font-weight: 700; color: var(--ink); }
+.lf .opt { font-weight: 400; color: var(--muted); }
+.lf input { font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; min-width: 0; width: 100%; }
+.lf input:focus-visible { outline: 2px solid var(--blue); outline-offset: 1px; }
+.lf input.bad { border-color: var(--warn); }
+.consent { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--text); cursor: pointer; }
+.consent input { width: 18px; height: 18px; margin: 1px 0 0; accent-color: var(--blue); flex: none; }
+.consent .opt { font-weight: 400; color: var(--muted); }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.lead-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+
+/* FAQ-style notes and the legal block */
+.notes { display: grid; gap: 0; border-top: 1px solid var(--border); }
+.notes details { border-bottom: 1px solid var(--border); }
+.notes summary { cursor: pointer; font-weight: 700; color: var(--ink); font-size: 16px; padding: 16px 0; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.notes summary::-webkit-details-marker { display: none; }
+.notes summary::after { content: "+"; color: var(--muted); font-weight: 400; font-size: 20px; }
+.notes details[open] summary::after { content: "−"; }
+.notes details > :not(summary) { margin-bottom: 18px; }
+.notes .prose { color: var(--text-light); font-size: 14px; max-width: 72ch; display: grid; gap: 10px; }
+.basis { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
+.basis li { display: grid; gap: 3px; }
+.basis strong { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); }
+.basis p { color: var(--text-light); font-size: 14px; max-width: 72ch; }
+.legal { display: grid; gap: 10px; }
+.legal h3 { font-size: 14px; }
+.legal ol { margin: 0; padding-left: 18px; display: grid; gap: 7px; }
+.legal li { font-size: 13px; line-height: 1.55; color: var(--text-light); }
+.legal li strong { color: var(--ink); font-weight: 700; }
+.foot { font-size: 12px; letter-spacing: .02em; color: var(--muted); border-top: 1px solid var(--border); padding-top: 14px; }
+
+@media (max-width: 980px) {
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .side { position: static; }
+  .card { max-height: none; overflow: visible; }
+  .side .line .what span, .side #m-cautious, .side .stats dd small, .side #bar-caption { display: block; }
+  .mini { display: flex; }
+}
+@media (max-width: 640px) {
+  .wrap { padding-block: 24px 110px; }
+  .segment.org { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .topbar .brand small { display: none; }
+  .q-count { text-align: left; }
+  .q-head .input-shell { width: 100%; justify-content: space-between; }
+  .staff-facts { grid-template-columns: minmax(0, 1fr); }
+  .lead-grid { grid-template-columns: minmax(0, 1fr); }
+  .lead { padding: 22px 18px 20px; }
+  .stats { grid-template-columns: minmax(0, 1fr); }
+  .card-hero { padding: 18px; } .card-body { padding: 16px 18px 20px; }
+}
+@media (prefers-reduced-motion: reduce) { .bar .s { transition: none; } }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="inner">
+    <div class="brand">Medicus<span class="dot">.</span><small>Practice time calculator</small></div>
+    <div class="actions">
+      <button class="btn-ghost" id="copy-link" type="button" hidden>Copy link</button>
+      <button class="btn-ghost" id="start-over" type="button" aria-describedby="start-over-note">Start over</button>
+      <span class="visually-hidden" id="start-over-note">Clears every input back to the defaults</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="layout">
+    <div class="col">
+  <section class="intro">
+    <h1>How much time would Medicus give <span id="h1-who">your practice</span> back<span class="dot">.</span></h1>
+    <p class="lede">Adjust the figures on the left and the estimate on the right updates as you go.</p>
+    <p class="lede-note">Built from the real-world impact of Medicus at a live NHS practice with around 12,000 patients. Every number has an <span class="info" aria-hidden="true" style="margin-left:2px">i</span> that shows how it was calculated.</p>
+  </section>
+    <form class="panel" id="inputs" autocomplete="off" onsubmit="return false">
+
+      <div class="q">
+        <div class="q-head"><span class="q-label" id="q-org">Who is this estimate for?</span></div>
+        <div class="segment org" role="radiogroup" aria-labelledby="q-org">
+          <label><input type="radio" name="org" value="practice" checked><span>GP practice<small>one registered list</small></span></label>
+          <label><input type="radio" name="org" value="pcn"><span>PCN<small>a group of practices</small></span></label>
+          <label><input type="radio" name="org" value="federation"><span>Federation<small>practices across a locality</small></span></label>
+          <label><input type="radio" name="org" value="icb"><span>ICB<small>practices across an area</small></span></label>
+        </div>
+        <p class="q-help">For a network or region the same model runs on the total registered list and the number of practices you expect to move to Medicus.</p>
+      </div>
+
+      <div class="q" id="practices-block" hidden>
+        <div class="q-head">
+          <label class="q-label" for="practices">How many practices will move to Medicus?</label>
+          <span class="input-shell"><input id="practices" type="text" inputmode="numeric" autocomplete="off" value="5" aria-describedby="practices-hint"><span class="unit">practices</span></span>
+        </div>
+        <div class="range-wrap">
+          <input type="range" id="practices-range" min="2" max="12" step="1" value="5" aria-label="Number of practices slider">
+          <div class="range-ends" aria-hidden="true"><span id="pr-min">2</span><span class="mid" id="pr-mid">7</span><span id="pr-max">12</span></div>
+        </div>
+        <p class="q-help" id="practices-hint">Count only the practices in scope: the estimate assumes all of them move to Medicus.</p>
+      </div>
+
+      <div class="q">
+        <div class="q-head">
+          <label class="q-label" for="patients" id="h-step1">How many registered patients does the practice have?</label>
+          <span class="input-shell big"><input id="patients" type="text" inputmode="numeric" autocomplete="off" value="12,310" aria-describedby="patients-hint"><span class="unit">patients</span></span>
+        </div>
+        <span class="visually-hidden" id="patients-label">Registered patients</span>
+        <div class="range-wrap">
+          <input type="range" id="patients-range" min="1000" max="40000" step="10" value="12310" aria-label="Registered patients slider">
+          <div class="range-ends" aria-hidden="true"><span id="pt-min">1,000</span><span class="mid" id="pt-mid">20,000</span><span id="pt-max">40,000</span></div>
+        </div>
+        <p class="q-help" id="size-intro"></p>
+        <div class="q-head"><p class="hint" id="patients-hint"></p><button class="btn-ghost" id="reset-patients" type="button">Reset to default</button></div>
+      </div>
+
+      <div class="q">
+        <div class="q-head">
+          <span class="q-label" id="staff-label">How is the clinical team staffed?</span>
+          <span class="tag" id="staff-tag">Estimated from list size</span>
+        </div>
+        <p class="q-help" id="staff-intro"></p>
+        <div class="segment two" role="group" aria-labelledby="staff-label">
+          <button type="button" id="mode-wilmslow" aria-pressed="true">Reference practice ratios</button>
+          <button type="button" id="mode-national" aria-pressed="false">National average</button>
+        </div>
+        <p class="hint" id="staff-hint"></p>
+        <div class="staff-row">
+          <label for="gp-actual">GPs (FTE)<button type="button" class="info" data-tip="gp" aria-label="How we calculated this">i</button></label>
+          <input class="num-input" id="gp-actual" type="number" min="0" step="0.5" value="8">
+          <div class="range-wrap slim"><input type="range" id="gp-range" min="0.5" max="40" step="0.5" value="8" aria-label="GPs FTE slider"><div class="range-ends" aria-hidden="true"><span>0.5</span><span id="gp-max">40</span></div></div>
+        </div>
+        <div class="staff-row">
+          <label for="nurse-actual">Practice Nurses (FTE)<button type="button" class="info" data-tip="nurse" aria-label="How we calculated this">i</button></label>
+          <input class="num-input" id="nurse-actual" type="number" min="0" step="0.5" value="3">
+          <div class="range-wrap slim"><input type="range" id="nurse-range" min="0" max="20" step="0.5" value="3" aria-label="Practice nurses FTE slider"><div class="range-ends" aria-hidden="true"><span>0</span><span id="nurse-max">20</span></div></div>
+        </div>
+        <div class="q-head"><p class="hint">One FTE is four clinical days of two sessions a week; add part-timers up as fractions.</p><button class="btn-ghost" id="use-estimate" type="button" hidden>Use the estimate again</button></div>
+        <dl class="staff-facts">
+          <div><dt>Clinical sessions a week<button type="button" class="info" data-tip="sessions" aria-label="How we calculated this">i</button></dt><dd id="sc-sessions">88</dd></div>
+          <div><dt>Admin time released<button type="button" class="info" data-tip="admin" aria-label="How we calculated this">i</button></dt><dd id="sc-admin">0.5 FTE</dd></div>
+        </dl>
+        <p class="hint" id="admin-share"></p>
+      </div>
+
+      <div class="q">
+        <div class="q-head">
+          <span class="q-label" id="vendor-label">Which native Medicus functions will you use?</span>
+          <span class="q-count" id="vendor-count"></span>
+        </div>
+        <p class="q-help" id="func-intro"></p>
+        <div class="using-all" id="using-all-row" hidden>
+          <label for="using-all">Practices using each add-on</label>
+          <span class="input-shell"><input id="using-all" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 60% or 3" aria-describedby="using-all-hint"></span>
+          <button type="button" class="btn outline small" id="using-all-btn">Apply to all</button>
+          <span class="hint" id="using-all-hint">A number or a percentage. Leave it empty for all of them. Each row can still be changed afterwards.</span>
+        </div>
+        <div class="vendors" id="vendors" role="group" aria-labelledby="vendor-label"></div>
+        <div class="vendor-add" id="vendor-add" role="group" aria-label="Add another add-on">
+          <input type="text" id="vendor-new-name" placeholder="Another add-on you could retire" aria-label="Name of another add-on to retire" maxlength="40">
+          <span class="input-shell"><span class="unit">£</span><input type="number" id="vendor-new-cost" min="0" step="100" placeholder="a year" aria-label="Annual cost of that add-on"></span>
+          <button type="button" class="btn outline small" id="vendor-add-btn">Add</button>
+        </div>
+        <p class="hint">Several add-ons are ICB or trust funded, so the saving may land with the commissioner rather than the practice. The basis for each estimate is under the function name.</p>
+      </div>
+
+      <div class="q">
+        <div class="q-head"><span class="q-label">Adjust the assumptions</span><span class="q-count">Optional</span></div>
+        <p class="q-help">Every default is the reference practice's own figure, or a public price. Change any of them and the estimate follows.</p>
+        <details class="adj" data-group="down"><summary>Slowdowns and downtime</summary><div class="pop"></div></details>
+        <details class="adj" data-group="login"><summary>Logins</summary><div class="pop"></div></details>
+        <details class="adj" data-group="admin"><summary>Admin time</summary><div class="pop"></div></details>
+        <details class="adj" data-group="value"><summary>Valuation, weeks and appointments</summary><div class="pop"></div></details>
+      </div>
+    </form>
+    </div>
+
+    <aside class="side" aria-live="polite" aria-atomic="false">
+      <div class="card" id="card">
+        <div class="card-hero">
+          <span class="eyebrow" id="hero-eyebrow">Time returned to the practice</span>
+          <div class="big"><span id="hero-hrs">0</span><small>hrs a week</small><button type="button" class="info" data-tip="hero" aria-label="How we calculated this">i</button></div>
+          <p id="hero-sub"></p>
+          <p id="hero-per" class="hero-per" hidden></p>
+          <div class="hero-range" id="hero-range">
+            <span class="hr-label">Cautious case</span>
+            <span class="hr-val"><strong id="hc-hrs">0</strong> hrs a week · <strong id="hc-val">£0</strong> a year<button type="button" class="info" data-tip="cautious" aria-label="How we calculated the cautious case">i</button></span>
+          </div>
+        </div>
+        <div class="card-body">
+          <dl class="stats">
+            <div><dt>Per clinician a day<button type="button" class="info" data-tip="perclin" aria-label="How we calculated this">i</button></dt><dd id="t-perclin"></dd></div>
+            <div><dt>Appointments a week<button type="button" class="info" data-tip="appts" aria-label="How we calculated this">i</button></dt><dd id="t-appts"></dd></div>
+            <div><dt>Hours a year<button type="button" class="info" data-tip="year" aria-label="How we calculated this">i</button></dt><dd id="t-year"></dd></div>
+          </dl>
+
+          <div class="breakdown">
+            <div class="section-head"><h3>Where the time comes from<button type="button" class="info" data-tip="hero" aria-label="How we calculated this">i</button></h3><span class="hint" id="bar-caption"></span></div>
+            <div class="bar" id="bar" style="margin:8px 0 12px">
+              <div class="s s-1" id="seg-down" tabindex="0"></div>
+              <div class="s s-2" id="seg-login" tabindex="0"></div>
+              <div class="s s-3" id="seg-admin" tabindex="0"></div>
+              <div class="tip" id="tip" hidden></div>
+            </div>
+            <dl class="lines">
+              <div class="line">
+                <span class="sw s-1"></span>
+                <dt class="what"><strong>Fewer slowdowns and downtime<button type="button" class="info" data-tip="down" aria-label="How we calculated this">i</button></strong><span id="d-down"></span></dt>
+                <dd class="hrs" id="l-down"></dd>
+              </div>
+              <div class="line">
+                <span class="sw s-2"></span>
+                <dt class="what"><strong>Fewer logins<button type="button" class="info" data-tip="login" aria-label="How we calculated this">i</button></strong><span id="d-login"></span></dt>
+                <dd class="hrs" id="l-login"></dd>
+              </div>
+              <div class="line">
+                <span class="sw s-3"></span>
+                <dt class="what"><strong>Less manual admin<button type="button" class="info" data-tip="admin" aria-label="How we calculated this">i</button></strong><span id="d-admin"></span></dt>
+                <dd class="hrs" id="l-admin"></dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="money">
+            <span class="label">What that time is worth<button type="button" class="info" data-tip="money" aria-label="How we calculated this">i</button></span>
+            <div class="amt" id="m-total"></div>
+            <div class="sub" id="m-sub"></div>
+            <div class="sub" id="m-cautious"></div>
+            <div class="lic"><span id="m-lic-label"></span><span><strong id="m-lic"></strong><button type="button" class="info" data-tip="lic" aria-label="How we calculated this" id="lic-info">i</button></span></div>
+            <p class="lic-split" id="m-lic-split" hidden></p>
+          </div>
+
+          <div class="card-cta">
+            <h3>Take this with you</h3>
+            <p class="hint">Get these figures, the inputs behind them and the basis as a two-page Medicus report.</p>
+            <button class="btn wide" id="open-lead" type="button">Get the PDF report</button>
+            <div class="row">
+              <button class="btn small outline" id="copy" type="button" aria-describedby="copy-note">Copy summary</button>
+              <span class="visually-hidden" id="copy-note">Copies the inputs and results as plain text</span>
+              <button class="btn-ghost" id="reset-all" type="button">Reset to defaults</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <section class="notes" aria-label="How the calculator works">
+    <details>
+      <summary>How this calculator works</summary>
+      <div class="prose">
+        <p>Three things change when a practice moves to Medicus, each measured at the reference practice: ten minutes of slowdowns and waits avoided in every four-hour clinical session, three minutes saved at each of two logins a clinician makes a day, and half a full-time administrator's week released by automated document handling. The calculator scales each of those to the list size, staffing and working pattern you enter, values the clinical hours at locum and agency replacement rates and admin hours at a loaded wage, and adds the list price of any add-on a native Medicus function retires.</p>
+        <p>The cautious case beside every result keeps your inputs but applies national-average staffing, halves the minutes saved and counts 45 working weeks. Read the two figures as a range. Press any <span class="info" aria-hidden="true" style="margin:0 2px">i</span> for the working behind a figure.</p>
+      </div>
+    </details>
+    <details>
+      <summary>Basis and limits</summary>
+      <ul class="basis">
+          <li><strong>Source</strong><p>Built from the measured impact of Medicus at a live NHS practice (the reference practice) with 8 FTE GPs, 3 FTE practice nurses and 0.5 FTE of admin time released across 12,310 registered patients. Time saved per login and per session, and the admin time released, are that practice's own figures. A session is a four-hour clinic (a half day of about 24 ten-minute appointments), not a single consultation, and the ten minutes per session is the practice's own conservative estimate of time lost to slow screens and system waits rather than a timed measurement. It is the least evidenced of the three inputs, which is why the cautious case halves it.</p></li>
+          <li><strong>Staffing presets</strong><p>Reference practice ratios give one GP FTE per 1,539 patients and one practice nurse FTE per 4,103. The national average preset uses NHS England's general practice workforce figures for February 2026 (28,895 FTE fully qualified GPs and 16,728 FTE nurses, a count that includes nurse practitioners and nursing associates) against 63,789,531 registered patients, or about 2,210 patients per GP and 3,810 per nurse. The reference practice is better staffed than average, so its ratios give the higher figure: a single practice starts from the reference ratios, and a network or region starts from the national average because no whole system can be assumed to match one well-staffed practice. Other clinical staff (pharmacists, physiotherapists, paramedics and the other ARRS roles, plus healthcare assistants) are not counted, which makes the clinical time figure conservative, particularly for a PCN. NHS England counts an FTE as 37.5 hours; the model follows the reference practice in counting one as four clinical days.</p></li>
+          <li><strong>Networks and regions</strong><p>For a PCN, federation or ICB the same model is applied to the total registered population and the number of practices entered, and assumes every practice entered moves to Medicus, so count only the practices in scope. The result is a steady state once they are all live, not a phased figure. Clinical staffing is estimated from the total list at the chosen ratio (national average by default), admin time released follows the total list, and add-on costs are estimated for a practice of average list size and multiplied by the number of practices using each tool; Accurx add-ons are priced at the G-Cloud 15 tier for the whole list in scope, as a network or ICB would buy. Practices within a network vary widely in size, systems and funding, so the result is an aggregate, not a sum of individual practice figures.</p></li>
+          <li><strong>Cautious case</strong><p>Every result is shown twice: on the reference assumptions as entered, and as a cautious case that keeps the same inputs but applies national-average staffing (unless the practice's own figures were entered), halves the minutes saved per session and per login, and counts no more than 45 working weeks. Admin hours and add-on savings are the same in both. The two figures should be read as a range, with the reference practice's own experience at the top of it.</p></li>
+          <li><strong>Plausibility checks</strong><p>Two outside figures sit alongside the reference practice's experience. The BMA's survey of doctors put time lost to inadequate IT at 13.5 million hours a year, the equivalent of almost 8,000 full-time doctors or roughly 5% of medical time; the model's 26 minutes a clinical day is 5.4% of an eight-hour day. And the admin time released, 0.406 FTE per 10,000 patients, is 3.4% of the national general practice admin workforce of 76,845 FTE across 63.8 million patients. Neither proves the figures for any one practice, but both put them in a credible range.</p></li>
+          <li><strong>Appointments</strong><p>Clinical capacity is clinical hours released divided by a ten-minute appointment. It shows the scale of the time, not a promise that every hour becomes an appointment; the reference practice's own view is that the larger benefit is a calmer working day.</p></li>
+          <li><strong>Valuation</strong><p>Clinical hours are valued at the session rate divided by session length (a £400 GP session over four hours gives £100 an hour). The default session rates are locum and agency replacement rates, which is what it would cost to buy the time back; employment cost is lower, at roughly £300 a session for a salaried GP and £120 for an employed practice nurse, and either can be set under Adjust. Admin time uses a loaded hourly cost of £15: the National Living Wage rose to £12.71 in April 2026, and employer National Insurance and pension take it to about £15. The reference practice used £12.50. The model assumes 52 working weeks on the reference assumptions; the cautious case uses 45.</p></li>
+          <li><strong>Possible overlap</strong><p>Login time and session slowdowns are counted separately, as the reference practice counted them. Some of the login saving may already sit inside the slowdown figure, so the two together should be read as an upper estimate.</p></li>
+          <li><strong>Native functions and add-ons</strong><p>The reference practice used Medicus's built-in functions to retire AccuRx, Docman, Docman Connect and ICE, and cut its texting spend by defaulting to email. The slide gave no costs, so each add-on is estimated from a public price list. Patient messaging uses Accurx's two-way patient messaging module on G-Cloud 15 (September 2026), priced by total list size: 38p a patient a year for lists under 15,000, 29p from 15,000, 26p from 90,000 and 23p from 800,000, ex VAT and excluding message fragments. Batch messaging and reminders, questionnaires and video are separate modules on the same list (27p, 27p and 23p at the smallest tier), so a practice that pays for Accurx's Communication bundle (£1.14 a patient) should enter that figure. Online consultation uses Accurx Patient Triage on the same list (38p a patient under 90,000, 29p and 24p above); OneAdvanced lists PATCHS at £0.45 to £0.90 a patient on G-Cloud 14. Booking starts at zero because the add-on varies by practice; Accurx appointment self-book lists 51p a patient. SMS is estimated at £0.51 a patient a year, around 17 message fragments at Accurx's 3p G-Cloud 15 rate; North East and North Cumbria ICB treats practices above £60 per 1,000 patients a month (£0.72 a patient a year) as high spenders. Clinical templates and searches use Ardens Starter on G-Cloud 15 at 29p a patient with a £1,119 minimum, excluding the one-off setup fee. Self check-in and patient calling screens use Engage Health Systems' G-Cloud 15 software prices of £249 and £149 a screen, assuming one screen per 8,000 patients and excluding hardware, so a practice with kiosks from Jayex or similar will usually pay more. Patient registration add-ons such as Healthtech-1 price by population band on request, so they start at zero. The panic button, which Medicus includes as standard, is estimated from Little Green Button's G-Cloud 15 price per device per month (£4.16 for up to 10 devices, £3.30 up to 25, £2.50 up to 50, £2.00 up to 200, billed annually), assuming one device per 500 patients; EDGEALERT lists £195 a practice site a year for up to 100 devices on G-Cloud 15, so a practice on that product should enter £195. Document scanning, referral letters and ICE ordering have no public price and are usually funded by the ICB, the sending trust or the pathology provider, so they start at zero.</p></li>
+          <li><strong>Who pays</strong><p>Each add-on carries a "Paid by" setting: the practice, or an ICB, trust or other commissioner. The defaults reflect common arrangements (messaging, online consultation, SMS, document management, ICE and referral tools are usually commissioned centrally; templates, kiosks, calling screens, panic buttons and registration tools are usually bought by the practice), and should be corrected for the practice's own contracts. The results show the two totals separately, because a saving on a centrally funded add-on belongs to the commissioner and should be presented to them, not counted as practice cash.</p></li>
+        </ul>
+      <p class="hint">Sources: <a href="https://digital.nhs.uk/data-and-information/publications/statistical/general-and-personal-medical-services/28-february-2026" target="_blank" rel="noopener">NHS England, General Practice Workforce, 28 February 2026</a> · <a href="https://digital.nhs.uk/data-and-information/publications/statistical/patients-registered-at-a-gp-practice/february-2026" target="_blank" rel="noopener">NHS England, Patients Registered at a GP Practice, February 2026</a> · <a href="https://www.acs.org.uk/news/national-living-wage-rise-ps1271-april-2026" target="_blank" rel="noopener">National Living Wage, April 2026</a> · <a href="https://assets.applytosupply.digitalmarketplace.service.gov.uk/g-cloud-15/documents/708675/985416930688622-pricing-document-2026-01-27-1436.pdf" target="_blank" rel="noopener">Accurx G-Cloud 15 pricing document, September 2026</a> · <a href="https://www.necsu.nhs.uk/optimising-gp-messaging-reducing-sms-costs-across-nenc-icb/" target="_blank" rel="noopener">NECS, Optimising GP messaging across NENC ICB</a> · <a href="https://www.bma.org.uk/news-and-opinion/millions-of-hours-of-doctors-time-lost-each-year-to-inadequate-it-systems" target="_blank" rel="noopener">BMA, doctors' time lost to inadequate IT systems</a> · <a href="https://assets.applytosupply.digitalmarketplace.service.gov.uk/g-cloud-15/documents/721020/439216584756241-pricing-document-2026-01-14-1235.pdf" target="_blank" rel="noopener">Little Green Button G-Cloud 15 pricing</a> · <a href="https://assets.applytosupply.digitalmarketplace.service.gov.uk/g-cloud-15/documents/703888/689977716756343-pricing-document-2026-01-19-1810.pdf" target="_blank" rel="noopener">EDGEALERT G-Cloud 15 pricing</a> · <a href="https://www.applytosupply.digitalmarketplace.service.gov.uk/g-cloud/services/644875981716958" target="_blank" rel="noopener">PATCHS Online Consultation, G-Cloud 14</a> · <a href="https://assets.applytosupply.digitalmarketplace.service.gov.uk/g-cloud-15/documents/704481/268573260259887-pricing-document-2026-01-29-1908.pdf" target="_blank" rel="noopener">Ardens G-Cloud 15 pricing</a> · <a href="https://assets.applytosupply.digitalmarketplace.service.gov.uk/g-cloud-15/documents/717701/318126969885787-pricing-document-2026-01-28-1352.pdf" target="_blank" rel="noopener">Engage Health Systems G-Cloud 15 pricing</a> · <a href="https://assets.applytosupply.digitalmarketplace.service.gov.uk/g-cloud-15/documents/722505/792761232297242-pricing-document-2026-01-27-1155.pdf" target="_blank" rel="noopener">Healthtech-1 G-Cloud 15 pricing</a></p>
+    </details>
+    <details>
+      <summary>Important information</summary>
+      <section class="legal" aria-labelledby="h-legal">
+        <h3 id="h-legal" class="visually-hidden">Important information</h3>
+        <ol>
+          <li><strong>What this is.</strong> An illustrative estimate of the staff time a GP practice, or a group of practices, might release, and the value of that time, if it moved to Medicus. It is a planning aid, not a quotation, forecast, offer or guarantee, and it does not form part of any contract.</li>
+          <li><strong>Where the figures come from.</strong> The time saved per login, per clinical session and in administrative work is the reported experience of one NHS practice of about 12,000 patients that uses Medicus. It has not been independently audited. Results for other practices, and for networks and regions, are scaled from it in proportion to the figures entered and will vary with list size, staffing, hardware, network and ways of working. Figures for a PCN, federation or ICB are aggregates across its practices, not a prediction for any one of them. The cautious case shown alongside applies national-average staffing, half the time saved and 45 working weeks; read the two figures as a range.</li>
+          <li><strong>Time, not cash.</strong> Hours are valued at the stated session and hourly rates to show what the time is worth. That is not a cash saving unless hours, overtime or locum spend actually fall. Appointment figures show the scale of the time released, not a commitment that it will become extra appointments.</li>
+          <li><strong>Third-party costs.</strong> Add-on prices marked "est." are publicly listed prices (Crown Commercial Service G-Cloud and supplier price lists, dated in Basis and limits) scaled to list size. Actual costs depend on the practice's own contracts and may be lower or higher. Who pays for each add-on is recorded as entered; where an ICB, trust or other commissioner pays, that saving belongs to the payer and is shown separately. Figures typed in are used as entered and are not verified.</li>
+          <li><strong>Third-party names.</strong> AccuRx, Docman, Patchs, eConsult, Ardens, Healthtech-1, Little Green Button, EDGEALERT, Engage and ICE are trademarks of their respective owners, which are not connected with Medicus. They are named only to identify systems a practice may already use. Whether Medicus replaces a given system for a given practice depends on that practice's requirements and should be confirmed before any decision.</li>
+          <li><strong>Your inputs.</strong> Results depend on the figures entered and any assumptions changed, all of which are recorded in the PDF report. Check them before relying on the output.</li>
+          <li><strong>Not advice.</strong> Nothing here is financial, procurement, clinical or legal advice. Any business case should be built on the practice's own measured data and follow the practice's and its ICB's governance.</li>
+          <li><strong>Accuracy and liability.</strong> Reasonable care has been taken in building the model, but Medicus and the authors of this calculator accept no liability for decisions made in reliance on it. Figures are correct to the dates stated in Basis and limits and may change. Model version 1.1, prices and assumptions reviewed November 2026.</li>
+          <li><strong>Your details.</strong> Details entered to request the report are used to prepare it and, where you have agreed, to follow up. See the <a href="/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a>.</li>
+        </ol>
+      </section>
+    </details>
+  </section>
+  <p class="foot">Illustrative estimate based on the stated assumptions. It indicates potential staff time released and is not a guarantee. Model version 1.1, prices and assumptions reviewed November 2026.</p>
+
+  <div class="mini off" id="mini" aria-hidden="true">
+    <div><span class="eyebrow">Time returned</span><strong id="mini-hrs">0 hrs a week</strong></div>
+    <button class="btn small" id="mini-see" type="button">See results</button>
+  </div>
+
+  <dialog class="lead-dialog" id="lead-dialog" aria-labelledby="lead-title">
+    <form class="lead" id="lead-form" novalidate>
+      <button type="button" class="lead-close" id="lead-close" aria-label="Close">×</button>
+      <div class="lead-head">
+        <span class="eyebrow">Take this with you</span>
+        <h3 id="lead-title">Get this estimate as a Medicus PDF report</h3>
+        <p class="hint">Tell us who it is for and we will build a short branded report with these figures. Medicus will only use your details to follow up on this estimate.</p>
+      </div>
+      <div class="lead-grid">
+        <div class="lf"><label for="lead-name">Your name</label><input id="lead-name" type="text" autocomplete="name" required></div>
+        <div class="lf"><label for="lead-practice" id="lead-practice-label">Practice</label><input id="lead-practice" type="text" autocomplete="organization" required></div>
+        <div class="lf"><label for="lead-email">Work email</label><input id="lead-email" type="email" autocomplete="email" inputmode="email" required></div>
+        <div class="lf"><label for="lead-role">Role <span class="opt">(optional)</span></label><input id="lead-role" type="text" autocomplete="organization-title" placeholder="e.g. Practice Manager"></div>
+      </div>
+      <label class="consent"><input type="checkbox" id="lead-consent"><span>Medicus may contact me about this estimate. <span class="opt">(optional)</span></span></label>
+      <div class="hp" aria-hidden="true"><label for="lead-gotcha">Leave this empty</label><input id="lead-gotcha" type="text" tabindex="-1" autocomplete="off"></div>
+      <div class="lead-actions">
+        <button type="button" class="btn" id="lead-submit">Download PDF report</button>
+        <span class="hint" id="lead-status" aria-live="polite"></span>
+      </div>
+      <p class="hint">Your name, organisation and email are used to prepare the report and to follow up on it. See the <a href="/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a>.</p>
+    </form>
+  </dialog>
+
+  <div class="calc" id="calc" role="tooltip" hidden><div class="pop-title">How we calculated this</div><div id="calc-body"></div></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var MODEL_VERSION = "1.1", MODEL_REVIEWED = "November 2026";   /* shown on the page, in the report footer and on its basis page */
+  var REF = { patients: 12310, gp: 8, nurse: 3, admin: 0.5 };
+  var RATIOS = {
+    wilmslow: { gp: REF.patients / REF.gp, nurse: REF.patients / REF.nurse },
+    national: { gp: 63789531 / 28895, nurse: 63789531 / 16728 }
+  };
+  var WILMSLOW_ASSUMP = {
+    gpSession: 400, nurseSession: 250, sessionHours: 4, adminRate: 12.5,
+    loginMins: 3, loginsPerDay: 2, downtimeMins: 10,
+    daysPerWeek: 4, sessionsPerDay: 2, adminHours: 37.5, adminPer10k: 0.406, weeks: 52, apptMins: 10
+  };
+  var DEFAULTS = Object.assign({}, WILMSLOW_ASSUMP, { adminRate: 15 });
+  var GROUPS = {
+    down: { title: "Slowdowns and downtime", note: "The reference practice's own conservative estimate: ten minutes of slowdowns and waits avoided in each four-hour clinical session (a half-day clinic, not an appointment).", fields: [
+      { key: "downtimeMins", label: "Minutes saved per session", post: "min", step: 1 },
+      { key: "sessionsPerDay", label: "Sessions per clinical day", step: 1 },
+      { key: "daysPerWeek", label: "Clinical days per FTE a week", step: 0.5 }
+    ]},
+    login: { title: "Logins", note: "Three minutes saved each time a clinician signs in, twice a day.", fields: [
+      { key: "loginMins", label: "Minutes saved per login", post: "min", step: 0.5 },
+      { key: "loginsPerDay", label: "Logins per clinician a day", step: 1 }
+    ]},
+    admin: { title: "Admin time", note: "The reference practice released 0.5 FTE across 12,310 patients, carried here as a rate per 10,000.", fields: [
+      { key: "adminPer10k", label: "Admin FTE released per 10,000 patients", post: "FTE", step: 0.01 },
+      { key: "adminHours", label: "Admin hours per FTE a week", post: "hrs", step: 0.5 }
+    ]},
+    value: { title: "Valuation", note: "Clinical hours are valued at the session rate over the session length. The defaults are locum and agency replacement rates; employment cost is nearer £300 a GP session and £120 a nurse session.", fields: [
+      { key: "gpSession", label: "GP session rate", pre: "£", step: 10 },
+      { key: "nurseSession", label: "Nurse session rate", pre: "£", step: 10 },
+      { key: "sessionHours", label: "Session length", post: "hrs", step: 0.5 },
+      { key: "adminRate", label: "Admin hourly rate (loaded)", pre: "£", step: 0.5, money: true },
+      { key: "weeks", label: "Working weeks a year", step: 1 },
+      { key: "apptMins", label: "Appointment length", post: "min", step: 1 }
+    ]}
+  };
+  /* Native Medicus functions and the external add-ons each one retires.
+     perPatient is a flat £ per registered patient a year; tiers is Accurx's G-Cloud 15 price per patient by total list size
+     (under 15,000; 15,000 to 89,999; 90,000 to 799,999; 800,000 or more). payer is who usually pays for the add-on today. */
+  var ACCURX_TIERS = [1, 15000, 90000, 800000];
+  var VENDORS = [
+    { id: "messaging", name: "Patient messaging", desc: "Retires AccuRx messaging or similar", on: true, cost: null, tiers: [0.38, 0.29, 0.26, 0.23], payer: "commissioner", basis: "Accurx two-way patient messaging, G-Cloud 15 (September 2026): 38p a patient a year for lists under 15,000, less for larger lists, ex VAT and SMS" },
+    { id: "booking", name: "Booking and admin", desc: "Retires online booking and admin add-ons", on: true, cost: null, perPatient: null, payer: "practice", basis: "No price by default; enter what the practice pays. Accurx appointment self-book lists 51p a patient a year on G-Cloud 15" },
+    { id: "consult", name: "Online consultation", desc: "Retires Patchs, AccuRx Patient Triage, eConsult or similar", on: true, cost: null, tiers: [0.38, 0.38, 0.29, 0.24], payer: "commissioner", basis: "Accurx Patient Triage, G-Cloud 15: 38p a patient a year for lists under 90,000, ex VAT; PATCHS lists £0.45 to £0.90 on G-Cloud 14" },
+    { id: "scanning", name: "Document scanning", desc: "Retires Docman or similar", on: true, cost: null, perPatient: null, payer: "commissioner", basis: "No public price; usually ICB funded under GP IT Futures" },
+    { id: "sms", name: "SMS and email", desc: "Cuts SMS spend by defaulting to email", on: true, cost: null, perPatient: 0.51, payer: "commissioner", basis: "About 17 fragments a patient a year (NENC ICB) at Accurx's G-Cloud 15 rate of 3p a fragment; NENC flags practices above £0.72" },
+    { id: "ice", name: "ICE ordering", desc: "Retires a separate ICE client", on: true, cost: null, perPatient: null, payer: "commissioner", basis: "No public price; usually funded by the pathology provider" },
+    { id: "referrals", name: "Referral letters", desc: "Retires Docman Connect or similar", on: true, cost: null, perPatient: null, payer: "commissioner", basis: "No public price; often paid by the sending trust" },
+    { id: "registration", name: "Patient registration", desc: "Retires Healthtech-1 or similar", on: true, cost: null, perPatient: null, payer: "practice", basis: "No public price; Healthtech-1 bands are agreed per practice" },
+    { id: "templates", name: "Clinical templates and searches", desc: "Retires Ardens or similar", on: true, cost: null, perPatient: null, payer: "practice", estimate: ardensEstimate, basis: "Ardens Starter, G-Cloud 15: 29p a patient a year, £1,119 minimum, ex VAT; setup fee excluded" },
+    { id: "checkin", name: "Self check-in", desc: "Retires a check-in kiosk or tablet add-on", on: true, cost: null, perPatient: null, payer: "practice", estimate: checkinEstimate, basis: "Engage Arrive, G-Cloud 15: £249 a screen, software only; one screen per 8,000 patients assumed" },
+    { id: "callscreen", name: "Patient calling screen", desc: "Retires a waiting room call-in screen add-on", on: true, cost: null, perPatient: null, payer: "practice", estimate: callEstimate, basis: "Engage Patient Call, G-Cloud 15: £149 a screen, software only; one screen per 8,000 patients assumed" },
+    { id: "panic", name: "Panic button", desc: "Retires Little Green Button, EDGEALERT or similar", on: true, cost: null, perPatient: null, payer: "practice", estimate: panicEstimate, basis: "Little Green Button G-Cloud 15 rate for one device per 500 patients; EDGEALERT is £195 a site" }
+  ];
+  var PAYERS = { practice: "the practice", commissioner: "ICB, trust or other" };
+  function tierIndex(patients) { var i = 0; for (var k = 1; k < ACCURX_TIERS.length; k++) if (patients >= ACCURX_TIERS[k]) i = k; return i; }
+  function tierLabel(i) { return ["under 15,000 patients", "15,000 to 89,999 patients", "90,000 to 799,999 patients", "800,000 patients or more"][i]; }
+  /* £ per patient a year for the add-on: Accurx tiers follow the whole list in scope (a practice's own list, or the network's total, as a network or ICB would buy). */
+  function vendorRate(v) {
+    if (v.tiers) return v.tiers[tierIndex(state.patients)];
+    return v.perPatient == null ? null : v.perPatient;
+  }
+  function hasEstimate(v) { return !v.custom && (vendorRate(v) != null || !!v.estimate); }
+  /* Panic button add-ons are priced per device, not per patient. Assume one device per 500 patients (about 25 at the reference practice) and
+     apply Little Green Button's G-Cloud 15 tier for that count, billed annually. */
+  function screensFor(patients) { return Math.max(1, Math.round(patients / 8000)); }
+  function ardensEstimate(patients) { return Math.round(Math.max(1119, patients * 0.29) / 10) * 10; }
+  function checkinEstimate(patients) { return screensFor(patients) * 249; }
+  function callEstimate(patients) { return screensFor(patients) * 149; }
+  function panicDevices(patients) { return Math.max(5, Math.round(patients / 500)); }
+  function panicMonthly(devices) { return devices <= 10 ? 4.16 : devices <= 25 ? 3.30 : devices <= 50 ? 2.50 : devices <= 200 ? 2.00 : devices <= 500 ? 1.75 : 1.50; }
+  function panicEstimate(patients) {
+    var devices = panicDevices(patients);
+    return Math.round(devices * panicMonthly(devices) * 12 / 10) * 10;
+  }
+  /* Plain-English working for each estimate, shown in its "How we calculated this" tooltip. */
+  function explainVendor(v, patients) {
+    var P = nf0.format(patients);
+    var lines = explainVendorUnit(v, patients);
+    if (isNetwork() && lines.length) {
+      var n = vendorUsing(v), u = vendorUnitCost(v);
+      lines = ["Estimated for one practice of average size: " + nf0.format(state.patients) + " patients ÷ " + nf0.format(state.practices) + " practices = " + P + " patients."].concat(lines);
+      if (u != null) lines.push(gbpExact(u) + " a practice × " + nf0.format(n) + " of " + nf0.format(state.practices) + " practices using it = " + gbpExact(u * n) + " a year" + (n ? "." : ", so nothing is counted until a number of practices is entered."));
+    }
+    return lines;
+  }
+  function explainVendorUnit(v, patients) {
+    var P = nf0.format(patients);
+    var rate = vendorRate(v);
+    if (rate != null) {
+      var raw = rate * patients;
+      var est1 = vendorEstimate(v);
+      var lines0 = [];
+      if (v.tiers) lines0.push("Accurx prices this by total list size. " + nf0.format(state.patients) + " patients" + (isNetwork() ? " across the whole " + ORG[state.org].group : "") + " is the " + tierLabel(tierIndex(state.patients)) + " tier: £" + money2.format(rate) + " a patient a year.");
+      lines0.push("£" + money2.format(rate) + " per patient a year × " + P + " patients = " + gbpExact(raw) + (Math.round(raw) === est1 ? "." : ", rounded to the nearest £10: " + gbpExact(est1) + "."));
+      lines0.push("~" + v.basis + ".");
+      return lines0;
+    }
+    if (v.id === "templates") {
+      var raw2 = 0.29 * patients;
+      return ["29p per patient a year × " + P + " patients = " + gbpExact(raw2) + ".",
+              (raw2 < 1119 ? "That is below Ardens' minimum licence of £1,119, so the minimum applies." : "Ardens' minimum licence is £1,119; this practice is above it.") + (Math.round(Math.max(1119, raw2)) === vendorEstimate(v) ? "" : " Rounded to the nearest £10: " + gbpExact(vendorEstimate(v)) + "."),
+              "~Ardens Starter on G-Cloud 15, ex VAT. The one-off setup fee is not included."];
+    }
+    if (v.id === "checkin" || v.id === "callscreen") {
+      var sc = screensFor(patients), unit = v.id === "checkin" ? 249 : 149;
+      return ["One screen for every 8,000 patients: " + P + " ÷ 8,000 ≈ " + sc + (sc === 1 ? " screen." : " screens."),
+              sc + " × £" + unit + " a screen a year = " + gbpExact(sc * unit) + ".",
+              "~Engage Health Systems' G-Cloud 15 software price. Hardware and support are extra, so a practice with kiosk hardware will usually pay more."];
+    }
+    if (v.id === "panic") {
+      var d = panicDevices(patients), m = panicMonthly(d);
+      return ["One device for every 500 patients: " + P + " ÷ 500 ≈ " + d + " devices (minimum 5).",
+              "At " + d + " devices Little Green Button charges £" + money2.format(m) + " a device a month: " + d + " × £" + money2.format(m) + " × 12 months = " + gbpExact(d * m * 12) + (Math.round(d * m * 12) === vendorEstimate(v) ? "." : ", rounded to " + gbpExact(vendorEstimate(v)) + "."),
+              "~Little Green Button's G-Cloud 15 price list, billed annually. EDGEALERT is a flat £195 a site instead."];
+    }
+    return [];
+  }
+
+  /* Who the estimate is for. Ranges are [min, max, step, default, slider mid-label]. */
+  var ORG = {
+    practice: { name: "GP practice", group: "practice", label: "the practice", field: "Practice", practices: null,
+      patients: [1000, 40000, 10, REF.patients, 20000], hero: "Time returned to the practice",
+      sizeTitle: "How many registered patients does the practice have?", patientsLabel: "Registered patients",
+      sizeIntro: "Every figure that follows scales with the registered list, so use the practice's current list size.", sizeHint: "Type a figure or use the slider. Lists above 40,000 can be typed in." },
+    pcn: { name: "Primary Care Network", group: "network", label: "the network", field: "PCN",
+      practices: [2, 12, 1, 5, 7], patients: [20000, 120000, 500, 50000, 70000], hero: "Time returned across the network",
+      sizeTitle: "How big is the network?", patientsLabel: "Registered patients in total",
+      sizeIntro: "Enter the number of practices you expect to move to Medicus and their registered list in total. Figures above the sliders' range can be typed in." },
+    federation: { name: "GP Federation", group: "federation", label: "the federation", field: "Federation",
+      practices: [5, 80, 1, 20, 42], patients: [50000, 800000, 1000, 200000, 425000], hero: "Time returned across the federation",
+      sizeTitle: "How big is the federation?", patientsLabel: "Registered patients in total",
+      sizeIntro: "Enter the number of member practices you expect to move to Medicus and their registered list in total. Figures above the sliders' range can be typed in." },
+    icb: { name: "Integrated Care Board", group: "ICB", label: "the ICB's practices", field: "ICB",
+      practices: [20, 400, 1, 150, 210], patients: [300000, 3500000, 10000, 1500000, 1900000], hero: "Time returned across the ICB's practices",
+      sizeTitle: "How big is the ICB's general practice footprint?", patientsLabel: "Registered patients in total",
+      sizeIntro: "Enter the number of GP practices you expect to move to Medicus and their registered list in total. Figures above the sliders' range can be typed in." }
+  };
+
+  var state = {
+    org: "practice",
+    practices: 1,
+    patients: REF.patients,
+    mode: "wilmslow",
+    actual: { gp: REF.gp, nurse: REF.nurse },
+    a: Object.assign({}, DEFAULTS),
+    vendors: VENDORS.map(function (v) { return Object.assign({ using: 1, usingAll: true }, v); })
+  };
+  function isNetwork() { return state.org !== "practice"; }
+  function avgPractice() { return isNetwork() ? state.patients / Math.max(1, state.practices) : state.patients; }
+  function vendorUsing(v) { return isNetwork() ? (v.usingAll ? state.practices : Math.max(0, Math.min(state.practices, v.using || 0))) : 1; }
+
+  var nf0 = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 });
+  var nf1 = new Intl.NumberFormat("en-GB", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  var nf2 = new Intl.NumberFormat("en-GB", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  var nf3 = new Intl.NumberFormat("en-GB", { minimumFractionDigits: 0, maximumFractionDigits: 3 });
+  var money2 = new Intl.NumberFormat("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  function gbp(v) { return "£" + nf0.format(Math.round(v / 100) * 100); }
+  function gbpExact(v) { return "£" + nf0.format(Math.round(v)); }
+  function gbpRate(v) { return "£" + (Math.abs(v - Math.round(v)) < 0.005 ? nf0.format(Math.round(v)) : money2.format(v)); }
+  var nfx = new Intl.NumberFormat("en-GB", { minimumFractionDigits: 0, maximumFractionDigits: 1 });
+  function hrs(v) { return nf1.format(v) + " hrs"; }
+  function $(id) { return document.getElementById(id); }
+
+  /* Add-on costs are estimated per practice: for a network, at the average list size, then multiplied by the practices using the tool. */
+  function vendorEstimate(v) {
+    var pts = avgPractice();
+    if (v.estimate) return v.estimate(pts);
+    var rate = vendorRate(v);
+    return rate == null ? null : Math.round(rate * pts / 10) * 10;
+  }
+  function vendorUnitCost(v) { return v.userCost ? v.cost : vendorEstimate(v); }
+  function vendorCost(v) { var u = vendorUnitCost(v); return u == null ? null : u * vendorUsing(v); }
+  /* Add-on savings split by who pays for the add-on today: the practice, or an ICB, trust or other commissioner. */
+  function vendorTotals() {
+    var t = { practice: 0, commissioner: 0, total: 0 };
+    state.vendors.forEach(function (v) {
+      var c = vendorCost(v);
+      if (!v.on || !(c > 0)) return;
+      t[v.payer === "commissioner" ? "commissioner" : "practice"] += c;
+      t.total += c;
+    });
+    return t;
+  }
+  function vendorTotal() { return vendorTotals().total; }
+
+  function compute(patients, staff, a, licVal) {
+    var gpRate = a.sessionHours > 0 ? a.gpSession / a.sessionHours : 0;
+    var nurseRate = a.sessionHours > 0 ? a.nurseSession / a.sessionHours : 0;
+    var adminHrs = staff.admin * a.adminHours;
+    var adminVal = adminHrs * a.adminRate * a.weeks;
+    var loginMinsDay = a.loginMins * a.loginsPerDay;
+    var loginGpHrs = staff.gp * a.daysPerWeek * loginMinsDay / 60;
+    var loginNurseHrs = staff.nurse * a.daysPerWeek * loginMinsDay / 60;
+    var loginVal = (loginGpHrs * gpRate + loginNurseHrs * nurseRate) * a.weeks;
+    var gpSessions = staff.gp * a.daysPerWeek * a.sessionsPerDay;
+    var nurseSessions = staff.nurse * a.daysPerWeek * a.sessionsPerDay;
+    var downGpHrs = gpSessions * a.downtimeMins / 60;
+    var downNurseHrs = nurseSessions * a.downtimeMins / 60;
+    var downVal = (downGpHrs * gpRate + downNurseHrs * nurseRate) * a.weeks;
+    var clinHrs = loginGpHrs + loginNurseHrs + downGpHrs + downNurseHrs;
+    var weekHrs = clinHrs + adminHrs;
+    return {
+      gpRate: gpRate, nurseRate: nurseRate,
+      adminHrs: adminHrs, adminVal: adminVal,
+      loginHrs: loginGpHrs + loginNurseHrs, loginVal: loginVal,
+      downHrs: downGpHrs + downNurseHrs, downVal: downVal,
+      gpSessions: gpSessions, nurseSessions: nurseSessions,
+      clinicians: staff.gp + staff.nurse,
+      clinHrs: clinHrs,
+      weekHrs: weekHrs,
+      yearHrs: weekHrs * a.weeks,
+      perClinDay: loginMinsDay + a.sessionsPerDay * a.downtimeMins,
+      appts: a.apptMins > 0 ? clinHrs * 60 / a.apptMins : 0,
+      sessionsYear: a.sessionHours > 0 ? clinHrs * a.weeks / a.sessionHours : 0,
+      timeVal: adminVal + loginVal + downVal,
+      licVal: licVal || 0,
+      total: adminVal + loginVal + downVal + (licVal || 0)
+    };
+  }
+
+  function staffing() {
+    var admin = state.patients / 10000 * state.a.adminPer10k;
+    if (state.mode === "actual") return { gp: state.actual.gp, nurse: state.actual.nurse, admin: admin };
+    var r = RATIOS[state.mode];
+    return { gp: state.patients / r.gp, nurse: state.patients / r.nurse, admin: admin };
+  }
+
+  /* Assumption popovers */
+  function buildPopovers() {
+    document.querySelectorAll(".adj").forEach(function (d) {
+      var g = GROUPS[d.dataset.group];
+      var pop = d.querySelector(".pop");
+      pop.innerHTML = '<div class="pop-title">' + g.title + '</div><div class="pop-note">' + g.note + '</div>';
+      g.fields.forEach(function (f) {
+        var row = document.createElement("div");
+        row.className = "field";
+        var id = "a-" + f.key;
+        var defVal = DEFAULTS[f.key], wVal = WILMSLOW_ASSUMP[f.key];
+        var fmt = f.money ? money2 : nf3;
+        var defText = defVal === wVal
+          ? "Reference practice: " + (f.pre || "") + fmt.format(wVal) + (f.post ? " " + f.post : "")
+          : "Default " + (f.pre || "") + fmt.format(defVal) + " · reference practice used " + (f.pre || "") + fmt.format(wVal);
+        row.innerHTML =
+          '<label for="' + id + '">' + f.label + '</label>' +
+          '<span class="input-shell">' + (f.pre ? '<span class="unit">' + f.pre + '</span>' : '') +
+          '<input id="' + id + '" type="number" min="0" step="' + f.step + '" value="' + (f.money ? defVal.toFixed(2) : defVal) + '" data-key="' + f.key + '">' +
+          (f.post ? '<span class="unit">' + f.post + '</span>' : '') + '</span>' +
+          '<span class="def" id="' + id + '-def">' + defText + '</span>';
+        pop.appendChild(row);
+      });
+    });
+  }
+  document.addEventListener("input", function (e) {
+    var t = e.target;
+    if (!t.dataset || !t.dataset.key) return;
+    var v = parseFloat(t.value);
+    var shell = t.parentElement;
+    if (t.value === "" || isNaN(v) || v < 0) { shell.classList.add("bad"); t.setAttribute("aria-invalid", "true"); return; }
+    shell.classList.remove("bad");
+    t.removeAttribute("aria-invalid");
+    state.a[t.dataset.key] = v;
+    $("a-" + t.dataset.key + "-def").classList.toggle("changed", v !== DEFAULTS[t.dataset.key]);
+    render();
+  });
+  function resetAssumptionFields() {
+    Object.keys(GROUPS).forEach(function (k) { GROUPS[k].fields.forEach(function (f) {
+      var el = $("a-" + f.key);
+      el.value = f.money ? DEFAULTS[f.key].toFixed(2) : DEFAULTS[f.key];
+      el.removeAttribute("aria-invalid");
+      el.parentElement.classList.remove("bad");
+      $("a-" + f.key + "-def").classList.remove("changed");
+    }); });
+  }
+
+  /* Patients */
+  var pInput = $("patients"), pRange = $("patients-range");
+  function setRangeFill() {
+    var min = +pRange.min, max = +pRange.max;
+    var pct = (Math.min(Math.max(state.patients, min), max) - min) / (max - min) * 100;
+    pRange.style.setProperty("--pct", pct + "%");
+  }
+  pRange.addEventListener("input", function () {
+    state.patients = +pRange.value;
+    pInput.value = nf0.format(state.patients);
+    pInput.removeAttribute("aria-invalid");
+    render();
+  });
+  pInput.addEventListener("input", function () {
+    var digits = pInput.value.replace(/[^\d]/g, "");
+    var v = parseInt(digits, 10);
+    if (!digits || isNaN(v) || v < 100 || v > 20000000) { pInput.setAttribute("aria-invalid", "true"); return; }
+    pInput.removeAttribute("aria-invalid");
+    state.patients = v;
+    pRange.value = Math.min(Math.max(v, +pRange.min), +pRange.max);
+    render();
+  });
+  pInput.addEventListener("blur", function () { pInput.value = nf0.format(state.patients); pInput.removeAttribute("aria-invalid"); });
+  pInput.addEventListener("keydown", function (e) { if (e.key === "Enter" && !pInput.getAttribute("aria-invalid")) { pInput.blur(); } });
+  $("reset-patients").addEventListener("click", function () {
+    var o = ORG[state.org];
+    state.patients = o.patients[3];
+    pInput.value = nf0.format(state.patients);
+    pInput.removeAttribute("aria-invalid");
+    pRange.value = state.patients;
+    if (o.practices) { state.practices = o.practices[3]; prInput.value = nf0.format(state.practices); prRange.value = state.practices; }
+    render();
+  });
+
+  /* Practices (networks and regions only) */
+  var prInput = $("practices"), prRange = $("practices-range");
+  function setPracticesFill() {
+    var min = +prRange.min, max = +prRange.max;
+    var pct = (Math.min(Math.max(state.practices, min), max) - min) / (max - min) * 100;
+    prRange.style.setProperty("--pct", pct + "%");
+  }
+  prRange.addEventListener("input", function () {
+    state.practices = +prRange.value;
+    prInput.value = nf0.format(state.practices);
+    prInput.removeAttribute("aria-invalid");
+    render();
+  });
+  prInput.addEventListener("input", function () {
+    var digits = prInput.value.replace(/[^\d]/g, "");
+    var v = parseInt(digits, 10);
+    if (!digits || isNaN(v) || v < 1 || v > 5000) { prInput.setAttribute("aria-invalid", "true"); return; }
+    prInput.removeAttribute("aria-invalid");
+    state.practices = v;
+    prRange.value = Math.min(Math.max(v, +prRange.min), +prRange.max);
+    render();
+  });
+  prInput.addEventListener("blur", function () { prInput.value = nf0.format(state.practices); prInput.removeAttribute("aria-invalid"); });
+  prInput.addEventListener("keydown", function (e) { if (e.key === "Enter" && !prInput.getAttribute("aria-invalid")) { prInput.blur(); pInput.focus(); } });
+
+  /* Organisation type */
+  function setRange(rng, cfg, prefix) {
+    rng.min = cfg[0]; rng.max = cfg[1]; rng.step = cfg[2];
+    $(prefix + "-min").textContent = nf0.format(cfg[0]);
+    $(prefix + "-max").textContent = nf0.format(cfg[1]);
+    var mid = $(prefix + "-mid");
+    mid.textContent = nf0.format(cfg[4]);
+    mid.style.left = "calc(11px + " + ((cfg[4] - cfg[0]) / (cfg[1] - cfg[0])) + " * (100% - 22px))";
+  }
+  function applyOrg(type, resetSizes) {
+    state.org = type;
+    var o = ORG[type];
+    document.querySelectorAll('input[name="org"]').forEach(function (r) { r.checked = r.value === type; });
+    $("h-step1").textContent = o.sizeTitle;
+    $("size-intro").textContent = o.sizeIntro;
+    $("patients-label").textContent = o.patientsLabel;
+    $("practices-block").hidden = !o.practices;
+    setRange(pRange, o.patients, "pt");
+    if (o.practices) setRange(prRange, o.practices, "pr");
+    if (resetSizes) { state.patients = o.patients[3]; state.practices = o.practices ? o.practices[3] : 1; }
+    else state.practices = o.practices ? Math.max(1, state.practices) : 1;
+    pInput.value = nf0.format(state.patients); pRange.value = Math.min(Math.max(state.patients, +pRange.min), +pRange.max);
+    if (o.practices) { prInput.value = nf0.format(state.practices); prRange.value = Math.min(Math.max(state.practices, +prRange.min), +prRange.max); }
+    $("staff-intro").textContent = o.practices
+      ? "We have estimated the clinical team across all " + o.group + " practices from the total list size; move the sliders if you know the real totals, or leave the estimate as it is."
+      : "We have estimated the clinical team from list size; move the sliders if you know the practice's own numbers, or leave the estimate as it is.";
+    $("lead-practice-label").textContent = o.field;
+    $("h1-who").textContent = o.practices ? "your practices" : "your practice";
+    $("vendor-new-cost").placeholder = o.practices ? "a year, per practice" : "a year";
+    $("using-all-row").hidden = !o.practices;
+    $("using-all").value = "";
+    $("vendor-new-cost").setAttribute("aria-label", o.practices ? "Annual cost of that add-on for one practice" : "Annual cost of that add-on");
+    $("func-intro").textContent = o.practices
+      ? "Each of these is built into Medicus, so practices can retire the external add-ons they currently pay for. Tick the functions you expect to use and say how many of the " + o.group + "'s practices currently use each add-on. Costs are estimated per practice at the average list size; overwrite with a known per-practice figure, or clear the field to go back to the estimate."
+      : "Each of these is built into Medicus, so the practice can retire the external add-on it currently pays for. Tick the functions you expect to use. Where the add-on has a public price its cost is estimated from list size; overwrite it with the practice's own figure, or clear the field to go back to the estimate.";
+    state.vendors.forEach(function (v) { v.usingAll = true; v.using = state.practices; });
+    buildVendors();
+    /* A single practice starts from the reference practice's ratios; a network or region starts from the national average, which no system can be assumed to beat. */
+    if (resetSizes) { basis = o.practices ? "national" : "wilmslow"; setMode(basis); }
+    else if (state.mode === "actual") setMode(basis); else render();
+  }
+  document.querySelectorAll('input[name="org"]').forEach(function (r) { r.addEventListener("change", function () { if (r.checked) applyOrg(r.value, true); }); });
+
+  /* Staffing */
+  var HINTS = {
+    wilmslow: "One GP FTE per 1,539 patients and one practice nurse FTE per 4,103, as at the reference practice.",
+    national: "One GP FTE per about 2,210 patients and one nurse FTE per 3,810 (practice nurses, nurse practitioners and nursing associates), from NHS England workforce data for February 2026. Most practices sit nearer this than the reference practice."
+  };
+  var basis = "wilmslow";   /* which ratio the estimate uses; state.mode is "actual" once a slider has been moved */
+  function setMode(m) {
+    if (m === "actual") {
+      if (state.mode !== "actual") {
+        var s0 = staffing();
+        state.actual.gp = Math.round(s0.gp * 2) / 2;
+        state.actual.nurse = Math.round(s0.nurse * 2) / 2;
+      }
+      state.mode = "actual";
+    } else {
+      basis = m;
+      state.mode = m;
+    }
+    ["wilmslow", "national"].forEach(function (k) { $("mode-" + k).setAttribute("aria-pressed", String(basis === k)); });
+    var own = state.mode === "actual";
+    $("staff-tag").textContent = own ? "Your figures" : "Estimated from list size";
+    $("staff-tag").className = "tag" + (own ? " own" : "");
+    $("use-estimate").hidden = !own;
+    $("staff-hint").textContent = HINTS[basis];
+    render();
+  }
+  ["wilmslow", "national"].forEach(function (k) { $("mode-" + k).addEventListener("click", function () { setMode(k); }); });
+  $("use-estimate").addEventListener("click", function () { setMode(basis); });
+  function syncStaffControls(s) {
+    var est = { gp: state.patients / RATIOS[basis].gp, nurse: state.patients / RATIOS[basis].nurse };
+    ["gp", "nurse"].forEach(function (k) {
+      var v = Math.round(s[k] * 10) / 10;
+      var num = $(k + "-actual"), rng = $(k + "-range");
+      /* the slider's top end follows the estimate so an ICB is not stuck at 40 GPs */
+      var top = Math.max(k === "gp" ? 40 : 20, Math.ceil(est[k] * 2.5 / 10) * 10);
+      rng.max = top; rng.step = top > 200 ? 5 : top > 60 ? 1 : 0.5;
+      $(k + "-max").textContent = nf0.format(top);
+      if (document.activeElement !== num) num.value = v;
+      rng.value = Math.min(Math.max(v, +rng.min), +rng.max);
+      var pctv = (rng.value - rng.min) / (rng.max - rng.min) * 100;
+      rng.style.setProperty("--pct", pctv + "%");
+    });
+  }
+  ["gp", "nurse"].forEach(function (k) {
+    function apply(v) {
+      if (state.mode !== "actual") {
+        var s0 = staffing();
+        state.actual.gp = Math.round(s0.gp * 10) / 10;
+        state.actual.nurse = Math.round(s0.nurse * 10) / 10;
+        state.mode = "actual";
+        $("staff-tag").textContent = "Your figures"; $("staff-tag").className = "tag own";
+        $("use-estimate").hidden = false;
+      }
+      state.actual[k] = v;
+      render();
+    }
+    $(k + "-range").addEventListener("input", function (e) { apply(+e.target.value); });
+    $(k + "-actual").addEventListener("input", function (e) {
+      var v = parseFloat(e.target.value);
+      if (e.target.value === "" || isNaN(v) || v < 0) { e.target.setAttribute("aria-invalid", "true"); return; }
+      e.target.removeAttribute("aria-invalid");
+      apply(v);
+    });
+  });
+
+  /* Vendors */
+  var vendorsEl = $("vendors");
+  function buildVendors() {
+    vendorsEl.innerHTML = "";
+    vendorsEl.classList.toggle("net", isNetwork());
+    state.vendors.forEach(function (v) {
+      var row = document.createElement("div");
+      row.className = "vendor" + (v.on ? "" : " off");
+      row.dataset.id = v.id;
+      var c = vendorUnitCost(v);
+      row.innerHTML =
+        '<input type="checkbox" id="v-' + v.id + '" data-id="' + v.id + '"' + (v.on ? " checked" : "") + '>' +
+        '<div class="v-name"><label for="v-' + v.id + '"></label><small class="v-desc"></small><small class="v-basis"></small></div>' +
+        '<div class="v-using"' + (isNetwork() ? "" : " hidden") + '><span class="input-shell"><input type="text" inputmode="numeric" autocomplete="off" data-using="' + v.id + '" aria-label="Practices using ' + v.name.replace(/"/g, "") + ', as a number or a percentage" title="A number of practices, or a percentage such as 60%"></span><span class="v-pct"></span></div>' +
+        '<div class="v-cost"><span class="input-shell"><span class="unit">£</span><input type="number" min="0" step="10" placeholder="a year" data-id="' + v.id + '" aria-label="Annual cost of ' + v.name.replace(/"/g, "") + (isNetwork() ? " per practice" : "") + '"' + (c != null ? ' value="' + c + '"' : "") + '></span><span class="v-tag"></span></div>';
+      if (hasEstimate(v)) {
+        var ib = document.createElement("button");
+        ib.type = "button"; ib.className = "info"; ib.dataset.tip = "v-" + v.id; ib.setAttribute("aria-label", "How we estimated the " + v.name + " add-on cost"); ib.textContent = "i";
+        row.querySelector(".v-cost").appendChild(ib);
+      }
+      row.querySelector("label").textContent = v.name;
+      row.querySelector(".v-desc").textContent = v.custom ? "" : v.desc;
+      row.querySelector(".v-basis").textContent = v.custom ? "" : v.basis;
+      var payer = document.createElement("label");
+      payer.className = "v-payer";
+      payer.innerHTML = 'Paid by <select data-payer="' + v.id + '" aria-label="Who pays for ' + v.name.replace(/"/g, "") + ' today"><option value="practice">' + (isNetwork() ? "the practices" : "the practice") + '</option><option value="commissioner">ICB, trust or other</option></select>';
+      payer.querySelector("select").value = v.payer === "commissioner" ? "commissioner" : "practice";
+      row.querySelector(".v-name").appendChild(payer);
+      if (v.custom) {
+        var rm = document.createElement("button");
+        rm.type = "button"; rm.className = "v-remove"; rm.textContent = "Remove"; rm.dataset.remove = v.id;
+        row.querySelector(".v-desc").replaceWith(rm);
+        row.querySelector(".v-basis").remove();
+      }
+      vendorsEl.appendChild(row);
+    });
+    syncVendorRows();
+  }
+  function syncVendorRows() {
+    state.vendors.forEach(function (v) {
+      var row = vendorsEl.querySelector('.vendor[data-id="' + v.id + '"]');
+      if (!row) return;
+      var input = row.querySelector('input[data-id]');
+      var tag = row.querySelector(".v-tag");
+      var c = vendorUnitCost(v);
+      if (!v.userCost && document.activeElement !== input) input.value = c != null ? c : "";
+      var net = isNetwork();
+      tag.textContent = v.custom ? (net ? "Per practice" : "") : (v.userCost ? (net ? "Your figure, per practice" : "Your figure") : (hasEstimate(v) ? (net ? "Estimate per practice" : "Estimate") : "Enter add-on cost"));
+      tag.className = "v-tag" + (v.userCost ? " own" : "");
+      var usingBox = row.querySelector(".v-using"), usingInput = row.querySelector("input[data-using]");
+      usingBox.hidden = !net;
+      if (net) {
+        var n = vendorUsing(v);
+        if (document.activeElement !== usingInput) usingInput.value = n;
+        row.querySelector(".v-pct").textContent = "of " + nf0.format(state.practices) + " practices · " + Math.round(n / Math.max(1, state.practices) * 100) + "%";
+      }
+    });
+  }
+  vendorsEl.addEventListener("change", function (e) {
+    var t = e.target;
+    if (t.tagName === "SELECT" && t.dataset.payer) {
+      var vp = state.vendors.find(function (x) { return x.id === t.dataset.payer; });
+      if (vp) { vp.payer = t.value; render(); }
+      return;
+    }
+    if (t.type !== "checkbox") return;
+    var v = state.vendors.find(function (x) { return x.id === t.dataset.id; });
+    if (!v) return;
+    v.on = t.checked;
+    t.closest(".vendor").classList.toggle("off", !v.on);
+    render();
+  });
+  /* "Practices using": a whole number, or a percentage of the practices ("60%"). Empty means all of them. */
+  function parseUsing(text) {
+    var m = String(text).trim().match(/^(\d+(?:\.\d+)?)\s*(%?)$/);
+    if (!m) return null;
+    var n = parseFloat(m[1]);
+    if (m[2]) return Math.round(Math.min(100, n) / 100 * state.practices);
+    return Math.min(Math.round(n), state.practices);
+  }
+  vendorsEl.addEventListener("input", function (e) {
+    var t = e.target;
+    if (t.dataset.using) {
+      var vu = state.vendors.find(function (x) { return x.id === t.dataset.using; });
+      if (!vu) return;
+      var k = parseUsing(t.value);
+      if (t.value.trim() === "") { vu.usingAll = true; t.removeAttribute("aria-invalid"); }
+      else if (k == null) { t.setAttribute("aria-invalid", "true"); return; }
+      else { vu.usingAll = false; vu.using = k; t.removeAttribute("aria-invalid"); }
+      render();
+      return;
+    }
+    if (t.type !== "number") return;
+    var v = state.vendors.find(function (x) { return x.id === t.dataset.id; });
+    if (!v) return;
+    var n = parseFloat(t.value);
+    if (t.value === "" || isNaN(n) || n < 0) { v.userCost = false; v.cost = null; }
+    else if (!v.custom && n === vendorEstimate(v)) { v.userCost = false; v.cost = null; }
+    else { v.userCost = true; v.cost = n; }
+    render();
+  });
+  vendorsEl.addEventListener("focusout", function (e) { if (e.target.type === "number" || e.target.dataset.using) { e.target.removeAttribute("aria-invalid"); syncVendorRows(); } });
+  vendorsEl.addEventListener("click", function (e) {
+    var id = e.target.dataset && e.target.dataset.remove;
+    if (!id) return;
+    state.vendors = state.vendors.filter(function (x) { return x.id !== id; });
+    buildVendors();
+    render();
+  });
+  function addVendor() {
+    var nameEl = $("vendor-new-name"), costEl = $("vendor-new-cost");
+    var name = nameEl.value.trim();
+    if (!name) { nameEl.focus(); return; }
+    var n = parseFloat(costEl.value);
+    var hasCost = !(costEl.value === "" || isNaN(n) || n < 0);
+    state.vendors.push({ id: "c" + Date.now(), name: name, desc: "", on: true, cost: hasCost ? n : null, userCost: hasCost, perPatient: null, payer: "practice", basis: "", custom: true, using: state.practices, usingAll: true });
+    nameEl.value = ""; costEl.value = "";
+    buildVendors();
+    render();
+    nameEl.focus();
+  }
+  function applyUsingAll() {
+    var el = $("using-all"), txt = el.value;
+    var k = parseUsing(txt);
+    if (txt.trim() === "") { state.vendors.forEach(function (v) { v.usingAll = true; }); el.removeAttribute("aria-invalid"); }
+    else if (k == null) { el.setAttribute("aria-invalid", "true"); return; }
+    else { state.vendors.forEach(function (v) { v.usingAll = false; v.using = k; }); el.removeAttribute("aria-invalid"); }
+    render();
+  }
+  $("using-all-btn").addEventListener("click", applyUsingAll);
+  $("using-all").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); applyUsingAll(); } });
+  $("vendor-add-btn").addEventListener("click", addVendor);
+  ["vendor-new-name", "vendor-new-cost"].forEach(function (id) {
+    $(id).addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); addVendor(); } });
+  });
+
+  function resetAll() {
+    state.a = Object.assign({}, DEFAULTS);
+    resetAssumptionFields();
+    state.patients = REF.patients;
+    pInput.value = nf0.format(REF.patients);
+    pRange.value = REF.patients;
+    state.vendors = VENDORS.map(function (v) { return Object.assign({ using: 1, usingAll: true }, v); });
+    basis = "wilmslow"; state.mode = "wilmslow";
+    applyOrg("practice", true);
+    setMode("wilmslow");
+  }
+  $("reset-all").addEventListener("click", resetAll);
+  $("start-over").addEventListener("click", function () { resetAll(); window.scrollTo({ top: 0, behavior: "smooth" }); });
+
+  /* ---------- Shareable state: the inputs and the current step travel in the URL hash, with localStorage as a fallback ---------- */
+  var canUseUrl = (function () { try { return window.top === window && typeof history.replaceState === "function"; } catch (e) { return false; } })();
+  var navigating = false, saveTimer = 0;
+  function encodeState(obj) { return btoa(unescape(encodeURIComponent(JSON.stringify(obj)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
+  function decodeState(str) {
+    if (!str) return null;
+    try { var b = str.replace(/-/g, "+").replace(/_/g, "/"); while (b.length % 4) b += "="; return JSON.parse(decodeURIComponent(escape(atob(b)))); } catch (e) { return null; }
+  }
+  function snapshot() {
+    var changed = {};
+    Object.keys(DEFAULTS).forEach(function (k) { if (state.a[k] !== DEFAULTS[k]) changed[k] = state.a[k]; });
+    var vs = [];
+    state.vendors.forEach(function (v) {
+      var base = VENDORS.find(function (x) { return x.id === v.id; });
+      var d = { id: v.id };
+      if (!v.on) d.off = 1;
+      if (v.userCost) d.cost = v.cost;
+      if (!v.usingAll) d.using = v.using;
+      if (v.payer !== (base ? base.payer : "practice")) d.payer = v.payer;
+      if (v.custom) { d.custom = 1; d.name = v.name; d.cost = v.userCost ? v.cost : null; }
+      if (Object.keys(d).length > 1) vs.push(d);
+    });
+    return { v: 1, o: state.org, n: state.practices, p: state.patients, m: state.mode, b: basis, gp: state.actual.gp, nu: state.actual.nurse, a: changed, vs: vs };
+  }
+  function restore(d) {
+    if (!d || d.v !== 1 || !ORG[d.o] || !(d.p > 0)) return false;
+    var o = ORG[d.o];
+    state.patients = Math.min(20000000, Math.max(100, Math.round(d.p)));
+    state.practices = o.practices ? Math.min(5000, Math.max(1, Math.round(d.n || 1))) : 1;
+    state.mode = "wilmslow";
+    state.a = Object.assign({}, DEFAULTS);
+    Object.keys(d.a || {}).forEach(function (k) { if (k in DEFAULTS && typeof d.a[k] === "number" && d.a[k] >= 0) state.a[k] = d.a[k]; });
+    resetAssumptionFields();
+    Object.keys(GROUPS).forEach(function (g) { GROUPS[g].fields.forEach(function (f) {
+      var el = $("a-" + f.key), v = state.a[f.key];
+      el.value = f.money ? v.toFixed(2) : v;
+      $("a-" + f.key + "-def").classList.toggle("changed", v !== DEFAULTS[f.key]);
+    }); });
+    applyOrg(d.o, false);
+    basis = RATIOS[d.b] ? d.b : (o.practices ? "national" : "wilmslow");
+    if (d.m === "actual" && d.gp >= 0 && d.nu >= 0) { state.actual = { gp: +d.gp, nurse: +d.nu }; state.mode = "actual"; setMode("actual"); }
+    else setMode(RATIOS[d.m] ? d.m : basis);
+    state.vendors = VENDORS.map(function (v) { return Object.assign({ using: state.practices, usingAll: true }, v); });
+    (d.vs || []).forEach(function (e) {
+      var v = state.vendors.find(function (x) { return x.id === e.id; });
+      if (!v && e.custom && e.name) { v = { id: String(e.id), name: String(e.name).slice(0, 40), desc: "", on: true, cost: null, userCost: false, perPatient: null, payer: "practice", basis: "", custom: true, using: state.practices, usingAll: true }; state.vendors.push(v); }
+      if (!v) return;
+      if (e.off) v.on = false;
+      if (typeof e.cost === "number" && e.cost >= 0) { v.userCost = true; v.cost = e.cost; }
+      if (typeof e.using === "number") { v.usingAll = false; v.using = Math.max(0, Math.min(state.practices, Math.round(e.using))); }
+      if (e.payer === "practice" || e.payer === "commissioner") v.payer = e.payer;
+    });
+    buildVendors();
+    render();
+    return true;
+  }
+  function readUrlState() {
+    if (!canUseUrl) return null;
+    var h = location.hash || "";
+    return h.indexOf("#s=") === 0 ? decodeState(h.slice(3)) : null;
+  }
+  function saveState() {
+    if (initialising) return;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () {
+      var enc = encodeState(snapshot());
+      try { localStorage.setItem("medicus-roi-state", enc); } catch (e) {}
+      if (canUseUrl) { try { history.replaceState(null, "", "#s=" + enc); } catch (e) {} }
+    }, 150);
+  }
+  function pushUrlState() {
+    if (!canUseUrl) return;
+    try { history.pushState(null, "", "#s=" + encodeState(snapshot())); } catch (e) {}
+  }
+  var copyLinkBtn = $("copy-link");
+  copyLinkBtn.hidden = !(canUseUrl && /^https?:$/.test(location.protocol));
+  copyLinkBtn.addEventListener("click", function () {
+    var url = location.href.split("#")[0] + "#s=" + encodeState(snapshot());
+    function done(ok) { copyLinkBtn.textContent = ok ? "Link copied" : "Could not copy"; setTimeout(function () { copyLinkBtn.textContent = "Copy link to this estimate"; }, 2000); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(function () { done(true); }, function () { done(false); });
+    else done(false);
+  });
+
+  /* Accessible names for the "i" buttons, so a screen reader hears which figure each one explains */
+  function nameInfoButtons() {
+    var names = { gp: "the GP estimate", nurse: "the practice nurse estimate", sessions: "clinical sessions a week", admin: "admin time released", hero: "hours a week", perclin: "minutes back per clinician each day", appts: "clinical capacity", year: "hours a year", down: "fewer slowdowns and downtime", login: "fewer logins", money: "what the time is worth", lic: "add-ons retired", cautious: "the cautious case" };
+    document.querySelectorAll(".info[data-tip]").forEach(function (b) { if (names[b.dataset.tip]) b.setAttribute("aria-label", "How we calculated " + names[b.dataset.tip]); });
+  }
+
+  /* Bar tooltip */
+  var tip = $("tip"), bar = $("bar");
+  var segInfo = {};
+  function showTip(el) {
+    var info = segInfo[el.id];
+    if (!info) return;
+    tip.textContent = info;
+    tip.hidden = false;
+    var barBox = bar.getBoundingClientRect(), box = el.getBoundingClientRect();
+    var centre = box.left + box.width / 2 - barBox.left;
+    var half = tip.offsetWidth / 2;
+    tip.style.left = Math.max(half, Math.min(barBox.width - half, centre)) + "px";
+  }
+  function hideTip() { tip.hidden = true; }
+  ["seg-down", "seg-login", "seg-admin"].forEach(function (id) {
+    var el = $(id);
+    el.addEventListener("mouseenter", function () { showTip(el); });
+    el.addEventListener("mouseleave", hideTip);
+    el.addEventListener("focus", function () { showTip(el); });
+    el.addEventListener("blur", hideTip);
+  });
+  function pct(part, total) { return total > 0 ? Math.round(part / total * 100) + "%" : "0%"; }
+  /* Whole-number shares that add up to 100 (largest-remainder rounding), so the breakdown never reads 101%. */
+  function shares(parts) {
+    var total = parts.reduce(function (x, y) { return x + y; }, 0);
+    if (total <= 0) return parts.map(function () { return 0; });
+    var raw = parts.map(function (v) { return v / total * 100; });
+    var out = raw.map(Math.floor);
+    var left = 100 - out.reduce(function (x, y) { return x + y; }, 0);
+    raw.map(function (v, i) { return [v - Math.floor(v), i]; }).sort(function (x, y) { return y[0] - x[0]; }).slice(0, left).forEach(function (p) { out[p[1]]++; });
+    return out;
+  }
+
+  /* Copy */
+  var lastSummary = "";
+  $("copy").addEventListener("click", function () {
+    var btn = this;
+    function done(ok) {
+      btn.textContent = ok ? "Copied" : "Select and copy";
+      setTimeout(function () { btn.textContent = "Copy summary"; }, 2000);
+    }
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = lastSummary; ta.setAttribute("readonly", "");
+      ta.style.position = "fixed"; ta.style.left = "-9999px";
+      document.body.appendChild(ta); ta.select();
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+      document.body.removeChild(ta);
+      done(ok);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(lastSummary).then(function () { done(true); }, fallback);
+    else fallback();
+  });
+
+  /* "How we calculated this": one shared popover, opened by the small i buttons. Hover or focus shows it; a click pins it. */
+  var tipText = {}, calcFor = null, calcPinned = false;
+  var calcEl = $("calc"), calcBody = $("calc-body");
+  function openCalc(btn, pin) {
+    var lines = tipText[btn.dataset.tip];
+    if (!lines || !lines.length) return;
+    calcBody.innerHTML = "";
+    lines.forEach(function (l) {
+      var pEl = document.createElement("p");
+      if (l.charAt(0) === "~") { pEl.className = "note"; l = l.slice(1); }
+      pEl.textContent = l;
+      calcBody.appendChild(pEl);
+    });
+    if (calcFor && calcFor !== btn) calcFor.setAttribute("aria-expanded", "false");
+    calcEl.hidden = false;
+    btn.setAttribute("aria-expanded", "true");
+    calcFor = btn; calcPinned = !!pin;
+    placeCalc(btn);
+  }
+  function placeCalc(btn) {
+    var b = btn.getBoundingClientRect();
+    var left = Math.max(16, Math.min(window.innerWidth - calcEl.offsetWidth - 16, b.left - 10));
+    var top = b.bottom + 8;
+    if (top + calcEl.offsetHeight > window.innerHeight - 12) top = Math.max(8, b.top - calcEl.offsetHeight - 8);
+    calcEl.style.left = left + "px"; calcEl.style.top = top + "px";
+  }
+  function closeCalc() {
+    if (calcFor) calcFor.setAttribute("aria-expanded", "false");
+    calcEl.hidden = true; calcFor = null; calcPinned = false;
+  }
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest(".info");
+    if (btn) { e.preventDefault(); if (calcFor === btn && calcPinned) closeCalc(); else openCalc(btn, true); return; }
+    if (!e.target.closest("#calc")) closeCalc();
+  });
+  document.addEventListener("mouseover", function (e) { var btn = e.target.closest(".info"); if (btn && !calcPinned && calcFor !== btn) openCalc(btn, false); });
+  document.addEventListener("mouseout", function (e) { var btn = e.target.closest(".info"); if (btn && !calcPinned && calcFor === btn) closeCalc(); });
+  document.addEventListener("focusin", function (e) { var btn = e.target.closest(".info"); if (btn && !calcPinned) openCalc(btn, false); });
+  document.addEventListener("focusout", function (e) { var btn = e.target.closest(".info"); if (btn && !calcPinned && calcFor === btn) closeCalc(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && calcFor) { var b = calcFor; closeCalc(); b.focus(); } });
+  window.addEventListener("scroll", function () { if (calcFor) placeCalc(calcFor); }, { passive: true });
+  window.addEventListener("resize", function () { if (calcFor) placeCalc(calcFor); });
+
+  /* Count-up animation for result figures: fast start, long ease into the final value */
+  var anim = {};
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var resultsLive = false;        /* Option B updates in place, so numbers are written straight away rather than counted up */
+  function easeOut(t) { return t >= 1 ? 1 : 1 - Math.pow(2, -9 * t); }   /* exponential ease-out: quick start, long gentle landing */
+  function setNum(id, target, fmt) {
+    var el = $(id);
+    var a = anim[id] || (anim[id] = { shown: 0, target: 0, raf: 0 });
+    a.fmt = fmt; a.target = target;
+    if (!resultsLive || reduceMotion) { a.shown = target; el.innerHTML = fmt(target, true); return; }
+    runNum(id, 1100);
+  }
+  function runNum(id, duration) {
+    var a = anim[id], el = $(id);
+    if (!a) return;
+    if (a.raf) cancelAnimationFrame(a.raf);
+    var from = a.shown, to = a.target, start = performance.now();
+    if (Math.abs(to - from) < 1e-9) { el.innerHTML = a.fmt(to, true); return; }
+    var lastHtml = "";
+    function frame(now) {
+      var t = Math.min(1, (now - start) / duration);
+      a.shown = from + (to - from) * easeOut(t);
+      var html = t < 1 ? a.fmt(a.shown, false) : a.fmt(to, true);
+      if (html !== lastHtml) { el.innerHTML = html; lastHtml = html; }
+      if (t < 1) a.raf = requestAnimationFrame(frame); else { a.raf = 0; a.shown = to; }
+    }
+    a.raf = requestAnimationFrame(frame);
+  }
+  function playResults() {
+    if (reduceMotion) return;
+    Object.keys(anim).forEach(function (id, i) {
+      anim[id].shown = 0;
+      if (anim[id].raf) cancelAnimationFrame(anim[id].raf);
+      $(id).innerHTML = anim[id].fmt(0, false);
+      setTimeout(function () { runNum(id, 2400); }, i * 40);
+    });
+    var segs = ["seg-down", "seg-login", "seg-admin"].map(function (id) { return $(id); });
+    var saved = segs.map(function (el) { return el.style.flex; });
+    segs.forEach(function (el) { el.style.transition = "none"; el.style.flex = "0 0 0px"; });
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      segs.forEach(function (el, i) { el.style.transition = "flex-basis 2.2s cubic-bezier(.16,1,.3,1)"; el.style.flex = saved[i]; });
+      setTimeout(function () { segs.forEach(function (el) { el.style.transition = ""; }); }, 2300);
+    }); });
+  }
+
+  function render() {
+    var s = staffing();
+    var vt = vendorTotals();
+    var r = compute(state.patients, s, state.a, vt.total);
+    var a = state.a;
+    /* Cautious case: national-average staffing unless own figures were entered, half the minutes saved, and no more than 45 working weeks. */
+    var cs = state.mode === "actual" ? s : { gp: state.patients / RATIOS.national.gp, nurse: state.patients / RATIOS.national.nurse, admin: s.admin };
+    var ca = Object.assign({}, a, { downtimeMins: a.downtimeMins / 2, loginMins: a.loginMins / 2, weeks: Math.min(a.weeks, 45) });
+    var c = compute(state.patients, cs, ca, vt.total);
+    var modeName = state.mode === "actual" ? (isNetwork() ? "Own staffing totals" : "Practice's own staffing") : { wilmslow: "Reference practice ratios", national: "National average ratios" }[state.mode];
+    var ticked = state.vendors.filter(function (v) { return v.on; });
+    var costed = ticked.filter(function (v) { return vendorCost(v) > 0; });
+    var estimated = costed.filter(function (v) { return !v.userCost; });
+    var uncosted = ticked.filter(function (v) { return !(vendorCost(v) > 0); });
+    $("vendor-count").textContent = ticked.length + " of " + state.vendors.length + " selected · " + costed.length + " with an add-on cost" + (estimated.length ? " (" + estimated.length + " estimated)" : "") + (isNetwork() ? " · " + nf0.format(state.practices) + " practices" : "");
+    syncVendorRows();
+
+    /* size step */
+    var o = ORG[state.org], net = isNetwork();
+    $("patients-hint").textContent = net
+      ? "That is an average of " + nf0.format(avgPractice()) + " patients a practice. Larger figures can be typed in."
+      : o.sizeHint;
+    setPracticesFill();
+
+    /* staffing */
+    syncStaffControls(s);
+    var adminTxt = nf2.format(Math.round(s.admin * 100) / 100) + " FTE";
+    $("sc-admin").innerHTML = adminTxt + "<small>" + nf1.format(r.adminHrs) + " hrs a week</small>";
+    $("admin-share").textContent = "Admin time released is not a staffing input. It follows list size at the reference practice's rate (" + nf3.format(a.adminPer10k) + " FTE per 10,000 patients) and can be changed under Adjust the assumptions.";
+    var sessions = nf0.format(Math.round(r.gpSessions + r.nurseSessions));
+    $("sc-sessions").textContent = sessions;
+
+    /* hero: time */
+    $("hero-eyebrow").textContent = o.hero;
+    setNum("hero-hrs", r.weekHrs, function (v) { return nf1.format(v); });
+    $("mini-hrs").textContent = nf1.format(r.weekHrs) + " hrs a week";
+    $("hero-sub").textContent = net
+      ? nf1.format(r.clinHrs) + " clinical hours and " + nf1.format(r.adminHrs) + " admin hours a week across " + nf0.format(state.practices) + " practices and " + nf0.format(state.patients) +
+        " patients, with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE practice nurses in total."
+      : nf1.format(r.clinHrs) + " clinical hours and " + nf1.format(r.adminHrs) + " admin hours a week, for a practice of " +
+        nf0.format(state.patients) + " patients with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE nurses.";
+    $("hero-per").hidden = !net;
+    if (net) $("hero-per").textContent = "An average of " + hrs(r.weekHrs / Math.max(1, state.practices)) + " a week for each practice, once all " + nf0.format(state.practices) + " practices are live on Medicus.";
+    setNum("hc-hrs", c.weekHrs, function (v) { return nf1.format(v); });
+    setNum("hc-val", c.timeVal, function (v, done) { return done ? gbp(v) : gbpExact(v); });
+    $("m-cautious").textContent = "Cautious case: " + gbp(c.timeVal) + " a year, with " + (state.mode === "actual" ? "your own staffing" : "national-average staffing") + ", half the minutes saved and " + nf2.format(ca.weeks) + " weeks. Read the two as a range.";
+    setNum("t-perclin", r.perClinDay, function (v) { return nf0.format(v) + "<small>minutes back</small>"; });
+    setNum("t-appts", r.appts, function (v) { return nf0.format(v) + "<small>" + nf0.format(a.apptMins) + "-minute appointments</small>"; });
+    var clinShare = r.weekHrs > 0 ? r.clinHrs / r.weekHrs : 0, sessPerHr = a.sessionHours > 0 ? 1 / a.sessionHours : 0;
+    setNum("t-year", r.yearHrs, function (v) {
+      var cy = v * clinShare, ay = v - cy;
+      return nf0.format(v) + "<small>" + nf0.format(cy) + " clinical hours (about " + nf0.format(cy * sessPerHr) + " sessions) and " + nf0.format(ay) + " admin hours</small>";
+    });
+    var sh = shares([r.downHrs, r.loginHrs, r.adminHrs]);
+
+    /* bar in hours */
+    var w = r.weekHrs || 1;
+    $("seg-down").style.flex = "0 0 calc(" + (r.downHrs / w * 100) + "% - 2px)";
+    $("seg-login").style.flex = "0 0 calc(" + (r.loginHrs / w * 100) + "% - 2px)";
+    $("seg-admin").style.flex = "1 1 0";
+    segInfo["seg-down"] = "Fewer slowdowns and downtime · " + hrs(r.downHrs) + " a week · " + sh[0] + "%";
+    segInfo["seg-login"] = "Fewer logins · " + hrs(r.loginHrs) + " a week · " + sh[1] + "%";
+    segInfo["seg-admin"] = "Less manual admin · " + hrs(r.adminHrs) + " a week · " + sh[2] + "%";
+    Object.keys(segInfo).forEach(function (id) { $(id).setAttribute("aria-label", segInfo[id]); });
+    setNum("bar-caption", r.weekHrs, function (v) { return hrs(v) + " a week in total"; });
+
+    setNum("l-down", r.downHrs, function (v) { return hrs(v) + "<small>a week · " + sh[0] + "%</small>"; });
+    setNum("l-login", r.loginHrs, function (v) { return hrs(v) + "<small>a week · " + sh[1] + "%</small>"; });
+    setNum("l-admin", r.adminHrs, function (v) { return hrs(v) + "<small>a week · " + sh[2] + "%</small>"; });
+    var downWho = a.downtimeMins === DEFAULTS.downtimeMins ? "the reference practice's estimate" : "your figure";
+    $("d-down").textContent = nf2.format(a.downtimeMins) + " min of slowdowns and waits avoided per " + nf2.format(a.sessionHours) + "-hour session (" + downWho + "), across " + sessions + " sessions a week";
+    $("d-login").textContent = nf2.format(a.loginMins) + " min × " + nf2.format(a.loginsPerDay) + " logins a day × " + nf2.format(a.daysPerWeek) + " days, across " + nf1.format(r.clinicians) + " clinicians";
+    $("d-admin").textContent = nf2.format(Math.round(s.admin * 100) / 100) + " FTE of admin time at " + nf2.format(a.adminHours) + " hrs a week";
+
+    /* money, second */
+    setNum("m-total", r.timeVal, function (v, done) { return (done ? gbp(v) : gbpExact(v)) + " a year"; });
+    $("m-sub").textContent = "At " + gbpExact(a.gpSession) + " a GP session and " + gbpExact(a.nurseSession) + " a nurse session (locum and agency replacement rates), admin at £" + money2.format(a.adminRate) + " an hour, " + nf2.format(a.weeks) + " weeks a year.";
+    var hasLic = r.licVal > 0;
+    $("m-lic-label").textContent = hasLic
+      ? "Add-ons retired by " + costed.length + " function" + (costed.length === 1 ? "" : "s") + (costed.some(function (v) { return !v.userCost; }) ? " (est.)" : "")
+      : "Add-ons retired: no costs entered yet";
+    if (hasLic) setNum("m-lic", r.licVal, function (v) { return gbpExact(v) + " a year"; }); else { $("m-lic").textContent = ""; delete anim["m-lic"]; }
+    var payerWho = net ? "the practices" : "the practice";
+    $("m-lic-split").hidden = !hasLic;
+    if (hasLic) {
+      $("m-lic-split").innerHTML = vt.commissioner > 0 && vt.practice > 0
+        ? "<strong>" + gbpExact(vt.practice) + "</strong> is paid by " + payerWho + " today; <strong>" + gbpExact(vt.commissioner) + "</strong> by an ICB, trust or other commissioner, so that part belongs to them."
+        : vt.commissioner > 0
+          ? "All of it is paid by an ICB, trust or other commissioner today, so the saving lands with them rather than " + payerWho + ". Change <em>Paid by</em> beside the function if " + payerWho + " pay" + (net ? "" : "s") + " for any of these."
+          : "All of it is paid by " + payerWho + " today, so the whole saving is " + (net ? "theirs" : "the practice's") + ".";
+    }
+
+    setRangeFill();
+
+    lastResult = { s: s, r: r, a: a, modeName: modeName, costed: costed, uncosted: uncosted, hasLic: hasLic, sessions: sessions, shares: sh, org: o, net: net, vt: vt, c: c, cs: cs, ca: ca };
+    $("lic-info").hidden = !hasLic;
+
+    /* "How we calculated this" text for every figure. Lines starting with ~ are notes. */
+    var gpRate = a.sessionHours > 0 ? a.gpSession / a.sessionHours : 0, nurseRate = a.sessionHours > 0 ? a.nurseSession / a.sessionHours : 0;
+    var gpSess = s.gp * a.daysPerWeek * a.sessionsPerDay, nSess = s.nurse * a.daysPerWeek * a.sessionsPerDay;
+    var loginMinDay = a.loginMins * a.loginsPerDay;
+    var ratio = state.mode === "national" ? RATIOS.national : RATIOS.wilmslow;
+    var ratioNote = state.mode === "national" ? "the NHS England national average for February 2026" : "the reference practice's ratio";
+    var wk = nf2.format(a.weeks) + " weeks";
+    tipText = {
+      gp: state.mode === "actual"
+        ? ["This is " + (net ? "your own figure" : "the practice's own figure") + ", entered on this page.", "~The estimate would be " + nf0.format(state.patients) + " ÷ " + nf0.format(ratio.gp) + " patients per GP = " + nf1.format(state.patients / ratio.gp) + " FTE at " + ratioNote + "."]
+        : [nf0.format(state.patients) + " patients ÷ " + nf0.format(ratio.gp) + " patients per GP = " + nf1.format(s.gp) + " FTE.", "~" + nf0.format(ratio.gp) + " patients per GP is " + ratioNote + ". Move the slider to use " + (net ? "your own total" : "the practice's own figure") + "."],
+      nurse: state.mode === "actual"
+        ? ["This is " + (net ? "your own figure" : "the practice's own figure") + ", entered on this page.", "~The estimate would be " + nf0.format(state.patients) + " ÷ " + nf0.format(ratio.nurse) + " patients per nurse = " + nf1.format(state.patients / ratio.nurse) + " FTE at " + ratioNote + "."]
+        : [nf0.format(state.patients) + " patients ÷ " + nf0.format(ratio.nurse) + " patients per nurse = " + nf1.format(s.nurse) + " FTE.", "~" + nf0.format(ratio.nurse) + " patients per nurse is " + ratioNote + ". Move the slider to use " + (net ? "your own total" : "the practice's own figure") + "."],
+      sessions: [nf1.format(s.gp) + " GPs × " + nf2.format(a.daysPerWeek) + " clinical days × " + nf2.format(a.sessionsPerDay) + " sessions = " + nfx.format(gpSess) + " GP sessions.",
+                 nf1.format(s.nurse) + " nurses × " + nf2.format(a.daysPerWeek) + " × " + nf2.format(a.sessionsPerDay) + " = " + nfx.format(nSess) + " nurse sessions.",
+                 "Total: " + sessions + " clinical sessions a week.",
+                 "~A session is a " + nf2.format(a.sessionHours) + "-hour clinic, not a single appointment; one FTE works " + nf2.format(a.daysPerWeek * a.sessionsPerDay) + " a week."],
+      admin: [nf0.format(state.patients) + " patients ÷ 10,000 × " + nf3.format(a.adminPer10k) + " = " + nf2.format(Math.round(s.admin * 100) / 100) + " FTE of admin time released.",
+              nf2.format(Math.round(s.admin * 100) / 100) + " FTE × " + nf2.format(a.adminHours) + " hours a week = " + hrs(r.adminHrs) + " a week, which is " + sh[2] + "% of the total.",
+              "Worth " + gbpExact(r.adminVal) + " a year at £" + money2.format(a.adminRate) + " an hour × " + wk + ".",
+              "~The " + nf3.format(a.adminPer10k) + " per 10,000 patients comes from the reference practice, which released 0.5 FTE across 12,310 patients through streamlined document handling."],
+      hero: ["Fewer slowdowns and downtime " + hrs(r.downHrs) + " + fewer logins " + hrs(r.loginHrs) + " = " + hrs(r.clinHrs) + " of clinical time a week.",
+             "Less manual admin: " + hrs(r.adminHrs) + " of admin time a week.",
+             hrs(r.clinHrs) + " + " + hrs(r.adminHrs) + " = " + hrs(r.weekHrs) + " a week in total." + (net ? " Across " + nf0.format(state.practices) + " practices that is an average of " + hrs(r.weekHrs / Math.max(1, state.practices)) + " a week each." : ""),
+             "~Clinical and admin time are different kinds of time, so the breakdown below keeps them separate."],
+      cautious: ["The cautious case keeps your inputs and changes three things: " +
+                   (state.mode === "actual"
+                     ? "your own staffing figures stay as entered (" + nf1.format(cs.gp) + " FTE GPs and " + nf1.format(cs.nurse) + " FTE nurses)"
+                     : "staffing at the national average (" + nf1.format(cs.gp) + " FTE GPs and " + nf1.format(cs.nurse) + " FTE nurses" + (state.mode === "national" ? ", as already chosen" : ", instead of " + nf1.format(s.gp) + " and " + nf1.format(s.nurse) + " at the reference practice's ratios") + ")") +
+                   "; half the minutes saved (" + nf2.format(ca.downtimeMins) + " a session and " + nf2.format(ca.loginMins) + " a login); and " + nf2.format(ca.weeks) + " working weeks.",
+                 "That gives " + hrs(c.clinHrs) + " clinical + " + hrs(c.adminHrs) + " admin = " + hrs(c.weekHrs) + " a week, " + nf0.format(c.yearHrs) + " hours a year, worth " + gbpExact(c.timeVal) + " a year (shown rounded to the nearest £100).",
+                 "On the reference assumptions it is " + hrs(r.weekHrs) + " a week and " + gbp(r.timeVal) + " a year. Read the two as a range: the reference practice's own experience sits at the top of it.",
+                 "~Admin hours a week and add-on savings are the same in both cases. The admin figure is a measured 0.5 FTE at the reference practice rather than an estimate."],
+      perclin: ["Logins: " + nf2.format(a.loginMins) + " minutes × " + nf2.format(a.loginsPerDay) + " a day = " + nf0.format(loginMinDay) + " minutes.",
+                "Slowdowns: " + nf2.format(a.downtimeMins) + " minutes × " + nf2.format(a.sessionsPerDay) + " sessions a day = " + nf0.format(a.sessionsPerDay * a.downtimeMins) + " minutes.",
+                "Total: " + nf0.format(r.perClinDay) + " minutes back for each clinician on each clinical day.",
+                "~This is the same for every clinician, so it does not change with list size or team size."],
+      appts: [hrs(r.clinHrs) + " of clinical time a week = " + nf0.format(r.clinHrs * 60) + " minutes.",
+              nf0.format(r.clinHrs * 60) + " ÷ " + nf0.format(a.apptMins) + "-minute appointments = " + nf0.format(r.appts) + (Math.abs(r.appts - Math.round(r.appts)) > 0.05 ? " (rounded)." : "."),
+              "~This is the upper limit, if every saved minute became appointment time. Some of it will be a calmer day rather than extra slots."],
+      year: [hrs(r.weekHrs) + " a week × " + wk + " = " + nf0.format(r.yearHrs) + " hours a year.",
+             "Of that, " + hrs(r.clinHrs) + " × " + nf2.format(a.weeks) + " = " + nf0.format(r.clinHrs * a.weeks) + " clinical hours, which is about " + nf0.format(r.sessionsYear) + " sessions of " + nf2.format(a.sessionHours) + " hours.",
+             "And " + hrs(r.adminHrs) + " × " + nf2.format(a.weeks) + " = " + nf0.format(r.adminHrs * a.weeks) + " admin hours.",
+             "~" + nf2.format(a.weeks) + " weeks assumes no allowance for leave or bank holidays; 45 is more cautious. Change it under Adjust the assumptions."],
+      down: ["Clinical sessions a week: " + nf1.format(s.gp) + " GPs × " + nf2.format(a.daysPerWeek) + " days × " + nf2.format(a.sessionsPerDay) + " = " + nfx.format(gpSess) + ", plus " + nf1.format(s.nurse) + " nurses × " + nf2.format(a.daysPerWeek) + " × " + nf2.format(a.sessionsPerDay) + " = " + nfx.format(nSess) + ", so " + sessions + ".",
+             sessions + " sessions × " + nf2.format(a.downtimeMins) + " minutes saved = " + nf0.format(r.downHrs * 60) + " minutes = " + hrs(r.downHrs) + " a week.",
+             "Share of the total: " + hrs(r.downHrs) + " ÷ " + hrs(r.weekHrs) + " = " + sh[0] + "%.",
+             "Worth " + gbpExact(r.downVal) + " a year: GP time at " + gbpRate(gpRate) + " an hour (" + gbpExact(a.gpSession) + " ÷ " + nf2.format(a.sessionHours) + "-hour session) and nurse time at " + gbpRate(nurseRate) + " an hour, × " + wk + ".",
+             "~A session is a " + nf2.format(a.sessionHours) + "-hour clinic of about " + nf0.format(a.apptMins > 0 ? a.sessionHours * 60 / a.apptMins : 0) + " " + nf2.format(a.apptMins) + "-minute appointments, so " + nf2.format(a.downtimeMins) + " minutes a session is about " + nf0.format(a.apptMins > 0 ? a.downtimeMins * 60 / (a.sessionHours * 60 / a.apptMins) : 0) + " seconds an appointment.",
+             "~The " + nf2.format(a.downtimeMins) + " minutes is the reference practice's own conservative estimate of time lost to slow screens and system waits, not a timed measurement. It is the least evidenced input, which is why the cautious case halves it."],
+      login: ["Clinicians: " + nf1.format(s.gp) + " GPs + " + nf1.format(s.nurse) + " nurses = " + nf1.format(r.clinicians) + ".",
+              nf1.format(r.clinicians) + " × " + nf2.format(a.daysPerWeek) + " clinical days × " + nf2.format(a.loginsPerDay) + " logins × " + nf2.format(a.loginMins) + " minutes = " + nf0.format(r.loginHrs * 60) + " minutes = " + hrs(r.loginHrs) + " a week.",
+              "Share of the total: " + hrs(r.loginHrs) + " ÷ " + hrs(r.weekHrs) + " = " + sh[1] + "%.",
+              "Worth " + gbpExact(r.loginVal) + " a year at " + gbpRate(gpRate) + " an hour for GPs and " + gbpRate(nurseRate) + " for nurses, × " + wk + ".",
+              "~Some login time may already sit inside the slowdown figure, so read the two together as an upper estimate."],
+      money: ["Fewer slowdowns " + gbpExact(r.downVal) + " + fewer logins " + gbpExact(r.loginVal) + " + less manual admin " + gbpExact(r.adminVal) + " = " + gbpExact(r.timeVal) + " a year, shown rounded to the nearest £100.",
+              "Hourly rates: GP " + gbpExact(a.gpSession) + " ÷ " + nf2.format(a.sessionHours) + " = " + gbpRate(gpRate) + "; nurse " + gbpExact(a.nurseSession) + " ÷ " + nf2.format(a.sessionHours) + " = " + gbpRate(nurseRate) + "; admin £" + money2.format(a.adminRate) + " loaded (pay plus employer costs). All × " + wk + ".",
+              "~The session rates are what it would cost to buy the time back from a locum or agency. Employment cost is lower: a salaried GP is nearer £300 a session and an employed practice nurse nearer £120. Either can be set under Adjust.",
+              "~This is the value of the time at those rates. It only becomes cash if hours, overtime or locum spend actually fall."],
+      lic: (hasLic ? ["Ticked functions with a cost: " + costed.map(function (v) { return v.name + " " + (net ? gbpExact(vendorUnitCost(v)) + " × " + nf0.format(vendorUsing(v)) + " = " : "") + gbpExact(vendorCost(v)) + (v.userCost ? "" : " (est.)"); }).join(" + ") + " = " + gbpExact(r.licVal) + " a year.",
+                       "Paid by " + payerWho + " today: " + (costed.filter(function (v) { return v.payer !== "commissioner"; }).map(function (v) { return v.name; }).join(", ") || "none") + " = " + gbpExact(vt.practice) + ". Paid by an ICB, trust or other: " + (costed.filter(function (v) { return v.payer === "commissioner"; }).map(function (v) { return v.name; }).join(", ") || "none") + " = " + gbpExact(vt.commissioner) + "."] : ["No ticked function has a cost yet."]).concat(
+             [net ? "~Estimates are list prices for a practice of average list size, multiplied by the number of practices using each tool; a figure you type (per practice) replaces the estimate. The working for each estimate is beside the function."
+                  : "~Estimates are list prices scaled to this list size; a figure you type replaces the estimate. The working for each estimate is beside the function."])
+    };
+    state.vendors.forEach(function (v) { if (hasEstimate(v)) tipText["v-" + v.id] = explainVendor(v, avgPractice()); });
+    if (calcFor) openCalc(calcFor, calcPinned);
+
+    lastSummary = [
+      "Medicus practice time estimate",
+      "For: " + o.name + (net ? " of " + nf0.format(state.practices) + " practices" : ""),
+      "Registered patients: " + nf0.format(state.patients) + (net ? " (average " + nf0.format(avgPractice()) + " a practice)" : ""),
+      "Staffing basis: " + modeName + " (GP " + nf1.format(s.gp) + " FTE, nurse " + nf1.format(s.nurse) + " FTE)",
+      "",
+      o.hero + ": " + nf1.format(r.weekHrs) + " hours a week, about " + nf0.format(r.yearHrs) + " a year" + (net ? " (an average of " + hrs(r.weekHrs / Math.max(1, state.practices)) + " a week for each practice, once all " + nf0.format(state.practices) + " practices are live)" : ""),
+      "  Fewer slowdowns and downtime: " + hrs(r.downHrs) + " a week",
+      "  Fewer logins: " + hrs(r.loginHrs) + " a week",
+      "  Less manual admin: " + hrs(r.adminHrs) + " a week",
+      "Cautious case: " + nf1.format(c.weekHrs) + " hours a week, about " + nf0.format(c.yearHrs) + " a year, worth " + gbp(c.timeVal) + " a year (" + (state.mode === "actual" ? "own staffing" : "national-average staffing") + ", half the minutes saved, " + nf2.format(ca.weeks) + " weeks)",
+      "Per clinician: about " + nf0.format(r.perClinDay) + " minutes a day",
+      "Estimated clinical capacity released: " + nf0.format(r.appts) + " " + nf0.format(a.apptMins) + "-minute appointments a week, or " + nf0.format(r.sessionsYear) + " clinical sessions a year",
+      "",
+      "What that time is worth: " + gbp(r.timeVal) + " a year",
+      "Add-ons retired by native Medicus functions: " + (hasLic ? gbpExact(r.licVal) + " a year (" + costed.map(function (v) { return v.name + " " + gbpExact(vendorCost(v)) + (net ? " across " + nf0.format(vendorUsing(v)) + " practice" + (vendorUsing(v) === 1 ? "" : "s") : "") + (v.userCost ? "" : " est.") + (v.payer === "commissioner" ? " [ICB or other pays]" : ""); }).join(", ") + ")" : "no costs entered") +
+        (uncosted.length ? "; selected without a cost: " + uncosted.map(function (v) { return v.name + (net && vendorUsing(v) === 0 ? " (no practices using it)" : ""); }).join(", ") : ""),
+      hasLic ? "  Of which paid by " + payerWho + " today: " + gbpExact(vt.practice) + "; paid by an ICB, trust or other commissioner: " + gbpExact(vt.commissioner) + " (that part of the saving belongs to the payer)" : null,
+      "",
+      "Assumptions: " + nf2.format(a.downtimeMins) + " min saved per " + nf2.format(a.sessionHours) + "-hour session, " + nf2.format(a.loginMins) + " min × " + nf2.format(a.loginsPerDay) + " logins a day, " +
+        nf3.format(a.adminPer10k) + " admin FTE released per 10,000 patients, " + nf2.format(a.daysPerWeek) + " clinical days × " + nf2.format(a.sessionsPerDay) + " sessions per FTE, " +
+        nf2.format(a.weeks) + " weeks a year; GP session " + gbpExact(a.gpSession) + ", nurse session " + gbpExact(a.nurseSession) + ", " + nf2.format(a.sessionHours) + " hr sessions, admin £" + money2.format(a.adminRate) + "/hr loaded.",
+      "Model basis: the real-world impact of Medicus at a live NHS practice of about 12,000 patients.",
+      "Important: illustrative estimate, not a quotation, forecast or guarantee. Time savings are the reported experience of one NHS practice, not independently audited. Hours are valued at stated rates and are not cash unless hours or locum spend fall. Add-on prices marked est. are public list prices scaled to list size; savings on add-ons paid by an ICB or trust belong to the payer. Third-party names are trademarks of their owners. Not financial, procurement, clinical or legal advice."
+    ].filter(function (l) { return l !== null; }).join("\n");
+    saveState();
+  }
+
+  /* ---------- Lead capture and PDF report ---------- */
+  var lastResult = null;
+
+  /* Where lead details go. Set LEAD_ENDPOINT to a form or webhook URL (HubSpot Forms API, Attio, Zapier, Make) that accepts a JSON POST;
+     leave it empty to fall back to the artifact's own store where available. */
+  var LEAD_ENDPOINT = "/api/medicus-roi/lead";
+
+  async function sendLead(lead) {
+    if (LEAD_ENDPOINT) {
+      var res = await fetch(LEAD_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(lead) });
+      if (!res.ok) throw new Error("endpoint " + res.status);
+      return "endpoint";
+    }
+    if (window.claude && window.claude.use) {
+      var db = await window.claude.use("db");
+      if (db) { await db.collection("leads").add(lead); return "store"; }
+    }
+    return "none";
+  }
+
+  function leadFromForm() {
+    var consent = $("lead-consent").checked;
+    var lead = {
+      name: $("lead-name").value.trim(),
+      practice: $("lead-practice").value.trim(),
+      email: $("lead-email").value.trim(),
+      role: $("lead-role").value.trim(),
+      consent: consent,
+      _gotcha: $("lead-gotcha").value,
+      submittedAt: new Date().toISOString(),
+      orgType: state.org,
+      variant: "B",
+      practices: state.practices,
+      patients: state.patients,
+      staffingBasis: lastResult.modeName,
+      gpFte: Math.round(lastResult.s.gp * 10) / 10,
+      nurseFte: Math.round(lastResult.s.nurse * 10) / 10,
+      hoursPerWeek: Math.round(lastResult.r.weekHrs * 10) / 10,
+      hoursPerYear: Math.round(lastResult.r.yearHrs),
+      valuePerYear: Math.round(lastResult.r.timeVal),
+      addOnsPerYear: Math.round(lastResult.r.licVal),
+      addOnsPracticePerYear: Math.round(lastResult.vt.practice),
+      cautiousHoursPerWeek: Math.round(lastResult.c.weekHrs * 10) / 10,
+      cautiousValuePerYear: Math.round(lastResult.c.timeVal),
+      functions: state.vendors.filter(function (v) { return v.on; }).map(function (v) { return v.name; }),
+      summary: lastSummary
+    };
+    return lead;
+  }
+
+  function validateLead() {
+    var ok = true;
+    [["lead-name", function (v) { return v.length > 1; }],
+     ["lead-practice", function (v) { return v.length > 1; }],
+     ["lead-email", function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }]].forEach(function (p) {
+      var el = $(p[0]);
+      var good = p[1](el.value.trim());
+      el.setAttribute("aria-invalid", good ? "false" : "true");
+      el.classList.toggle("bad", !good);
+      if (!good) ok = false;
+    });
+    return ok;
+  }
+
+  /* Branded PDF (A4) built with jsPDF. Georgia and Arial are not embeddable here, so Times and Helvetica stand in. */
+  function buildPdf(lead) {
+    var J = window.jspdf && window.jspdf.jsPDF;
+    if (!J) throw new Error("pdf library not loaded");
+    var R = lastResult, r = R.r, s = R.s, a = R.a;
+    var doc = new J({ unit: "mm", format: "a4" });
+    var W = 210, M = 18, cw = W - M * 2, FOOT = 283;
+    var INK = [9, 28, 57], GREEN = [110, 186, 144], BLUE = [61, 115, 175], BLUE_DK = [31, 79, 128], BLUE_LT = [127, 166, 209];
+    var TEXT = [33, 33, 33], LIGHT = [91, 97, 107], MUTED = [114, 119, 128], BORDER = [229, 231, 235], TINT = [235, 241, 248], BG = [244, 245, 247];
+    var today = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+    function col(c) { doc.setTextColor(c[0], c[1], c[2]); }
+    function fill(c) { doc.setFillColor(c[0], c[1], c[2]); }
+    function stroke(c) { doc.setDrawColor(c[0], c[1], c[2]); }
+    function eyebrow(t, x, y, c) { doc.setFont("helvetica", "bold"); doc.setFontSize(7.5); doc.setCharSpace(0.6); col(c || GREEN); doc.text(t.toUpperCase(), x, y); doc.setCharSpace(0); }
+    function para(t, x, y, w, size, c, lh) {
+      doc.setFont("helvetica", "normal"); doc.setFontSize(size); col(c || TEXT);
+      var lines = doc.splitTextToSize(t, w);
+      doc.text(lines, x, y);
+      return y + lines.length * (lh || size * 0.5);
+    }
+    function wordmark(x, y, size, c) {
+      doc.setFont("times", "normal"); doc.setFontSize(size); col(c);
+      doc.text("Medicus", x, y);
+      col(GREEN); doc.text(".", x + doc.getTextWidth("Medicus"), y);
+    }
+    function rule(y) { stroke(BORDER); doc.line(M, y, W - M, y); }
+    /* Continuation pages carry a slim header; page 1 has the full band. */
+    function newPage() {
+      doc.addPage();
+      wordmark(M, 15, 14, INK);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(MUTED);
+      doc.text("Practice time calculator  ·  Prepared for " + lead.practice + "  ·  " + today, W - M, 15, { align: "right" });
+      rule(20);
+      return 32;
+    }
+    function ensure(y, need) { return y + need > FOOT - 6 ? newPage() : y; }
+
+    /* ---------- Page 1: the estimate ---------- */
+    fill(INK); doc.rect(0, 0, W, 40, "F");
+    doc.saveGraphicsState();
+    doc.rect(0, 0, W, 40, null); doc.clip(); doc.discardPath();
+    fill(BLUE);
+    for (var gi = 14; gi >= 1; gi--) {
+      doc.setGState(new doc.GState({ opacity: 0.055 }));
+      doc.ellipse(W / 2, -4, 110 * gi / 14, 46 * gi / 14, "F");
+    }
+    doc.restoreGraphicsState();
+    doc.setGState(new doc.GState({ opacity: 1 }));
+    wordmark(M, 20, 24, [255, 255, 255]);
+    eyebrow("Practice time calculator", M, 28, GREEN);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(9); col([219, 228, 239]);
+    doc.text("Prepared for " + lead.practice, W - M, 18, { align: "right" });
+    col([157, 180, 204]); doc.setFontSize(8);
+    doc.text(lead.name + (lead.role ? ", " + lead.role : ""), W - M, 23.5, { align: "right" });
+    doc.text(today, W - M, 28.5, { align: "right" });
+
+    /* Hero */
+    var y = 52;
+    eyebrow(R.org.hero, M, y); y += 15;
+    doc.setFont("times", "bold"); doc.setFontSize(40); col(INK);
+    var big = nf1.format(r.weekHrs);
+    doc.text(big, M, y);
+    var bw = doc.getTextWidth(big);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(14); col(INK);
+    doc.text("hours a week", M + bw + 3, y);
+    y += 8;
+    y = para(R.net
+      ? nf1.format(r.clinHrs) + " clinical hours and " + nf1.format(r.adminHrs) + " admin hours a week across " + nf0.format(state.practices) + " practices and " + nf0.format(state.patients) +
+        " registered patients, with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE practice nurses in total (" + R.modeName + "). That is an average of " +
+        hrs(r.weekHrs / Math.max(1, state.practices)) + " a week for each practice, as a steady state once all " + nf0.format(state.practices) + " practices are live on Medicus."
+      : nf1.format(r.clinHrs) + " clinical hours and " + nf1.format(r.adminHrs) + " admin hours a week, for a practice of " + nf0.format(state.patients) +
+        " registered patients with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE practice nurses (" + R.modeName + ").", M, y, cw, 10, LIGHT, 5);
+    y += 1;
+    doc.setFont("helvetica", "bold"); doc.setFontSize(9); col(INK);
+    var cautLead = "Cautious case: " + nf1.format(R.c.weekHrs) + " hours a week and " + gbp(R.c.timeVal) + " a year.";
+    doc.text(cautLead, M, y);
+    y += 4.2;
+    y = para("With " + (state.mode === "actual" ? "your own staffing" : "national-average staffing") + ", half the minutes saved and " + nf2.format(R.ca.weeks) + " working weeks; admin hours and add-on savings are unchanged. Read the two figures as a range.", M, y, cw, 8, LIGHT, 3.8);
+
+    /* Tiles */
+    y += 1;
+    var tw = (cw - 8) / 3, th = 25;
+    [["Per clinician, each day", nf0.format(r.perClinDay), "minutes back"],
+     ["Estimated clinical capacity released each week", nf0.format(r.appts), nf0.format(a.apptMins) + "-minute appointments"],
+     ["Over a year", nf0.format(r.yearHrs), "hours, about " + nf0.format(r.sessionsYear) + " clinical sessions"]].forEach(function (t, i) {
+      var x = M + i * (tw + 4);
+      stroke(BORDER); fill([255, 255, 255]); doc.roundedRect(x, y, tw, th, 2.5, 2.5, "FD");
+      doc.setFont("helvetica", "normal"); doc.setFontSize(8); col(LIGHT); doc.text(doc.splitTextToSize(t[0], tw - 10).slice(0, 2), x + 5, y + 6.5, { lineHeightFactor: 1.15 });
+      doc.setFont("times", "bold"); doc.setFontSize(18); col(INK); doc.text(t[1], x + 5, y + 17.5);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(MUTED); doc.text(t[2], x + 5, y + 22);
+    });
+    y += th + 7;
+
+    /* Breakdown */
+    doc.setFont("helvetica", "bold"); doc.setFontSize(11); col(INK); doc.text("Where the time comes from", M, y);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); col(MUTED); doc.text(hrs(r.weekHrs) + " a week in total", W - M, y, { align: "right" });
+    y += 5;
+    var total = r.weekHrs || 1, bx = M, bh = 4;
+    [[r.downHrs, BLUE_DK], [r.loginHrs, BLUE], [r.adminHrs, BLUE_LT]].forEach(function (seg, i) {
+      var sw = Math.max(0, cw * seg[0] / total - (i < 2 ? 0.8 : 0));
+      fill(seg[1]); doc.rect(bx, y, sw, bh, "F"); bx += sw + 0.8;
+    });
+    y += bh + 5;
+    [["Fewer slowdowns and downtime", nf2.format(a.downtimeMins) + " min of slowdowns and waits avoided per " + nf2.format(a.sessionHours) + "-hour session (" + (a.downtimeMins === DEFAULTS.downtimeMins ? "the reference practice's estimate" : "your figure") + ") x " + R.sessions + " sessions a week", r.downHrs, BLUE_DK],
+     ["Fewer logins", nf2.format(a.loginMins) + " min x " + nf2.format(a.loginsPerDay) + " logins a day across " + nf1.format(r.clinicians) + " clinicians", r.loginHrs, BLUE],
+     ["Less manual admin", nf2.format(Math.round(s.admin * 100) / 100) + " FTE of admin time at " + nf2.format(a.adminHours) + " hrs a week", r.adminHrs, BLUE_LT]].forEach(function (row, rowIndex) {
+      rule(y); y += 5.5;
+      fill(row[3]); doc.roundedRect(M, y - 2.6, 3, 3, .6, .6, "F");
+      doc.setFont("helvetica", "bold"); doc.setFontSize(9.5); col(INK); doc.text(row[0], M + 6, y);
+      doc.text(hrs(row[2]) + " a week", W - M, y, { align: "right" });
+      doc.setFont("helvetica", "normal"); doc.setFontSize(8); col(MUTED); doc.text(R.shares[rowIndex] + "%", W - M - 34, y, { align: "right" });
+      y += 4.2;
+      doc.setFont("helvetica", "normal"); doc.setFontSize(8); col(LIGHT); doc.text(row[1], M + 6, y);
+      y += 3.5;
+    });
+    rule(y);
+    y += 7;
+
+    /* What the time is worth */
+    var mh = 23;
+    fill(BG); stroke(BORDER); doc.roundedRect(M, y, cw, mh, 2.5, 2.5, "FD");
+    eyebrow("What that time is worth", M + 6, y + 7, MUTED);
+    doc.setFont("times", "bold"); doc.setFontSize(18); col(INK); doc.text(gbp(r.timeVal) + " a year", M + 6, y + 15);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(MUTED); doc.text("Cautious case", W - M - 6, y + 8.5, { align: "right" });
+    doc.setFont("times", "bold"); doc.setFontSize(13); col(INK); doc.text(gbp(R.c.timeVal) + " a year", W - M - 6, y + 15, { align: "right" });
+    doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(LIGHT);
+    doc.text(doc.splitTextToSize("Clinical time at " + gbpExact(a.gpSession) + " a GP session and " + gbpExact(a.nurseSession) + " a nurse session (locum and agency replacement rates); admin at £" +
+      money2.format(a.adminRate) + " an hour loaded; " + nf2.format(a.weeks) + " weeks a year.", cw - 12), M + 6, y + 20);
+    y += mh + 6;
+
+    /* Third-party add-ons retired: summary, then the functions that retire them */
+    var on = state.vendors.filter(function (v) { return v.on; });
+    var costed = on.filter(function (v) { return vendorCost(v) > 0; });
+    var est = costed.filter(function (v) { return !v.userCost; });
+    var own = costed.length - est.length;
+    doc.setFont("helvetica", "bold"); doc.setFontSize(11); col(INK); doc.text("Third-party add-ons retired", M, y);
+    y += 4;
+    var sh = 18;
+    fill(TINT); stroke(BORDER); doc.roundedRect(M, y, cw, sh, 2.5, 2.5, "FD");
+    eyebrow("Annual saving on add-ons", M + 6, y + 7, MUTED);
+    doc.setFont("times", "bold"); doc.setFontSize(18); col(INK);
+    doc.text(R.hasLic ? gbpExact(r.licVal) + " a year" : "No add-on costs entered", M + 6, y + 15);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(7); col(LIGHT);
+    var sum1 = costed.length + " of " + on.length + " functions carry a cost" + (R.net ? " across " + nf0.format(state.practices) + " practices" : "") + (R.hasLic ? " (" + (est.length ? est.length + " estimated" : "") + (est.length && own ? ", " : "") + (own ? own + " entered" : "") + ")" : "");
+    var sum2 = R.hasLic
+      ? gbpExact(R.vt.practice) + " paid by " + (R.net ? "the practices" : "the practice") + ", " + gbpExact(R.vt.commissioner) + " by an ICB or other payer"
+      : "Enter your own add-on costs to see a figure";
+    doc.text(sum1, W - M - 6, y + 8.5, { align: "right" });
+    doc.text(sum2, W - M - 6, y + 13.5, { align: "right" });
+    y += sh + 6;
+
+    doc.setFont("helvetica", "bold"); doc.setFontSize(9.5); col(INK); doc.text("Native Medicus functions you plan to use", M, y);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(MUTED); doc.text("Add-on cost a year", W - M, y, { align: "right" });
+    y += 5.5;
+    var rows = Math.ceil(on.length / 2), colW = (cw - 8) / 2;
+    var lineH = Math.max(4, Math.min(4.9, (FOOT - 4 - y) / Math.max(1, rows)));   /* squeeze the list a little if the hero ran long */
+    on.forEach(function (v, i) {
+      var c = i < rows ? 0 : 1, rI = i < rows ? i : i - rows;
+      var x = M + c * (colW + 8), yy = y + rI * lineH;
+      fill(GREEN); doc.circle(x + 1.5, yy - 1, 1, "F");
+      doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); col(TEXT); doc.text(v.name, x + 5, yy);
+      var cost = vendorCost(v);
+      doc.setFontSize(7.5);
+      if (cost > 0) { col(v.userCost ? INK : LIGHT); doc.text((R.net ? nf0.format(vendorUsing(v)) + "/" + nf0.format(state.practices) + " · " : "") + gbpExact(cost) + (v.userCost ? "" : " est.") + (v.payer === "commissioner" ? " (ICB)" : ""), x + colW, yy, { align: "right" }); }
+      else { col(MUTED); doc.text(R.net && vendorUsing(v) === 0 ? "no practices using it" : "no cost entered", x + colW, yy, { align: "right" }); }
+    });
+    y += rows * lineH + 1.5;
+    if (y + 11 <= FOOT - 3) {
+      rule(y);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(7); col(MUTED);
+      doc.text(doc.splitTextToSize("Estimates are list prices scaled to list size. Add-ons marked (ICB) are recorded as paid by an ICB, trust or other commissioner, so that saving belongs to the payer rather than the practice. Assumptions and sources are on page 2; the working for every figure is in the calculator's \"how we calculated this\" notes.", cw), M, y + 4.5);
+    }
+
+    /* ---------- Page 2: assumptions and basis ---------- */
+    y = newPage();
+    doc.setFont("helvetica", "bold"); doc.setFontSize(13); col(INK); doc.text("Assumptions and basis", M, y); y += 7;
+    y = para("Built from the real-world impact of Medicus at a live NHS practice of about 12,000 patients: " + WILMSLOW_ASSUMP.downtimeMins + " minutes of slowdowns and waits avoided in each four-hour clinical session (the practice's own conservative estimate), " +
+      WILMSLOW_ASSUMP.loginMins + " minutes at each login and 0.5 FTE of admin time released across 12,310 patients. Login and slowdown savings are counted separately, so read the two together as an upper estimate.",
+      M, y, cw, 8, LIGHT, 3.8);
+    y += 2;
+
+
+    /* Inputs and assumptions, laid out in two columns so the whole basis fits one page */
+    var gcw = (cw - 10) / 2;
+    function fieldRows(g) {
+      return g.fields.map(function (f) {
+        var v = a[f.key], w = WILMSLOW_ASSUMP[f.key];
+        var fmt = f.money ? money2 : nf3;
+        var val = (f.pre || "") + fmt.format(v) + (f.post ? " " + f.post : "");
+        var note = v === DEFAULTS[f.key] ? "" : "changed from " + (f.pre || "") + fmt.format(DEFAULTS[f.key]) + (f.post ? " " + f.post : "");
+        if (!note && DEFAULTS[f.key] !== w) note = "reference practice used " + (f.pre || "") + fmt.format(w) + (f.post ? " " + f.post : "");
+        return [f.label, val, note];
+      });
+    }
+    var practiceRows = [
+      ["Estimate for", R.org.name, ""]].concat(R.net ? [
+      ["Practices", nf0.format(state.practices), ""],
+      ["Average list size", nf0.format(avgPractice()), "patients a practice"]] : []).concat([
+      ["Registered patients" + (R.net ? " in total" : ""), nf0.format(state.patients), ""],
+      ["GPs (FTE)", nf1.format(s.gp), R.modeName],
+      ["Practice nurses (FTE)", nf1.format(s.nurse), R.modeName],
+      ["Clinical sessions a week", R.sessions, ""],
+      ["Admin time released (FTE)", nf2.format(Math.round(s.admin * 100) / 100), nf3.format(a.adminPer10k) + " FTE per 10,000 patients"]
+    ]);
+    var leftGroups = [[R.net ? "This " + R.org.name.toLowerCase() : "This practice", practiceRows], [GROUPS.down.title, fieldRows(GROUPS.down)], [GROUPS.login.title, fieldRows(GROUPS.login)]];
+    var rightGroups = [[GROUPS.admin.title, fieldRows(GROUPS.admin)], [GROUPS.value.title, fieldRows(GROUPS.value)]];
+    function drawColumn(groups, x, y0) {
+      var yy = y0;
+      groups.forEach(function (g) {
+        yy += 3.6; eyebrow(g[0], x, yy, MUTED); yy += 1.8;
+        g[1].forEach(function (row) {
+          stroke(BORDER); doc.line(x, yy, x + gcw, yy); yy += 4.2;
+          doc.setFont("helvetica", "normal"); doc.setFontSize(8); col(TEXT); doc.text(row[0], x, yy);
+          doc.setFont("helvetica", "bold"); col(INK); doc.text(row[1], x + gcw, yy, { align: "right" });
+          if (row[2]) { yy += 3.1; doc.setFont("helvetica", "normal"); doc.setFontSize(6.8); col(MUTED); doc.text(row[2], x, yy); yy += 1.3; }
+          else { yy += 1.5; }
+        });
+        stroke(BORDER); doc.line(x, yy, x + gcw, yy); yy += 2;
+      });
+      return yy;
+    }
+    function columnHeight(groups) {
+      var h = 0;
+      groups.forEach(function (g) { h += 5.4; g[1].forEach(function (row) { h += 4.2 + (row[2] ? 4.4 : 1.5); }); h += 2; });
+      return h;
+    }
+    y = ensure(y, Math.max(columnHeight(leftGroups), columnHeight(rightGroups)) + 2);
+    var yl = drawColumn(leftGroups, M, y);
+    var yr = drawColumn(rightGroups, M + gcw + 10, y);
+    y = Math.max(yl, yr) + 2;
+
+    y += 6;
+
+    y = ensure(y, 22);
+    eyebrow("Sources", M, y, MUTED); y += 4.5;
+    y = para("NHS England, General Practice Workforce, 28 February 2026; NHS England, Patients Registered at a GP Practice, February 2026; National Living Wage from April 2026; " +
+      "Accurx pricing on G-Cloud 15 (September 2026); PATCHS (OneAdvanced) pricing on G-Cloud 14; Ardens, Engage Health Systems, Little Green Button, EDGEALERT and Healthtech-1 pricing documents on G-Cloud 15; " +
+      "NECS, Optimising GP messaging across North East and North Cumbria ICB; BMA, doctors' time lost to inadequate IT systems. Links to each are in the calculator's Basis and limits section.", M, y, cw, 7, LIGHT, 3.5);
+    y += 2.5;
+    doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(MUTED);
+    doc.text("Model version " + MODEL_VERSION + "  ·  prices and assumptions reviewed " + MODEL_REVIEWED + "  ·  report generated " + today, M, y);
+    y += 7;
+
+    /* Important information */
+    var legal = [
+      ["What this is.", "An illustrative estimate of the staff time a GP practice, or a group of practices, might release, and the value of that time, if it moved to Medicus. It is a planning aid, not a quotation, forecast, offer or guarantee, and it does not form part of any contract."],
+      ["Where the figures come from.", "The time saved per login, per clinical session and in administrative work is the reported experience of one NHS practice of about 12,000 patients that uses Medicus. It has not been independently audited. Results for other practices, and for networks and regions, are scaled from it in proportion to the figures entered and will vary with list size, staffing, hardware, network and ways of working. Figures for a PCN, federation or ICB are aggregates across its practices, not a prediction for any one of them. The cautious case shown alongside applies national-average staffing, half the time saved and 45 working weeks; read the two figures as a range."],
+      ["Time, not cash.", "Hours are valued at the stated session and hourly rates to show what the time is worth. That is not a cash saving unless hours, overtime or locum spend actually fall. Appointment figures show the scale of the time released, not a commitment that it will become extra appointments."],
+      ["Third-party costs.", "Add-on prices marked est. are publicly listed prices (Crown Commercial Service G-Cloud and supplier price lists, as dated above) scaled to list size. Actual costs depend on the practice's own contracts and may be lower or higher. Who pays for each add-on is recorded as entered; where an ICB, trust or other commissioner pays, that saving belongs to the payer and is shown separately. Figures entered are used as given and are not verified."],
+      ["Third-party names.", "AccuRx, Docman, Patchs, eConsult, Ardens, Healthtech-1, Little Green Button, EDGEALERT, Engage and ICE are trademarks of their respective owners, which are not connected with Medicus. They are named only to identify systems a practice may already use. Whether Medicus replaces a given system for a given practice depends on that practice's requirements and should be confirmed before any decision."],
+      ["Your inputs.", "Results depend on the figures entered and any assumptions changed, all of which are recorded in this report. Check them before relying on the output."],
+      ["Not advice.", "Nothing in this report is financial, procurement, clinical or legal advice. Any business case should be built on the practice's own measured data and follow the practice's and its ICB's governance."],
+      ["Accuracy and liability.", "Reasonable care has been taken in building the model, but Medicus and the authors of this calculator accept no liability for decisions made in reliance on it. Figures are correct to the dates stated and may change."],
+      ["Your details.", "Details entered to request this report are used to prepare it and, where you have agreed, to follow up, as described in the privacy policy at wynwin.co.uk/privacy."]
+    ];
+    /* Each item: bold lead-in, then the body starting on the same line and wrapping to full width below it */
+    var legalLayout = legal.map(function (item) {
+      doc.setFont("helvetica", "bold"); doc.setFontSize(6.8);
+      var lw = doc.getTextWidth(item[0]) + 1.5;
+      doc.setFont("helvetica", "normal");
+      var first = doc.splitTextToSize(item[1], cw - lw)[0] || "";
+      var rest = doc.splitTextToSize(item[1].slice(first.length).trim(), cw);
+      if (!rest.length || rest[0] === "") rest = [];
+      return { lead: item[0], lw: lw, first: first, rest: rest, lines: 1 + rest.length };
+    });
+    /* Line spacing tightens a little if that is what keeps the whole report on two pages */
+    var totalLines = legalLayout.reduce(function (n, it) { return n + it.lines; }, 0);
+    var lh = 3, gap = 1.6;
+    if (y + 4.5 + totalLines * lh + legalLayout.length * gap > FOOT - 6) { lh = 2.75; gap = 1.2; }
+    legalLayout.forEach(function (it) { it.h = it.lines * lh + gap; });
+    y = ensure(y, 4.5 + legalLayout[0].h + legalLayout[1].h);
+    eyebrow("Important information", M, y, MUTED); y += 4.5;
+    legalLayout.forEach(function (it) {
+      y = ensure(y, it.h);
+      doc.setFont("helvetica", "bold"); doc.setFontSize(6.8); col(INK); doc.text(it.lead, M, y);
+      doc.setFont("helvetica", "normal"); col(LIGHT); doc.text(it.first, M + it.lw, y);
+      if (it.rest.length) doc.text(it.rest, M, y + lh, { lineHeightFactor: lh / 2.4 });
+      y += it.h;
+    });
+
+    /* Footers, once the page count is known */
+    var pages = doc.getNumberOfPages();
+    for (var pn = 1; pn <= pages; pn++) {
+      doc.setPage(pn);
+      rule(FOOT);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(7); col(MUTED);
+      doc.text("Illustrative estimate based on the stated assumptions. It indicates potential staff time released and is not a guarantee.", M, FOOT + 5);
+      doc.text("Page " + pn + " of " + pages, W - M, FOOT + 5, { align: "right" });
+      if (pn === 1) doc.text("Model version " + MODEL_VERSION + "  ·  report generated " + today, M, FOOT + 9);
+    }
+    doc.setPage(1);
+    return doc;
+  }
+
+  async function deliverPdf(doc, filename) {
+    var blob = doc.output("blob");
+    if (window.claude && window.claude.use) {
+      var dl = await window.claude.use("downloads");
+      if (dl) {
+        try { await dl.save({ filename: filename, data: blob }); return "saved"; }
+        catch (e) { return e && e.code === "declined" ? "declined" : "unavailable"; }
+      }
+      return "unavailable";
+    }
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement("a");
+    link.href = url; link.download = filename;
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+    return "saved";
+  }
+
+  async function submitLead(e) {
+    if (e) e.preventDefault();
+    if (!validateLead()) { $("lead-status").textContent = "Please complete the highlighted fields."; return; }
+    var btn = $("lead-submit"), status = $("lead-status");
+    btn.disabled = true; status.textContent = "Preparing your report…";
+    var lead = leadFromForm();
+    var sent = "none";
+    try { sent = await sendLead(lead); } catch (err) { sent = "failed"; }
+    var filename = "Medicus time estimate - " + lead.practice.replace(/[^\w\- ]+/g, "").trim() + ".pdf";
+    var outcome = "unavailable";
+    try { outcome = await deliverPdf(buildPdf(lead), filename); } catch (err) { outcome = "error"; }
+    var msg = outcome === "saved" ? "Your PDF report is ready." :
+              outcome === "declined" ? "Download cancelled. Press the button again when you are ready." :
+              outcome === "error" ? "The PDF could not be built. Check your connection and try again." :
+              "Downloads are not available in this view. Use Copy summary instead.";
+    if (sent === "endpoint" || sent === "store") msg += " Your details have been sent.";
+    else if (sent === "failed") msg += " Your details could not be sent; the report still includes them.";
+    else msg += " This preview does not send your details anywhere.";
+    status.textContent = msg;
+    btn.disabled = false;
+  }
+  $("lead-form").addEventListener("submit", submitLead);
+  $("lead-submit").addEventListener("click", function (e) { e.preventDefault(); if (!$("lead-submit").disabled) submitLead(); });
+  $("lead-form").querySelectorAll("input").forEach(function (el) { el.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); submitLead(); } }); });
+
+  /* One page: nothing to step through. The results card re-renders on every input. */
+  var initialising = true;
+  window.addEventListener("popstate", function () { var d = readUrlState(); if (d) { navigating = true; restore(d); navigating = false; } });
+
+  /* Report dialog */
+  var leadDialog = $("lead-dialog");
+  function closeLead() { if (typeof leadDialog.close === "function") leadDialog.close(); else leadDialog.removeAttribute("open"); }
+  function openLead() {
+    try { if (!leadDialog.open) leadDialog.showModal(); } catch (e) { leadDialog.setAttribute("open", ""); }
+    setTimeout(function () { $("lead-name").focus(); }, 60);
+  }
+  $("open-lead").addEventListener("click", openLead);
+  $("lead-close").addEventListener("click", closeLead);
+  leadDialog.addEventListener("click", function (e) { if (e.target === leadDialog) closeLead(); });
+
+  /* Summary bar on small screens: shown while the card is off screen */
+  $("mini-see").addEventListener("click", function () { $("card").scrollIntoView({ behavior: "smooth", block: "start" }); });
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (entries) { $("mini").classList.toggle("off", entries[0].isIntersecting); }, { threshold: 0.12 }).observe($("card"));
+  } else { $("mini").classList.remove("off"); }
+
+  buildPopovers();
+  nameInfoButtons();
+  var savedState = readUrlState();
+  if (!savedState) { try { savedState = decodeState(localStorage.getItem("medicus-roi-state") || ""); } catch (e) { savedState = null; } }
+  if (!(savedState && restore(savedState))) {
+    applyOrg("practice", false);
+    setMode("wilmslow");
+  }
+  initialising = false;
+  saveState();
+})();
+</script>
+
+</body>
+</html>

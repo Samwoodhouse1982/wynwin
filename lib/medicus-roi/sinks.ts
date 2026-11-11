@@ -53,6 +53,7 @@ export async function saveLead(record: LeadRecord): Promise<SaveResult> {
         role: record.role,
         marketing_consent: record.consent ? 'yes' : 'no',
         organisation_type: record.orgType,
+        calculator_variant: record.variant,
         practices: String(record.practices),
         patients: String(record.patients),
         staffing_basis: record.staffingBasis,
