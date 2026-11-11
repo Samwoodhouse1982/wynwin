@@ -5,14 +5,14 @@
 //
 // Run it after every edit to a calculator.html and commit both files. Two
 // variants live here: the step-by-step calculator (Option A, this folder) and
-// the single-page one with the live results card (Option B, ./option-b).
+// the single-page one with the live results card (Option B, ../medicus-roi-b-984afa1e).
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 
-for (const dir of ['.', 'option-b']) {
+for (const dir of ['.', '../medicus-roi-b-984afa1e']) {
   const html = readFileSync(join(here, dir, 'calculator.html'), 'utf8');
   const ts =
     '// GENERATED from calculator.html by build.mjs. Edit the HTML, then rebuild.\n' +
