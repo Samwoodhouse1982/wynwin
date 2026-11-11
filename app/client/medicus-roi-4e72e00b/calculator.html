@@ -112,7 +112,14 @@ h1, h2, h3 { text-wrap: balance; }
 a { color: var(--blue); text-underline-offset: 3px; }
 
 /* Masthead */
-.masthead { display: grid; gap: 10px; max-width: 60ch; }
+.masthead { display: grid; gap: 10px; }
+.masthead h1 { max-width: 60ch; }
+.mast-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.theme { display: inline-flex; gap: 2px; padding: 2px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); }
+.theme button { font: inherit; font-size: 12px; font-weight: 700; color: var(--text-light); background: transparent; border: 0; border-radius: 999px; padding: 4px 11px; cursor: pointer; line-height: 1.2; }
+.theme button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.theme button:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+:root[data-theme="light"] { color-scheme: light; }
 .eyebrow {
   font-size: 12px;
   font-weight: 700;
@@ -565,7 +572,13 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 <body>
 <div class="wrap">
   <header class="masthead">
-    <span class="eyebrow">Medicus · Practice time calculator</span>
+    <div class="mast-row">
+      <span class="eyebrow">Medicus · Practice time calculator</span>
+      <div class="theme" role="group" aria-label="Colour theme">
+        <button type="button" data-theme="light" aria-pressed="false">Light</button>
+        <button type="button" data-theme="dark" aria-pressed="false">Dark</button>
+      </div>
+    </div>
     <h1>How much time would Medicus give <span id="h1-who">your practice</span> back<span class="dot">.</span></h1>
   </header>
 
@@ -606,7 +619,11 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
           <input type="range" id="practices-range" min="2" max="12" step="1" value="5" aria-label="Number of practices slider">
           <div class="range-ends" aria-hidden="true"><span id="pr-min">2</span><span class="mid" id="pr-mid">7</span><span id="pr-max">12</span></div>
         </div>
-        <p class="hint" id="practices-hint">Count only the practices in scope: the estimate assumes all of them move to Medicus.</p>
+        <div class="label-row">
+          <label class="label" for="avg-list">Average list size per practice</label>
+          <span class="input-shell"><input id="avg-list" type="text" inputmode="numeric" autocomplete="off" value="10,000" aria-describedby="practices-hint"><span class="unit">patients each</span></span>
+        </div>
+        <p class="hint" id="practices-hint">Count only the practices in scope: the estimate assumes all of them move to Medicus. The total list follows the practice count at this average; change the total and the average updates instead.</p>
       </div>
       <div class="block">
         <div class="label-row">
@@ -1174,8 +1191,22 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     var pct = (Math.min(Math.max(state.practices, min), max) - min) / (max - min) * 100;
     prRange.style.setProperty("--pct", pct + "%");
   }
+  /* For a network or region the average list size is the anchor: changing the practice count moves the total list with it,
+     changing the total changes the average, and the average can be typed directly. */
+  function setPatientsTotal(total) {
+    state.patients = Math.min(20000000, Math.max(100, Math.round(total)));
+    pInput.value = nf0.format(state.patients);
+    pInput.removeAttribute("aria-invalid");
+    pRange.value = Math.min(Math.max(state.patients, +pRange.min), +pRange.max);
+  }
+  function setPractices(n) {
+    var avg = state.patients / Math.max(1, state.practices);
+    state.practices = n;
+    prRange.value = Math.min(Math.max(n, +prRange.min), +prRange.max);
+    setPatientsTotal(avg * n);
+  }
   prRange.addEventListener("input", function () {
-    state.practices = +prRange.value;
+    setPractices(+prRange.value);
     prInput.value = nf0.format(state.practices);
     prInput.removeAttribute("aria-invalid");
     render();
@@ -1185,10 +1216,19 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     var v = parseInt(digits, 10);
     if (!digits || isNaN(v) || v < 1 || v > 5000) { prInput.setAttribute("aria-invalid", "true"); return; }
     prInput.removeAttribute("aria-invalid");
-    state.practices = v;
-    prRange.value = Math.min(Math.max(v, +prRange.min), +prRange.max);
+    setPractices(v);
     render();
   });
+  var avgInput = $("avg-list");
+  avgInput.addEventListener("input", function () {
+    var digits = avgInput.value.replace(/[^\d]/g, "");
+    var v = parseInt(digits, 10);
+    if (!digits || isNaN(v) || v < 100 || v > 200000) { avgInput.setAttribute("aria-invalid", "true"); return; }
+    avgInput.removeAttribute("aria-invalid");
+    setPatientsTotal(v * Math.max(1, state.practices));
+    render();
+  });
+  avgInput.addEventListener("blur", function () { avgInput.value = nf0.format(Math.round(avgPractice())); avgInput.removeAttribute("aria-invalid"); });
   prInput.addEventListener("blur", function () { prInput.value = nf0.format(state.practices); prInput.removeAttribute("aria-invalid"); });
   prInput.addEventListener("keydown", function (e) { if (e.key === "Enter" && !prInput.getAttribute("aria-invalid")) { prInput.blur(); pInput.focus(); } });
 
@@ -1703,8 +1743,9 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     /* size step */
     var o = ORG[state.org], net = isNetwork();
     $("patients-hint").textContent = net
-      ? "That is an average of " + nf0.format(avgPractice()) + " patients a practice. Larger figures can be typed in."
+      ? nf0.format(state.practices) + " practices × " + nf0.format(Math.round(avgPractice())) + " patients = " + nf0.format(state.patients) + ". Larger figures can be typed in."
       : o.sizeHint;
+    if (net && document.activeElement !== avgInput) avgInput.value = nf0.format(Math.round(avgPractice()));
     setPracticesFill();
 
     /* staffing */
@@ -2375,6 +2416,25 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
   $("next").addEventListener("click", function () { goTo(current === TOTAL_STEPS ? 1 : current + 1); });
   window.addEventListener("popstate", function () { var d = readUrlState(); if (d) { navigating = true; restore(d); navigating = false; } });
   stepBtns.forEach(function (b) { b.addEventListener("click", function () { goTo(+b.dataset.go); }); });
+
+  /* Light and dark: follows the device until a choice is made here, then remembers it */
+  (function () {
+    var root = document.documentElement, btns = document.querySelectorAll(".theme button");
+    if (!btns.length) return;
+    var mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+    function effective() { var t = root.getAttribute("data-theme"); return t === "dark" || t === "light" ? t : (mq && mq.matches ? "dark" : "light"); }
+    function paint() { var e = effective(); btns.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.theme === e)); }); }
+    var saved = null;
+    try { saved = localStorage.getItem("medicus-roi-theme"); } catch (e) {}
+    if (saved === "dark" || saved === "light") root.setAttribute("data-theme", saved);
+    btns.forEach(function (b) { b.addEventListener("click", function () {
+      root.setAttribute("data-theme", b.dataset.theme);
+      try { localStorage.setItem("medicus-roi-theme", b.dataset.theme); } catch (e) {}
+      paint();
+    }); });
+    if (mq && mq.addEventListener) mq.addEventListener("change", paint);
+    paint();
+  })();
 
   buildPopovers();
   nameInfoButtons();

@@ -66,7 +66,12 @@ a { color: var(--blue); text-underline-offset: 3px; }
 .topbar .brand { font-family: var(--font-display); font-size: 22px; letter-spacing: .01em; }
 .topbar .brand .dot { color: var(--green); }
 .topbar .brand small { font-family: var(--font-body); font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--green); margin-left: 12px; white-space: nowrap; }
-.topbar .actions { display: flex; gap: 6px; align-items: center; }
+.topbar .actions { display: flex; gap: 10px; align-items: center; }
+.theme { display: inline-flex; gap: 2px; padding: 2px; border: 1px solid rgba(255,255,255,.35); border-radius: 999px; }
+.theme button { font: inherit; font-size: 12px; font-weight: 700; color: #DBE4EF; background: transparent; border: 0; border-radius: 999px; padding: 4px 11px; cursor: pointer; line-height: 1.2; }
+.theme button[aria-pressed="true"] { background: #FFFFFF; color: #091C39; }
+.theme button:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+:root[data-theme="light"] { color-scheme: light; }
 .topbar .btn-ghost { color: #DBE4EF; }
 .topbar .btn-ghost:hover { color: #FFFFFF; }
 
@@ -93,6 +98,7 @@ h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 
 .q:last-child { border-bottom: 0; padding-bottom: 0; }
 .q-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
 .q-label { font-size: 16px; font-weight: 700; color: var(--ink); line-height: 1.35; }
+.q-label.sub { font-size: 14px; }
 .q-help { font-size: 13.5px; line-height: 1.6; color: var(--text-light); max-width: 60ch; }
 .q-count { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); line-height: 1.4; text-align: right; max-width: 100%; }
 .hint { font-size: 13px; line-height: 1.6; color: var(--muted); }
@@ -347,6 +353,10 @@ dialog.lead-dialog::backdrop { background: rgba(9, 28, 57, .55); }
   <div class="inner">
     <div class="brand">Medicus<span class="dot">.</span><small>Practice time calculator</small></div>
     <div class="actions">
+      <div class="theme" role="group" aria-label="Colour theme">
+        <button type="button" data-theme="light" aria-pressed="false">Light</button>
+        <button type="button" data-theme="dark" aria-pressed="false">Dark</button>
+      </div>
       <button class="btn-ghost" id="copy-link" type="button" hidden>Copy link</button>
       <button class="btn-ghost" id="start-over" type="button" aria-describedby="start-over-note">Start over</button>
       <span class="visually-hidden" id="start-over-note">Clears every input back to the defaults</span>
@@ -385,7 +395,11 @@ dialog.lead-dialog::backdrop { background: rgba(9, 28, 57, .55); }
           <input type="range" id="practices-range" min="2" max="12" step="1" value="5" aria-label="Number of practices slider">
           <div class="range-ends" aria-hidden="true"><span id="pr-min">2</span><span class="mid" id="pr-mid">7</span><span id="pr-max">12</span></div>
         </div>
-        <p class="q-help" id="practices-hint">Count only the practices in scope: the estimate assumes all of them move to Medicus.</p>
+        <div class="q-head">
+          <label class="q-label sub" for="avg-list">Average list size per practice</label>
+          <span class="input-shell"><input id="avg-list" type="text" inputmode="numeric" autocomplete="off" value="10,000" aria-describedby="practices-hint"><span class="unit">patients each</span></span>
+        </div>
+        <p class="q-help" id="practices-hint">Count only the practices in scope: the estimate assumes all of them move to Medicus. The total list follows the practice count at this average; change the total and the average updates instead.</p>
       </div>
 
       <div class="q">
@@ -926,8 +940,22 @@ dialog.lead-dialog::backdrop { background: rgba(9, 28, 57, .55); }
     var pct = (Math.min(Math.max(state.practices, min), max) - min) / (max - min) * 100;
     prRange.style.setProperty("--pct", pct + "%");
   }
+  /* For a network or region the average list size is the anchor: changing the practice count moves the total list with it,
+     changing the total changes the average, and the average can be typed directly. */
+  function setPatientsTotal(total) {
+    state.patients = Math.min(20000000, Math.max(100, Math.round(total)));
+    pInput.value = nf0.format(state.patients);
+    pInput.removeAttribute("aria-invalid");
+    pRange.value = Math.min(Math.max(state.patients, +pRange.min), +pRange.max);
+  }
+  function setPractices(n) {
+    var avg = state.patients / Math.max(1, state.practices);
+    state.practices = n;
+    prRange.value = Math.min(Math.max(n, +prRange.min), +prRange.max);
+    setPatientsTotal(avg * n);
+  }
   prRange.addEventListener("input", function () {
-    state.practices = +prRange.value;
+    setPractices(+prRange.value);
     prInput.value = nf0.format(state.practices);
     prInput.removeAttribute("aria-invalid");
     render();
@@ -937,10 +965,19 @@ dialog.lead-dialog::backdrop { background: rgba(9, 28, 57, .55); }
     var v = parseInt(digits, 10);
     if (!digits || isNaN(v) || v < 1 || v > 5000) { prInput.setAttribute("aria-invalid", "true"); return; }
     prInput.removeAttribute("aria-invalid");
-    state.practices = v;
-    prRange.value = Math.min(Math.max(v, +prRange.min), +prRange.max);
+    setPractices(v);
     render();
   });
+  var avgInput = $("avg-list");
+  avgInput.addEventListener("input", function () {
+    var digits = avgInput.value.replace(/[^\d]/g, "");
+    var v = parseInt(digits, 10);
+    if (!digits || isNaN(v) || v < 100 || v > 200000) { avgInput.setAttribute("aria-invalid", "true"); return; }
+    avgInput.removeAttribute("aria-invalid");
+    setPatientsTotal(v * Math.max(1, state.practices));
+    render();
+  });
+  avgInput.addEventListener("blur", function () { avgInput.value = nf0.format(Math.round(avgPractice())); avgInput.removeAttribute("aria-invalid"); });
   prInput.addEventListener("blur", function () { prInput.value = nf0.format(state.practices); prInput.removeAttribute("aria-invalid"); });
   prInput.addEventListener("keydown", function (e) { if (e.key === "Enter" && !prInput.getAttribute("aria-invalid")) { prInput.blur(); pInput.focus(); } });
 
@@ -1454,8 +1491,9 @@ dialog.lead-dialog::backdrop { background: rgba(9, 28, 57, .55); }
     /* size step */
     var o = ORG[state.org], net = isNetwork();
     $("patients-hint").textContent = net
-      ? "That is an average of " + nf0.format(avgPractice()) + " patients a practice. Larger figures can be typed in."
+      ? nf0.format(state.practices) + " practices × " + nf0.format(Math.round(avgPractice())) + " patients = " + nf0.format(state.patients) + ". Larger figures can be typed in."
       : o.sizeHint;
+    if (net && document.activeElement !== avgInput) avgInput.value = nf0.format(Math.round(avgPractice()));
     setPracticesFill();
 
     /* staffing */
@@ -2049,6 +2087,25 @@ dialog.lead-dialog::backdrop { background: rgba(9, 28, 57, .55); }
   if ("IntersectionObserver" in window) {
     new IntersectionObserver(function (entries) { $("mini").classList.toggle("off", entries[0].isIntersecting); }, { threshold: 0.12 }).observe($("card"));
   } else { $("mini").classList.remove("off"); }
+
+  /* Light and dark: follows the device until a choice is made here, then remembers it */
+  (function () {
+    var root = document.documentElement, btns = document.querySelectorAll(".theme button");
+    if (!btns.length) return;
+    var mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+    function effective() { var t = root.getAttribute("data-theme"); return t === "dark" || t === "light" ? t : (mq && mq.matches ? "dark" : "light"); }
+    function paint() { var e = effective(); btns.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.theme === e)); }); }
+    var saved = null;
+    try { saved = localStorage.getItem("medicus-roi-theme"); } catch (e) {}
+    if (saved === "dark" || saved === "light") root.setAttribute("data-theme", saved);
+    btns.forEach(function (b) { b.addEventListener("click", function () {
+      root.setAttribute("data-theme", b.dataset.theme);
+      try { localStorage.setItem("medicus-roi-theme", b.dataset.theme); } catch (e) {}
+      paint();
+    }); });
+    if (mq && mq.addEventListener) mq.addEventListener("change", paint);
+    paint();
+  })();
 
   buildPopovers();
   nameInfoButtons();
