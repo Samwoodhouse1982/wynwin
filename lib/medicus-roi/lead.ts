@@ -36,9 +36,13 @@ export const leadSchema = z.object({
   addOnsPerYear: z.number().min(0),
   // Share of the add-on saving paid by the practice today (the rest is paid by an ICB, trust or other commissioner).
   addOnsPracticePerYear: z.number().min(0).optional().default(0),
-  // The cautious case: national-average staffing, half the minutes saved, 45 working weeks.
-  cautiousHoursPerWeek: z.number().min(0).optional().default(0),
-  cautiousValuePerYear: z.number().min(0).optional().default(0),
+  // The headline: value of the time returned plus add-ons retired, and the part of it that lands with the practice(s)
+  // (its own staff time plus the add-ons it pays for) rather than with an ICB, trust or other commissioner.
+  totalPerYear: z.number().min(0).optional().default(0),
+  totalPracticePerYear: z.number().min(0).optional().default(0),
+  // Older submissions carried a cautious case; accepted and ignored so a cached page still posts cleanly.
+  cautiousHoursPerWeek: z.number().min(0).optional(),
+  cautiousValuePerYear: z.number().min(0).optional(),
   functions: z.array(z.string().max(60)).max(40),
   summary: z.string().max(6000),
 });

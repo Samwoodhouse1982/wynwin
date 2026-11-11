@@ -362,11 +362,15 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
   font-variant-numeric: tabular-nums lining-nums;
 }
 .hero .big small { font-size: .42em; font-weight: 400; margin-left: 8px; font-family: var(--font-body); }
+.hero .big small.pre { margin-left: 0; margin-right: 8px; white-space: nowrap; }
 .hero p { color: #DBE4EF; max-width: 60ch; }
-.hero .hero-range { margin-top: 10px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.18); display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; font-size: 14px; color: #DBE4EF; }
-.hero .hero-range .hr-label { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--green); font-weight: 700; }
-.hero .hero-range strong { color: #FFFFFF; font-variant-numeric: tabular-nums lining-nums; }
-.hero .hero-range .info { margin-left: 8px; vertical-align: middle; }
+/* The saving broken down: time, add-ons, and who it lands with */
+.hero .hero-break { margin: 12px 0 0; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.18); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 20px; }
+.hero .hero-break > div { display: grid; gap: 2px; align-content: start; min-width: 0; }
+.hero .hero-break dt { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--green); font-weight: 700; }
+.hero .hero-break dd { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 24px; line-height: 1.1; color: #FFFFFF; font-variant-numeric: tabular-nums lining-nums; }
+.hero .hero-break small { font-size: 13px; line-height: 1.4; color: #DBE4EF; }
+.hero .hero-break .info { margin-left: 6px; vertical-align: middle; }
 
 .tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0; }
 .tile {
@@ -463,11 +467,10 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
   border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px;
   display: grid; gap: 10px; background: var(--bg);
 }
-.money .row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.money .row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px 24px; flex-wrap: wrap; }
+.money .row > div:first-child { flex: 1 1 280px; min-width: 0; }
 .money .amt { font-family: var(--font-display); font-weight: 700; font-size: 27px; color: var(--ink); font-variant-numeric: tabular-nums lining-nums; }
 .money .sub { font-size: 13px; color: var(--text-light); }
-.money .cautious-line { border-top: 1px solid var(--border); padding-top: 8px; margin-top: 2px; }
-.money .cautious-line strong { color: var(--ink); font-variant-numeric: tabular-nums; }
 .money .lic { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; border-top: 1px solid var(--border); padding-top: 10px; }
 .money .lic strong { color: var(--ink); font-variant-numeric: tabular-nums; }
 .money .lic > span:last-child { white-space: nowrap; }
@@ -548,6 +551,11 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 
 @media (max-width: 700px) {
   .tiles { grid-template-columns: minmax(0, 1fr); }
+  .hero .hero-break { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .hero .hero-break > div { grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; }
+  .hero .hero-break dt { grid-column: 1 / -1; }
+  .hero .hero-break dd { order: 2; }
+  .hero .hero-break small { order: 1; }
   .line { grid-template-columns: 12px minmax(0, 1fr) auto; }
   .line .adj { grid-column: 2 / -1; }
   .pop { right: auto; left: 0; }
@@ -566,6 +574,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
   .step { padding: 22px 18px; min-height: 0; }
   .navbar { padding: 14px 18px; }
   .hero { padding: 22px 18px 20px; }
+  .hero .big { font-size: 40px; }
   .wrap { padding-block: 28px 40px; }
 }
 @media (prefers-reduced-motion: reduce) { .bar .s { transition: none; } }
@@ -711,14 +720,15 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 
     <section class="step" data-step="5" aria-labelledby="h-step4" hidden>
       <div class="hero">
-        <span class="eyebrow" id="hero-eyebrow">Time returned to the practice</span>
-        <div class="big"><span id="hero-hrs">19.1</span><small>hours a week</small><button type="button" class="info" data-tip="hero" aria-label="How we calculated this">i</button></div>
+        <span class="eyebrow" id="hero-eyebrow">Estimated annual saving for the practice</span>
+        <div class="big"><small class="pre">Up to</small><span id="m-total">£0</span><small>a year</small><button type="button" class="info" data-tip="total" aria-label="How we calculated this">i</button></div>
         <p id="hero-sub"></p>
         <p id="hero-per" class="hero-per" hidden></p>
-        <div class="hero-range" id="hero-range">
-          <span class="hr-label">Cautious case</span>
-          <span class="hr-val"><strong id="hc-hrs">0</strong> hrs a week<button type="button" class="info" data-tip="cautious" aria-label="How we calculated the cautious case">i</button></span>
-        </div>
+        <dl class="hero-break">
+          <div><dt>Time returned<button type="button" class="info" data-tip="money" aria-label="How we calculated this">i</button></dt><dd id="m-time">£0</dd><small>up to <span id="hero-hrs">0</span> hrs a week</small></div>
+          <div><dt>Add-ons retired<button type="button" class="info" data-tip="lic" aria-label="How we calculated this" id="lic-info">i</button></dt><dd id="m-lic">£0</dd><small id="m-lic-note"></small></div>
+          <div><dt id="m-practice-label">Saving to the practice<button type="button" class="info" data-tip="split" aria-label="How we calculated this">i</button></dt><dd id="m-practice">£0</dd><small id="m-split-note"></small></div>
+        </dl>
         <h2 class="visually-hidden" id="h-step4">Results</h2>
       </div>
 
@@ -773,14 +783,12 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       <div class="money">
         <div class="row">
           <div>
-            <span class="label">What that time is worth<button type="button" class="info" data-tip="money" aria-label="How we calculated this">i</button></span>
-            <div class="amt" id="m-total"></div>
+            <span class="label">How the saving is valued<button type="button" class="info" data-tip="money" aria-label="How we calculated this">i</button></span>
             <div class="sub" id="m-sub"></div>
-            <div class="sub cautious-line" id="m-cautious"></div>
           </div>
           <details class="adj" data-group="value"><summary>Adjust</summary><div class="pop"></div></details>
         </div>
-        <div class="lic"><span id="m-lic-label"></span><span><strong id="m-lic"></strong><button type="button" class="info" data-tip="lic" aria-label="How we calculated this" id="lic-info">i</button></span></div>
+        <div class="lic"><span id="m-lic-label"></span><span><strong id="m-lic-exact"></strong><button type="button" class="info" data-tip="lic" aria-label="How we calculated this">i</button></span></div>
         <p class="lic-split" id="m-lic-split" hidden></p>
       </div>
 
@@ -815,13 +823,13 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       <details class="more">
         <summary>Basis and limits</summary>
         <ul class="basis">
-          <li><strong>Source</strong><p>Built from the measured impact of Medicus at a live NHS practice (the reference practice) with 8 FTE GPs, 3 FTE practice nurses and 0.5 FTE of admin time released across 12,310 registered patients. Time saved per login and per session, and the admin time released, are that practice's own figures. A session is a four-hour clinic (a half day of about 24 ten-minute appointments), not a single consultation, and the ten minutes per session is the practice's own conservative estimate of time lost to slow screens and system waits rather than a timed measurement. It is the least evidenced of the three inputs, which is why the cautious case halves it.</p></li>
+          <li><strong>Source</strong><p>Built from the measured impact of Medicus at a live NHS practice (the reference practice) with 8 FTE GPs, 3 FTE practice nurses and 0.5 FTE of admin time released across 12,310 registered patients. Time saved per login and per session, and the admin time released, are that practice's own figures. A session is a four-hour clinic (a half day of about 24 ten-minute appointments), not a single consultation, and the ten minutes per session is the practice's own conservative estimate of time lost to slow screens and system waits rather than a timed measurement. It is the least evidenced of the three inputs, which is one reason every figure is presented as "up to".</p></li>
           <li><strong>Staffing presets</strong><p>Reference practice ratios give one GP FTE per 1,539 patients and one practice nurse FTE per 4,103. The national average preset uses NHS England's general practice workforce figures for February 2026 (28,895 FTE fully qualified GPs and 16,728 FTE nurses, a count that includes nurse practitioners and nursing associates) against 63,789,531 registered patients, or about 2,210 patients per GP and 3,810 per nurse. The reference practice is better staffed than average, so its ratios give the higher figure: a single practice starts from the reference ratios, and a network or region starts from the national average because no whole system can be assumed to match one well-staffed practice. Other clinical staff (pharmacists, physiotherapists, paramedics and the other ARRS roles, plus healthcare assistants) are not counted, which makes the clinical time figure conservative, particularly for a PCN. NHS England counts an FTE as 37.5 hours; the model follows the reference practice in counting one as four clinical days.</p></li>
           <li><strong>Networks and regions</strong><p>For a PCN, federation or ICB the same model is applied to the total registered population and the number of practices entered, and assumes every practice entered moves to Medicus, so count only the practices in scope. The result is a steady state once they are all live, not a phased figure. Clinical staffing is estimated from the total list at the chosen ratio (national average by default), admin time released follows the total list, and add-on costs are estimated for a practice of average list size and multiplied by the number of practices using each tool; Accurx add-ons are priced at the G-Cloud 15 tier for the whole list in scope, as a network or ICB would buy. Practices within a network vary widely in size, systems and funding, so the result is an aggregate, not a sum of individual practice figures.</p></li>
-          <li><strong>Cautious case</strong><p>Every result is shown twice: on the reference assumptions as entered, and as a cautious case that keeps the same inputs but applies national-average staffing (unless the practice's own figures were entered), halves the minutes saved per session and per login, and counts no more than 45 working weeks. Admin hours and add-on savings are the same in both. The two figures should be read as a range, with the reference practice's own experience at the top of it.</p></li>
+          <li><strong>Reading the figures</strong><p>Every figure is shown as "up to": it is the reference practice's own experience, scaled to the inputs entered, and it is the top of the range a practice should expect rather than a forecast. The headline saving is the value of the time returned plus the cost of the add-ons retired, and it is split into the part that lands with the practice (its own staff time plus the add-ons it pays for) and the part that lands with an ICB, trust or other commissioner (the add-ons they pay for). A practice that already runs lean, or has faster hardware and fewer logins, will see less; the add-on saving depends on those contracts actually being ended.</p></li>
           <li><strong>Plausibility checks</strong><p>Two outside figures sit alongside the reference practice's experience. The BMA's survey of doctors put time lost to inadequate IT at 13.5 million hours a year, the equivalent of almost 8,000 full-time doctors or roughly 5% of medical time; the model's 26 minutes a clinical day is 5.4% of an eight-hour day. And the admin time released, 0.406 FTE per 10,000 patients, is 3.4% of the national general practice admin workforce of 76,845 FTE across 63.8 million patients. Neither proves the figures for any one practice, but both put them in a credible range.</p></li>
           <li><strong>Appointments</strong><p>Clinical capacity is clinical hours released divided by a ten-minute appointment. It shows the scale of the time, not a promise that every hour becomes an appointment; the reference practice's own view is that the larger benefit is a calmer working day.</p></li>
-          <li><strong>Valuation</strong><p>Clinical hours are valued at the session rate divided by session length (a £400 GP session over four hours gives £100 an hour). The default session rates are locum and agency replacement rates, which is what it would cost to buy the time back; employment cost is lower, at roughly £300 a session for a salaried GP and £120 for an employed practice nurse, and either can be set under Adjust. Admin time uses a loaded hourly cost of £15: the National Living Wage rose to £12.71 in April 2026, and employer National Insurance and pension take it to about £15. The reference practice used £12.50. The model assumes 52 working weeks on the reference assumptions; the cautious case uses 45.</p></li>
+          <li><strong>Valuation</strong><p>Clinical hours are valued at the session rate divided by session length (a £400 GP session over four hours gives £100 an hour). The default session rates are locum and agency replacement rates, which is what it would cost to buy the time back; employment cost is lower, at roughly £300 a session for a salaried GP and £120 for an employed practice nurse, and either can be set under Adjust. Admin time uses a loaded hourly cost of £15: the National Living Wage rose to £12.71 in April 2026, and employer National Insurance and pension take it to about £15. The reference practice used £12.50. The model assumes 52 working weeks; set 45 under Adjust to allow for leave and bank holidays.</p></li>
           <li><strong>Possible overlap</strong><p>Login time and session slowdowns are counted separately, as the reference practice counted them. Some of the login saving may already sit inside the slowdown figure, so the two together should be read as an upper estimate.</p></li>
           <li><strong>Native functions and add-ons</strong><p>The reference practice used Medicus's built-in functions to retire AccuRx, Docman, Docman Connect and ICE, and cut its texting spend by defaulting to email. The slide gave no costs, so each add-on is estimated from a public price list. Patient messaging uses Accurx's two-way patient messaging module on G-Cloud 15 (September 2026), priced by total list size: 38p a patient a year for lists under 15,000, 29p from 15,000, 26p from 90,000 and 23p from 800,000, ex VAT and excluding message fragments. Batch messaging and reminders, questionnaires and video are separate modules on the same list (27p, 27p and 23p at the smallest tier), so a practice that pays for Accurx's Communication bundle (£1.14 a patient) should enter that figure. Online consultation uses Accurx Patient Triage on the same list (38p a patient under 90,000, 29p and 24p above); OneAdvanced lists PATCHS at £0.45 to £0.90 a patient on G-Cloud 14. Booking starts at zero because the add-on varies by practice; Accurx appointment self-book lists 51p a patient. SMS is estimated at £0.51 a patient a year, around 17 message fragments at Accurx's 3p G-Cloud 15 rate; North East and North Cumbria ICB treats practices above £60 per 1,000 patients a month (£0.72 a patient a year) as high spenders. Clinical templates and searches use Ardens Starter on G-Cloud 15 at 29p a patient with a £1,119 minimum, excluding the one-off setup fee. Self check-in and patient calling screens use Engage Health Systems' G-Cloud 15 software prices of £249 and £149 a screen, assuming one screen per 8,000 patients and excluding hardware, so a practice with kiosks from Jayex or similar will usually pay more. Patient registration add-ons such as Healthtech-1 price by population band on request, so they start at zero. The panic button, which Medicus includes as standard, is estimated from Little Green Button's G-Cloud 15 price per device per month (£4.16 for up to 10 devices, £3.30 up to 25, £2.50 up to 50, £2.00 up to 200, billed annually), assuming one device per 500 patients; EDGEALERT lists £195 a practice site a year for up to 100 devices on G-Cloud 15, so a practice on that product should enter £195. Document scanning, referral letters and ICE ordering have no public price and are usually funded by the ICB, the sending trust or the pathology provider, so they start at zero.</p></li>
           <li><strong>Who pays</strong><p>Each add-on carries a "Paid by" setting: the practice, or an ICB, trust or other commissioner. The defaults reflect common arrangements (messaging, online consultation, SMS, document management, ICE and referral tools are usually commissioned centrally; templates, kiosks, calling screens, panic buttons and registration tools are usually bought by the practice), and should be corrected for the practice's own contracts. The results show the two totals separately, because a saving on a centrally funded add-on belongs to the commissioner and should be presented to them, not counted as practice cash.</p></li>
@@ -833,13 +841,13 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
         <h3 id="h-legal">Important information</h3>
         <ol>
           <li><strong>What this is.</strong> An illustrative estimate of the staff time a GP practice, or a group of practices, might release, and the value of that time, if it moved to Medicus. It is a planning aid, not a quotation, forecast, offer or guarantee, and it does not form part of any contract.</li>
-          <li><strong>Where the figures come from.</strong> The time saved per login, per clinical session and in administrative work is the reported experience of one NHS practice of about 12,000 patients that uses Medicus. It has not been independently audited. Results for other practices, and for networks and regions, are scaled from it in proportion to the figures entered and will vary with list size, staffing, hardware, network and ways of working. Figures for a PCN, federation or ICB are aggregates across its practices, not a prediction for any one of them. The cautious case shown alongside applies national-average staffing, half the time saved and 45 working weeks; read the two figures as a range.</li>
+          <li><strong>Where the figures come from.</strong> The time saved per login, per clinical session and in administrative work is the reported experience of one NHS practice of about 12,000 patients that uses Medicus. It has not been independently audited. Results for other practices, and for networks and regions, are scaled from it in proportion to the figures entered and will vary with list size, staffing, hardware, network and ways of working. Figures for a PCN, federation or ICB are aggregates across its practices, not a prediction for any one of them. Every figure is presented as "up to": the top of the range the inputs imply, not a central forecast.</li>
           <li><strong>Time, not cash.</strong> Hours are valued at the stated session and hourly rates to show what the time is worth. That is not a cash saving unless hours, overtime or locum spend actually fall. Appointment figures show the scale of the time released, not a commitment that it will become extra appointments.</li>
           <li><strong>Third-party costs.</strong> Add-on prices marked "est." are publicly listed prices (Crown Commercial Service G-Cloud and supplier price lists, dated in Basis and limits) scaled to list size. Actual costs depend on the practice's own contracts and may be lower or higher. Who pays for each add-on is recorded as entered; where an ICB, trust or other commissioner pays, that saving belongs to the payer and is shown separately. Figures typed in are used as entered and are not verified.</li>
           <li><strong>Third-party names.</strong> AccuRx, Docman, Patchs, eConsult, Ardens, Healthtech-1, Little Green Button, EDGEALERT, Engage and ICE are trademarks of their respective owners, which are not connected with Medicus. They are named only to identify systems a practice may already use. Whether Medicus replaces a given system for a given practice depends on that practice's requirements and should be confirmed before any decision.</li>
           <li><strong>Your inputs.</strong> Results depend on the figures entered and any assumptions changed, all of which are recorded in the PDF report. Check them before relying on the output.</li>
           <li><strong>Not advice.</strong> Nothing here is financial, procurement, clinical or legal advice. Any business case should be built on the practice's own measured data and follow the practice's and its ICB's governance.</li>
-          <li><strong>Accuracy and liability.</strong> Reasonable care has been taken in building the model, but Medicus and the authors of this calculator accept no liability for decisions made in reliance on it. Figures are correct to the dates stated in Basis and limits and may change. Model version 1.1, prices and assumptions reviewed November 2026.</li>
+          <li><strong>Accuracy and liability.</strong> Reasonable care has been taken in building the model, but Medicus and the authors of this calculator accept no liability for decisions made in reliance on it. Figures are correct to the dates stated in Basis and limits and may change. Model version 1.2, prices and assumptions reviewed November 2026.</li>
           <li><strong>Your details.</strong> Details entered to request the report are used to prepare it and, where you have agreed, to follow up. See the <a href="/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a>.</li>
         </ol>
         <p class="foot">Illustrative estimate based on the stated assumptions. It indicates potential staff time released and is not a guarantee.</p>
@@ -869,7 +877,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 (function () {
   "use strict";
 
-  var MODEL_VERSION = "1.1", MODEL_REVIEWED = "November 2026";   /* shown on the page, in the report footer and on its basis page */
+  var MODEL_VERSION = "1.2", MODEL_REVIEWED = "November 2026";   /* shown on the page, in the report footer and on its basis page */
   var REF = { patients: 12310, gp: 8, nurse: 3, admin: 0.5 };
   var RATIOS = {
     wilmslow: { gp: REF.patients / REF.gp, nurse: REF.patients / REF.nurse },
@@ -990,19 +998,19 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
   /* Who the estimate is for. Ranges are [min, max, step, default, slider mid-label]. */
   var ORG = {
     practice: { name: "GP practice", group: "practice", label: "the practice", field: "Practice", practices: null,
-      patients: [1000, 40000, 10, REF.patients, 20000], hero: "Time returned to the practice",
+      patients: [1000, 40000, 10, REF.patients, 20000], hero: "Estimated annual saving for the practice", payer: "the practice",
       sizeTitle: "How many registered patients does the practice have?", patientsLabel: "Registered patients",
       sizeIntro: "Every figure that follows scales with the registered list, so use the practice's current list size.", sizeHint: "Type a figure or use the slider. Lists above 40,000 can be typed in." },
     pcn: { name: "Primary Care Network", group: "network", label: "the network", field: "PCN",
-      practices: [2, 12, 1, 5, 7], patients: [20000, 120000, 500, 50000, 70000], hero: "Time returned across the network",
+      practices: [2, 12, 1, 5, 7], patients: [20000, 120000, 500, 50000, 70000], hero: "Estimated annual saving across the network", payer: "the practices",
       sizeTitle: "How big is the network?", patientsLabel: "Registered patients in total",
       sizeIntro: "Enter the number of practices you expect to move to Medicus and their registered list in total. Figures above the sliders' range can be typed in." },
     federation: { name: "GP Federation", group: "federation", label: "the federation", field: "Federation",
-      practices: [5, 80, 1, 20, 42], patients: [50000, 800000, 1000, 200000, 425000], hero: "Time returned across the federation",
+      practices: [5, 80, 1, 20, 42], patients: [50000, 800000, 1000, 200000, 425000], hero: "Estimated annual saving across the federation", payer: "the practices",
       sizeTitle: "How big is the federation?", patientsLabel: "Registered patients in total",
       sizeIntro: "Enter the number of member practices you expect to move to Medicus and their registered list in total. Figures above the sliders' range can be typed in." },
     icb: { name: "Integrated Care Board", group: "ICB", label: "the ICB's practices", field: "ICB",
-      practices: [20, 400, 1, 150, 210], patients: [300000, 3500000, 10000, 1500000, 1900000], hero: "Time returned across the ICB's practices",
+      practices: [20, 400, 1, 150, 210], patients: [300000, 3500000, 10000, 1500000, 1900000], hero: "Estimated annual saving across the ICB's practices", payer: "the practices",
       sizeTitle: "How big is the ICB's general practice footprint?", patientsLabel: "Registered patients in total",
       sizeIntro: "Enter the number of GP practices you expect to move to Medicus and their registered list in total. Figures above the sliders' range can be typed in." }
   };
@@ -1578,7 +1586,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 
   /* Accessible names for the "i" buttons, so a screen reader hears which figure each one explains */
   function nameInfoButtons() {
-    var names = { gp: "the GP estimate", nurse: "the practice nurse estimate", sessions: "clinical sessions a week", admin: "admin time released", hero: "hours a week", perclin: "minutes back per clinician each day", appts: "clinical capacity", year: "hours a year", down: "fewer slowdowns and downtime", login: "fewer logins", money: "what the time is worth", lic: "add-ons retired", cautious: "the cautious case" };
+    var names = { gp: "the GP estimate", nurse: "the practice nurse estimate", sessions: "clinical sessions a week", admin: "admin time released", hero: "hours a week", total: "the total saving", split: "who the saving lands with", perclin: "minutes back per clinician each day", appts: "clinical capacity", year: "hours a year", down: "fewer slowdowns and downtime", login: "fewer logins", money: "the value of the time returned", lic: "add-ons retired" };
     document.querySelectorAll(".info[data-tip]").forEach(function (b) { if (names[b.dataset.tip]) b.setAttribute("aria-label", "How we calculated " + names[b.dataset.tip]); });
   }
 
@@ -1730,10 +1738,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     var vt = vendorTotals();
     var r = compute(state.patients, s, state.a, vt.total);
     var a = state.a;
-    /* Cautious case: national-average staffing unless own figures were entered, half the minutes saved, and no more than 45 working weeks. */
-    var cs = state.mode === "actual" ? s : { gp: state.patients / RATIOS.national.gp, nurse: state.patients / RATIOS.national.nurse, admin: s.admin };
-    var ca = Object.assign({}, a, { downtimeMins: a.downtimeMins / 2, loginMins: a.loginMins / 2, weeks: Math.min(a.weeks, 45) });
-    var c = compute(state.patients, cs, ca, vt.total);
+    /* The headline: the value of the time returned plus the add-ons retired, and the part of it that lands with the practice(s) rather than a commissioner. */
+    var total = r.timeVal + r.licVal, toPractice = r.timeVal + vt.practice;
     var modeName = state.mode === "actual" ? (isNetwork() ? "Own staffing totals" : "Practice's own staffing") : { wilmslow: "Reference practice ratios", national: "National average ratios" }[state.mode];
     var ticked = state.vendors.filter(function (v) { return v.on; });
     var costed = ticked.filter(function (v) { return vendorCost(v) > 0; });
@@ -1758,18 +1764,28 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     var sessions = nf0.format(Math.round(r.gpSessions + r.nurseSessions));
     $("sc-sessions").textContent = sessions;
 
-    /* hero: time */
+    /* hero: the saving, then the time behind it */
+    var hasLic = r.licVal > 0;
+    var payerWho = o.payer;
     $("hero-eyebrow").textContent = o.hero;
-    setNum("hero-hrs", r.weekHrs, function (v) { return nf1.format(v); });
-    $("hero-sub").textContent = net
-      ? nf1.format(r.clinHrs) + " clinical hours and " + nf1.format(r.adminHrs) + " admin hours a week across " + nf0.format(state.practices) + " practices and " + nf0.format(state.patients) +
-        " patients, with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE practice nurses in total."
-      : nf1.format(r.clinHrs) + " clinical hours and " + nf1.format(r.adminHrs) + " admin hours a week, for a practice of " +
-        nf0.format(state.patients) + " patients with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE nurses.";
+    setNum("m-total", total, function (v, done) { return done ? gbp(v) : gbpExact(v); });
+    $("hero-sub").textContent = "Up to " + nf1.format(r.weekHrs) + " hours of staff time a week (" + nf1.format(r.clinHrs) + " clinical and " + nf1.format(r.adminHrs) + " admin)" + (net
+      ? " across " + nf0.format(state.practices) + " practices and " + nf0.format(state.patients) + " patients, with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE practice nurses in total"
+      : " for a practice of " + nf0.format(state.patients) + " patients with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE nurses") +
+      (hasLic ? ", plus " + gbpExact(r.licVal) + " a year of add-on costs retired by native Medicus functions." : ".");
     $("hero-per").hidden = !net;
-    if (net) $("hero-per").textContent = "An average of " + hrs(r.weekHrs / Math.max(1, state.practices)) + " a week for each practice, once all " + nf0.format(state.practices) + " practices are live on Medicus.";
-    setNum("hc-hrs", c.weekHrs, function (v) { return nf1.format(v); });
-    $("m-cautious").innerHTML = "Cautious case: <strong>" + gbp(c.timeVal) + "</strong> a year, with " + (state.mode === "actual" ? "your own staffing" : "national-average staffing") + ", half the minutes saved and " + nf2.format(ca.weeks) + " weeks. Read the two as a range.";
+    if (net) $("hero-per").textContent = "An average of up to " + gbp(total / Math.max(1, state.practices)) + " a year and " + hrs(r.weekHrs / Math.max(1, state.practices)) + " a week for each practice, once all " + nf0.format(state.practices) + " practices are live on Medicus.";
+    setNum("m-time", r.timeVal, function (v, done) { return done ? gbp(v) : gbpExact(v); });
+    setNum("hero-hrs", r.weekHrs, function (v) { return nf1.format(v); });
+    setNum("m-lic", r.licVal, function (v) { return gbpExact(v); });
+    $("m-lic-note").textContent = hasLic
+      ? "retired by " + costed.length + " native function" + (costed.length === 1 ? "" : "s") + (estimated.length ? " (est.)" : "") + (net ? " across " + nf0.format(state.practices) + " practices" : "")
+      : "no add-on costs entered" + (uncosted.length ? " for " + uncosted.length + " selected function" + (uncosted.length === 1 ? "" : "s") : "");
+    $("m-practice-label").firstChild.textContent = "Saving to " + payerWho;
+    setNum("m-practice", toPractice, function (v, done) { return done ? gbp(v) : gbpExact(v); });
+    $("m-split-note").textContent = vt.commissioner > 0
+      ? gbpExact(vt.commissioner) + " to an ICB, trust or other payer"
+      : hasLic ? "nothing is paid by an ICB or other payer" : "all of it is the value of the time returned";
     setNum("t-perclin", r.perClinDay, function (v) { return nf0.format(v) + "<small>minutes back</small>"; });
     setNum("t-appts", r.appts, function (v) { return nf0.format(v) + "<small>" + nf0.format(a.apptMins) + "-minute appointments</small>"; });
     var clinShare = r.weekHrs > 0 ? r.clinHrs / r.weekHrs : 0, sessPerHr = a.sessionHours > 0 ? 1 / a.sessionHours : 0;
@@ -1788,7 +1804,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     segInfo["seg-login"] = "Fewer logins · " + hrs(r.loginHrs) + " a week · " + sh[1] + "%";
     segInfo["seg-admin"] = "Less manual admin · " + hrs(r.adminHrs) + " a week · " + sh[2] + "%";
     Object.keys(segInfo).forEach(function (id) { $(id).setAttribute("aria-label", segInfo[id]); });
-    setNum("bar-caption", r.weekHrs, function (v) { return hrs(v) + " a week in total"; });
+    setNum("bar-caption", r.weekHrs, function (v) { return "up to " + hrs(v) + " a week in total"; });
 
     setNum("l-down", r.downHrs, function (v) { return hrs(v) + "<small>a week · " + sh[0] + "%</small>"; });
     setNum("l-login", r.loginHrs, function (v) { return hrs(v) + "<small>a week · " + sh[1] + "%</small>"; });
@@ -1798,15 +1814,12 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     $("d-login").textContent = nf2.format(a.loginMins) + " min × " + nf2.format(a.loginsPerDay) + " logins a day × " + nf2.format(a.daysPerWeek) + " days, across " + nf1.format(r.clinicians) + " clinicians";
     $("d-admin").textContent = nf2.format(Math.round(s.admin * 100) / 100) + " FTE of admin time at " + nf2.format(a.adminHours) + " hrs a week";
 
-    /* money, second */
-    setNum("m-total", r.timeVal, function (v, done) { return (done ? gbp(v) : gbpExact(v)) + " a year"; });
-    $("m-sub").textContent = "Clinical time at " + gbpExact(a.gpSession) + " a GP session and " + gbpExact(a.nurseSession) + " a nurse session, the locum and agency rates it would cost to buy that time back; admin at £" + money2.format(a.adminRate) + " an hour loaded; " + nf2.format(a.weeks) + " weeks.";
-    var hasLic = r.licVal > 0;
+    /* how the saving is valued: the rates behind the time figure, and the add-ons behind the other */
+    $("m-sub").textContent = "Time returned is valued at " + gbpExact(a.gpSession) + " a GP session and " + gbpExact(a.nurseSession) + " a nurse session, the locum and agency rates it would cost to buy that time back, and admin at £" + money2.format(a.adminRate) + " an hour loaded, over " + nf2.format(a.weeks) + " weeks a year. It is the value of the time, not cash, unless hours or locum spend actually fall.";
     $("m-lic-label").textContent = hasLic
-      ? "Plus add-ons retired for " + costed.map(function (v) { return v.name + (net ? " (" + nf0.format(vendorUsing(v)) + " practice" + (vendorUsing(v) === 1 ? "" : "s") + ")" : "") + (v.userCost ? "" : " (est.)"); }).join(", ")
+      ? "Add-ons retired: " + costed.map(function (v) { return v.name + (net ? " (" + nf0.format(vendorUsing(v)) + " practice" + (vendorUsing(v) === 1 ? "" : "s") + ")" : "") + (v.userCost ? "" : " (est.)"); }).join(", ")
       : "Add-ons retired: no costs entered" + (uncosted.length ? " for " + uncosted.map(function (v) { return v.name + (net && vendorUsing(v) === 0 ? " (no practices using it)" : ""); }).join(", ") : "");
-    if (hasLic) setNum("m-lic", r.licVal, function (v) { return gbpExact(v) + " a year"; }); else { $("m-lic").textContent = ""; delete anim["m-lic"]; }
-    var payerWho = net ? "the practices" : "the practice";
+    if (hasLic) setNum("m-lic-exact", r.licVal, function (v) { return gbpExact(v) + " a year"; }); else { $("m-lic-exact").textContent = ""; delete anim["m-lic-exact"]; }
     $("m-lic-split").hidden = !hasLic;
     if (hasLic) {
       $("m-lic-split").innerHTML = vt.commissioner > 0 && vt.practice > 0
@@ -1818,8 +1831,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 
     setRangeFill();
 
-    lastResult = { s: s, r: r, a: a, modeName: modeName, costed: costed, uncosted: uncosted, hasLic: hasLic, sessions: sessions, shares: sh, org: o, net: net, vt: vt, c: c, cs: cs, ca: ca };
-    $("lic-info").hidden = !hasLic;
+    lastResult = { s: s, r: r, a: a, modeName: modeName, costed: costed, uncosted: uncosted, hasLic: hasLic, sessions: sessions, shares: sh, org: o, net: net, vt: vt, total: total, toPractice: toPractice };
 
     /* "How we calculated this" text for every figure. Lines starting with ~ are notes. */
     var gpRate = a.sessionHours > 0 ? a.gpSession / a.sessionHours : 0, nurseRate = a.sessionHours > 0 ? a.nurseSession / a.sessionHours : 0;
@@ -1847,14 +1859,12 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
              "Less manual admin: " + hrs(r.adminHrs) + " of admin time a week.",
              hrs(r.clinHrs) + " + " + hrs(r.adminHrs) + " = " + hrs(r.weekHrs) + " a week in total." + (net ? " Across " + nf0.format(state.practices) + " practices that is an average of " + hrs(r.weekHrs / Math.max(1, state.practices)) + " a week each." : ""),
              "~Clinical and admin time are different kinds of time, so the breakdown below keeps them separate."],
-      cautious: ["The cautious case keeps your inputs and changes three things: " +
-                   (state.mode === "actual"
-                     ? "your own staffing figures stay as entered (" + nf1.format(cs.gp) + " FTE GPs and " + nf1.format(cs.nurse) + " FTE nurses)"
-                     : "staffing at the national average (" + nf1.format(cs.gp) + " FTE GPs and " + nf1.format(cs.nurse) + " FTE nurses" + (state.mode === "national" ? ", as already chosen" : ", instead of " + nf1.format(s.gp) + " and " + nf1.format(s.nurse) + " at the reference practice's ratios") + ")") +
-                   "; half the minutes saved (" + nf2.format(ca.downtimeMins) + " a session and " + nf2.format(ca.loginMins) + " a login); and " + nf2.format(ca.weeks) + " working weeks.",
-                 "That gives " + hrs(c.clinHrs) + " clinical + " + hrs(c.adminHrs) + " admin = " + hrs(c.weekHrs) + " a week, " + nf0.format(c.yearHrs) + " hours a year, worth " + gbpExact(c.timeVal) + " a year (shown rounded to the nearest £100).",
-                 "On the reference assumptions it is " + hrs(r.weekHrs) + " a week and " + gbp(r.timeVal) + " a year. Read the two as a range: the reference practice's own experience sits at the top of it.",
-                 "~Admin hours a week and add-on savings are the same in both cases. The admin figure is a measured 0.5 FTE at the reference practice rather than an estimate."],
+      total: ["Time returned " + gbpExact(r.timeVal) + " + add-ons retired " + gbpExact(r.licVal) + " = " + gbpExact(total) + " a year, shown rounded to the nearest £100." + (net ? " Across " + nf0.format(state.practices) + " practices that is an average of " + gbp(total / Math.max(1, state.practices)) + " a year each." : ""),
+              "Of that, " + gbpExact(toPractice) + " lands with " + payerWho + " (the value of " + (net ? "their" : "its") + " own staff time plus the add-ons " + (net ? "they pay" : "it pays") + " for) and " + gbpExact(vt.commissioner) + " with an ICB, trust or other commissioner.",
+              "~\"Up to\" because the time figures scale one NHS practice's own experience to your inputs, which puts them at the top of the range to expect, and the add-on figures are list prices unless you entered your own. The time is value, not cash, unless hours or locum spend actually fall."],
+      split: ["To " + payerWho + ": time returned " + gbpExact(r.timeVal) + " + add-ons " + (net ? "they pay" : "it pays") + " for " + gbpExact(vt.practice) + (vt.practice > 0 ? " (" + costed.filter(function (v) { return v.payer !== "commissioner"; }).map(function (v) { return v.name; }).join(", ") + ")" : "") + " = " + gbpExact(toPractice) + " a year.",
+              "To an ICB, trust or other commissioner: the add-ons they pay for" + (vt.commissioner > 0 ? " (" + costed.filter(function (v) { return v.payer === "commissioner"; }).map(function (v) { return v.name; }).join(", ") + ")" : "") + " = " + gbpExact(vt.commissioner) + " a year.",
+              "~A saving on a centrally funded add-on belongs to the payer. It is worth presenting to them, but it is not " + (net ? "the practices'" : "practice") + " cash. Change Paid by on the functions step if the defaults are wrong for your contracts."],
       perclin: ["Logins: " + nf2.format(a.loginMins) + " minutes × " + nf2.format(a.loginsPerDay) + " a day = " + nf0.format(loginMinDay) + " minutes.",
                 "Slowdowns: " + nf2.format(a.downtimeMins) + " minutes × " + nf2.format(a.sessionsPerDay) + " sessions a day = " + nf0.format(a.sessionsPerDay * a.downtimeMins) + " minutes.",
                 "Total: " + nf0.format(r.perClinDay) + " minutes back for each clinician on each clinical day.",
@@ -1865,13 +1875,13 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       year: [hrs(r.weekHrs) + " a week × " + wk + " = " + nf0.format(r.yearHrs) + " hours a year.",
              "Of that, " + hrs(r.clinHrs) + " × " + nf2.format(a.weeks) + " = " + nf0.format(r.clinHrs * a.weeks) + " clinical hours, which is about " + nf0.format(r.sessionsYear) + " sessions of " + nf2.format(a.sessionHours) + " hours.",
              "And " + hrs(r.adminHrs) + " × " + nf2.format(a.weeks) + " = " + nf0.format(r.adminHrs * a.weeks) + " admin hours.",
-             "~" + nf2.format(a.weeks) + " weeks assumes no allowance for leave or bank holidays; 45 is more cautious. Change it under Adjust in the valuation box."],
+             "~" + nf2.format(a.weeks) + " weeks assumes no allowance for leave or bank holidays; set 45 to allow for them. Change it under Adjust in the valuation box."],
       down: ["Clinical sessions a week: " + nf1.format(s.gp) + " GPs × " + nf2.format(a.daysPerWeek) + " days × " + nf2.format(a.sessionsPerDay) + " = " + nfx.format(gpSess) + ", plus " + nf1.format(s.nurse) + " nurses × " + nf2.format(a.daysPerWeek) + " × " + nf2.format(a.sessionsPerDay) + " = " + nfx.format(nSess) + ", so " + sessions + ".",
              sessions + " sessions × " + nf2.format(a.downtimeMins) + " minutes saved = " + nf0.format(r.downHrs * 60) + " minutes = " + hrs(r.downHrs) + " a week.",
              "Share of the total: " + hrs(r.downHrs) + " ÷ " + hrs(r.weekHrs) + " = " + sh[0] + "%.",
              "Worth " + gbpExact(r.downVal) + " a year: GP time at " + gbpRate(gpRate) + " an hour (" + gbpExact(a.gpSession) + " ÷ " + nf2.format(a.sessionHours) + "-hour session) and nurse time at " + gbpRate(nurseRate) + " an hour, × " + wk + ".",
              "~A session is a " + nf2.format(a.sessionHours) + "-hour clinic of about " + nf0.format(a.apptMins > 0 ? a.sessionHours * 60 / a.apptMins : 0) + " " + nf2.format(a.apptMins) + "-minute appointments, so " + nf2.format(a.downtimeMins) + " minutes a session is about " + nf0.format(a.apptMins > 0 ? a.downtimeMins * 60 / (a.sessionHours * 60 / a.apptMins) : 0) + " seconds an appointment.",
-             "~The " + nf2.format(a.downtimeMins) + " minutes is the reference practice's own conservative estimate of time lost to slow screens and system waits, not a timed measurement. It is the least evidenced input, which is why the cautious case halves it."],
+             "~The " + nf2.format(a.downtimeMins) + " minutes is the reference practice's own conservative estimate of time lost to slow screens and system waits, not a timed measurement. It is the least evidenced input, which is one reason the figures are shown as up to."],
       login: ["Clinicians: " + nf1.format(s.gp) + " GPs + " + nf1.format(s.nurse) + " nurses = " + nf1.format(r.clinicians) + ".",
               nf1.format(r.clinicians) + " × " + nf2.format(a.daysPerWeek) + " clinical days × " + nf2.format(a.loginsPerDay) + " logins × " + nf2.format(a.loginMins) + " minutes = " + nf0.format(r.loginHrs * 60) + " minutes = " + hrs(r.loginHrs) + " a week.",
               "Share of the total: " + hrs(r.loginHrs) + " ÷ " + hrs(r.weekHrs) + " = " + sh[1] + "%.",
@@ -1895,15 +1905,19 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       "Registered patients: " + nf0.format(state.patients) + (net ? " (average " + nf0.format(avgPractice()) + " a practice)" : ""),
       "Staffing basis: " + modeName + " (GP " + nf1.format(s.gp) + " FTE, nurse " + nf1.format(s.nurse) + " FTE)",
       "",
-      o.hero + ": " + nf1.format(r.weekHrs) + " hours a week, about " + nf0.format(r.yearHrs) + " a year" + (net ? " (an average of " + hrs(r.weekHrs / Math.max(1, state.practices)) + " a week for each practice, once all " + nf0.format(state.practices) + " practices are live)" : ""),
+      o.hero + ": up to " + gbp(total) + " a year" + (net ? " (an average of up to " + gbp(total / Math.max(1, state.practices)) + " a year for each practice, once all " + nf0.format(state.practices) + " practices are live)" : ""),
+      "  Time returned: " + gbp(r.timeVal) + " a year, up to " + nf1.format(r.weekHrs) + " hours a week or about " + nf0.format(r.yearHrs) + " a year",
+      "  Add-ons retired: " + (hasLic ? gbpExact(r.licVal) + " a year" : "no costs entered"),
+      "  To " + payerWho + ": " + gbp(toPractice) + " a year (time returned plus the add-ons " + (net ? "they pay" : "it pays") + " for); to an ICB, trust or other commissioner: " + gbpExact(vt.commissioner) + " a year",
+      "",
+      "Where the time comes from (up to " + hrs(r.weekHrs) + " a week" + (net ? ", an average of " + hrs(r.weekHrs / Math.max(1, state.practices)) + " for each practice" : "") + "):",
       "  Fewer slowdowns and downtime: " + hrs(r.downHrs) + " a week",
       "  Fewer logins: " + hrs(r.loginHrs) + " a week",
       "  Less manual admin: " + hrs(r.adminHrs) + " a week",
-      "Cautious case: " + nf1.format(c.weekHrs) + " hours a week, about " + nf0.format(c.yearHrs) + " a year, worth " + gbp(c.timeVal) + " a year (" + (state.mode === "actual" ? "own staffing" : "national-average staffing") + ", half the minutes saved, " + nf2.format(ca.weeks) + " weeks)",
       "Per clinician: about " + nf0.format(r.perClinDay) + " minutes a day",
       "Estimated clinical capacity released: " + nf0.format(r.appts) + " " + nf0.format(a.apptMins) + "-minute appointments a week, or " + nf0.format(r.sessionsYear) + " clinical sessions a year",
       "",
-      "What that time is worth: " + gbp(r.timeVal) + " a year",
+      "How the time is valued: GP time at " + gbpExact(a.gpSession) + " a session and nurse time at " + gbpExact(a.nurseSession) + " a session (locum and agency replacement rates), admin at £" + money2.format(a.adminRate) + " an hour loaded, " + nf2.format(a.weeks) + " weeks a year",
       "Add-ons retired by native Medicus functions: " + (hasLic ? gbpExact(r.licVal) + " a year (" + costed.map(function (v) { return v.name + " " + gbpExact(vendorCost(v)) + (net ? " across " + nf0.format(vendorUsing(v)) + " practice" + (vendorUsing(v) === 1 ? "" : "s") : "") + (v.userCost ? "" : " est.") + (v.payer === "commissioner" ? " [ICB or other pays]" : ""); }).join(", ") + ")" : "no costs entered") +
         (uncosted.length ? "; selected without a cost: " + uncosted.map(function (v) { return v.name + (net && vendorUsing(v) === 0 ? " (no practices using it)" : ""); }).join(", ") : ""),
       hasLic ? "  Of which paid by " + payerWho + " today: " + gbpExact(vt.practice) + "; paid by an ICB, trust or other commissioner: " + gbpExact(vt.commissioner) + " (that part of the saving belongs to the payer)" : null,
@@ -1912,7 +1926,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
         nf3.format(a.adminPer10k) + " admin FTE released per 10,000 patients, " + nf2.format(a.daysPerWeek) + " clinical days × " + nf2.format(a.sessionsPerDay) + " sessions per FTE, " +
         nf2.format(a.weeks) + " weeks a year; GP session " + gbpExact(a.gpSession) + ", nurse session " + gbpExact(a.nurseSession) + ", " + nf2.format(a.sessionHours) + " hr sessions, admin £" + money2.format(a.adminRate) + "/hr loaded.",
       "Model basis: the real-world impact of Medicus at a live NHS practice of about 12,000 patients.",
-      "Important: illustrative estimate, not a quotation, forecast or guarantee. Time savings are the reported experience of one NHS practice, not independently audited. Hours are valued at stated rates and are not cash unless hours or locum spend fall. Add-on prices marked est. are public list prices scaled to list size; savings on add-ons paid by an ICB or trust belong to the payer. Third-party names are trademarks of their owners. Not financial, procurement, clinical or legal advice."
+      "Important: illustrative estimate, not a quotation, forecast or guarantee. Every figure is an upper estimate (up to). Time savings are the reported experience of one NHS practice, not independently audited. Hours are valued at stated rates and are not cash unless hours or locum spend fall. Add-on prices marked est. are public list prices scaled to list size; savings on add-ons paid by an ICB or trust belong to the payer. Third-party names are trademarks of their owners. Not financial, procurement, clinical or legal advice."
     ].filter(function (l) { return l !== null; }).join("\n");
     saveState();
   }
@@ -1958,8 +1972,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
       valuePerYear: Math.round(lastResult.r.timeVal),
       addOnsPerYear: Math.round(lastResult.r.licVal),
       addOnsPracticePerYear: Math.round(lastResult.vt.practice),
-      cautiousHoursPerWeek: Math.round(lastResult.c.weekHrs * 10) / 10,
-      cautiousValuePerYear: Math.round(lastResult.c.timeVal),
+      totalPerYear: Math.round(lastResult.total),
+      totalPracticePerYear: Math.round(lastResult.toPractice),
       functions: state.vendors.filter(function (v) { return v.on; }).map(function (v) { return v.name; }),
       summary: lastSummary
     };
@@ -2036,46 +2050,58 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     doc.text(lead.name + (lead.role ? ", " + lead.role : ""), W - M, 23.5, { align: "right" });
     doc.text(today, W - M, 28.5, { align: "right" });
 
-    /* Hero */
+    /* Hero: the saving, then the time behind it */
     var y = 52;
+    var on = state.vendors.filter(function (v) { return v.on; });
+    var costed = on.filter(function (v) { return vendorCost(v) > 0; });
+    var est = costed.filter(function (v) { return !v.userCost; });
+    var own = costed.length - est.length;
+    var payerWho = R.org.payer;
     eyebrow(R.org.hero, M, y); y += 15;
+    doc.setFont("helvetica", "normal"); doc.setFontSize(14); col(INK);
+    doc.text("Up to", M, y);
+    var preW = doc.getTextWidth("Up to") + 2.5;
     doc.setFont("times", "bold"); doc.setFontSize(40); col(INK);
-    var big = nf1.format(r.weekHrs);
-    doc.text(big, M, y);
+    var big = gbp(R.total);
+    doc.text(big, M + preW, y);
     var bw = doc.getTextWidth(big);
     doc.setFont("helvetica", "normal"); doc.setFontSize(14); col(INK);
-    doc.text("hours a week", M + bw + 3, y);
+    doc.text("a year", M + preW + bw + 3, y);
     y += 8;
-    y = para(R.net
-      ? nf1.format(r.clinHrs) + " clinical hours and " + nf1.format(r.adminHrs) + " admin hours a week across " + nf0.format(state.practices) + " practices and " + nf0.format(state.patients) +
-        " registered patients, with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE practice nurses in total (" + R.modeName + "). That is an average of " +
-        hrs(r.weekHrs / Math.max(1, state.practices)) + " a week for each practice, as a steady state once all " + nf0.format(state.practices) + " practices are live on Medicus."
-      : nf1.format(r.clinHrs) + " clinical hours and " + nf1.format(r.adminHrs) + " admin hours a week, for a practice of " + nf0.format(state.patients) +
-        " registered patients with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE practice nurses (" + R.modeName + ").", M, y, cw, 10, LIGHT, 5);
-    y += 1;
-    doc.setFont("helvetica", "bold"); doc.setFontSize(9); col(INK);
-    var cautLead = "Cautious case: " + nf1.format(R.c.weekHrs) + " hours a week.";
-    doc.text(cautLead, M, y);
-    y += 4.2;
-    y = para("With " + (state.mode === "actual" ? "your own staffing" : "national-average staffing") + ", half the minutes saved and " + nf2.format(R.ca.weeks) + " working weeks; admin hours and add-on savings are unchanged. Read the two figures as a range.", M, y, cw, 8, LIGHT, 3.8);
+    y = para("Up to " + nf1.format(r.weekHrs) + " hours of staff time a week (" + nf1.format(r.clinHrs) + " clinical and " + nf1.format(r.adminHrs) + " admin)" + (R.net
+      ? " across " + nf0.format(state.practices) + " practices and " + nf0.format(state.patients) + " registered patients, with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE practice nurses in total (" + R.modeName + ")"
+      : " for a practice of " + nf0.format(state.patients) + " registered patients with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE practice nurses (" + R.modeName + ")") +
+      (R.hasLic ? ", plus " + gbpExact(r.licVal) + " a year of add-on costs retired by native Medicus functions." : ".") +
+      (R.net ? " That is an average of up to " + gbp(R.total / Math.max(1, state.practices)) + " a year and " + hrs(r.weekHrs / Math.max(1, state.practices)) + " a week for each practice, as a steady state once all " + nf0.format(state.practices) + " practices are live on Medicus." : ""),
+      M, y, cw, 10, LIGHT, 4.6);
 
-    /* Tiles */
+    /* The saving broken down */
     y += 1;
-    var tw = (cw - 8) / 3, th = 25;
-    [["Per clinician, each day", nf0.format(r.perClinDay), "minutes back"],
-     ["Estimated clinical capacity released each week", nf0.format(r.appts), nf0.format(a.apptMins) + "-minute appointments"],
-     ["Over a year", nf0.format(r.yearHrs), "hours, about " + nf0.format(r.sessionsYear) + " clinical sessions"]].forEach(function (t, i) {
-      var x = M + i * (tw + 4);
-      stroke(BORDER); fill([255, 255, 255]); doc.roundedRect(x, y, tw, th, 2.5, 2.5, "FD");
-      doc.setFont("helvetica", "normal"); doc.setFontSize(8); col(LIGHT); doc.text(doc.splitTextToSize(t[0], tw - 10).slice(0, 2), x + 5, y + 6.5, { lineHeightFactor: 1.15 });
-      doc.setFont("times", "bold"); doc.setFontSize(18); col(INK); doc.text(t[1], x + 5, y + 17.5);
-      doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(MUTED); doc.text(t[2], x + 5, y + 22);
-    });
-    y += th + 7;
+    var tw = (cw - 8) / 3, th = 22;
+    function tileRow(tiles, dark) {
+      tiles.forEach(function (t, i) {
+        var x = M + i * (tw + 4);
+        if (dark) { fill(INK); stroke(INK); } else { stroke(BORDER); fill([255, 255, 255]); }
+        doc.roundedRect(x, y, tw, th, 2.5, 2.5, "FD");
+        doc.setFont("helvetica", "normal"); doc.setFontSize(8); col(dark ? GREEN : LIGHT); doc.text(doc.splitTextToSize(t[0], tw - 10).slice(0, 2), x + 5, y + 6, { lineHeightFactor: 1.1 });
+        doc.setFont("times", "bold"); doc.setFontSize(17); col(dark ? [255, 255, 255] : INK); doc.text(t[1], x + 5, y + 15.2);
+        doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(dark ? [219, 228, 239] : MUTED); doc.text(doc.splitTextToSize(t[2], tw - 10)[0] || "", x + 5, y + 19.4);
+      });
+      y += th + 5;
+    }
+    tileRow([["Time returned", gbp(r.timeVal), "up to " + nf1.format(r.weekHrs) + " hrs a week"],
+             ["Add-ons retired", R.hasLic ? gbpExact(r.licVal) : "£0", R.hasLic ? costed.length + " native function" + (costed.length === 1 ? "" : "s") + (est.length ? " (est.)" : "") : "no add-on costs entered"],
+             ["Saving to " + payerWho, gbp(R.toPractice), R.vt.commissioner > 0 ? gbpExact(R.vt.commissioner) + " to ICB or other payers" : R.hasLic ? "nothing paid by an ICB or other" : "all of it is the value of the time"]], true);
+
+    /* Time tiles */
+    tileRow([["Per clinician, each day", nf0.format(r.perClinDay), "minutes back"],
+             ["Estimated clinical capacity released each week", nf0.format(r.appts), nf0.format(a.apptMins) + "-minute appointments"],
+             ["Over a year", nf0.format(r.yearHrs), "hours, about " + nf0.format(r.sessionsYear) + " clinical sessions"]], false);
 
     /* Breakdown */
+    y += 2;
     doc.setFont("helvetica", "bold"); doc.setFontSize(11); col(INK); doc.text("Where the time comes from", M, y);
-    doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); col(MUTED); doc.text(hrs(r.weekHrs) + " a week in total", W - M, y, { align: "right" });
+    doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); col(MUTED); doc.text("up to " + hrs(r.weekHrs) + " a week in total", W - M, y, { align: "right" });
     y += 5;
     var total = r.weekHrs || 1, bx = M, bh = 4;
     [[r.downHrs, BLUE_DK], [r.loginHrs, BLUE], [r.adminHrs, BLUE_LT]].forEach(function (seg, i) {
@@ -2098,41 +2124,21 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     rule(y);
     y += 7;
 
-    /* What the time is worth */
-    var mh = 23;
+    /* How the saving is valued */
+    doc.setFont("helvetica", "normal"); doc.setFontSize(7.5);
+    var valLines = doc.splitTextToSize("Time returned (" + gbp(r.timeVal) + " a year) is clinical time at " + gbpExact(a.gpSession) + " a GP session and " + gbpExact(a.nurseSession) + " a nurse session (locum and agency replacement rates) and admin at £" +
+      money2.format(a.adminRate) + " an hour loaded, over " + nf2.format(a.weeks) + " weeks a year. It is the value of the time, not cash, unless hours or locum spend actually fall. Add-ons retired (" + (R.hasLic ? gbpExact(r.licVal) + " a year" : "none costed") + ") " +
+      (R.hasLic ? "are the list prices below: " + gbpExact(R.vt.practice) + " paid by " + payerWho + " today and " + gbpExact(R.vt.commissioner) + " by an ICB, trust or other commissioner, whose saving it is." : "would be the annual cost of any add-on a native Medicus function replaces."), cw - 12);
+    var mh = 10 + valLines.length * 3.2 + 2;
     fill(BG); stroke(BORDER); doc.roundedRect(M, y, cw, mh, 2.5, 2.5, "FD");
-    eyebrow("What that time is worth", M + 6, y + 7, MUTED);
-    doc.setFont("times", "bold"); doc.setFontSize(18); col(INK); doc.text(gbp(r.timeVal) + " a year", M + 6, y + 15);
-    doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(MUTED); doc.text("Cautious case", W - M - 6, y + 8.5, { align: "right" });
-    doc.setFont("times", "bold"); doc.setFontSize(13); col(INK); doc.text(gbp(R.c.timeVal) + " a year", W - M - 6, y + 15, { align: "right" });
+    eyebrow("How the saving is valued", M + 6, y + 6.5, MUTED);
     doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(LIGHT);
-    doc.text(doc.splitTextToSize("Clinical time at " + gbpExact(a.gpSession) + " a GP session and " + gbpExact(a.nurseSession) + " a nurse session (locum and agency replacement rates); admin at £" +
-      money2.format(a.adminRate) + " an hour loaded; " + nf2.format(a.weeks) + " weeks a year.", cw - 12), M + 6, y + 20);
+    doc.text(valLines, M + 6, y + 11, { lineHeightFactor: 1.2 });
     y += mh + 6;
 
-    /* Third-party add-ons retired: summary, then the functions that retire them */
-    var on = state.vendors.filter(function (v) { return v.on; });
-    var costed = on.filter(function (v) { return vendorCost(v) > 0; });
-    var est = costed.filter(function (v) { return !v.userCost; });
-    var own = costed.length - est.length;
-    doc.setFont("helvetica", "bold"); doc.setFontSize(11); col(INK); doc.text("Third-party add-ons retired", M, y);
-    y += 4;
-    var sh = 18;
-    fill(TINT); stroke(BORDER); doc.roundedRect(M, y, cw, sh, 2.5, 2.5, "FD");
-    eyebrow("Annual saving on add-ons", M + 6, y + 7, MUTED);
-    doc.setFont("times", "bold"); doc.setFontSize(18); col(INK);
-    doc.text(R.hasLic ? gbpExact(r.licVal) + " a year" : "No add-on costs entered", M + 6, y + 15);
-    doc.setFont("helvetica", "normal"); doc.setFontSize(7); col(LIGHT);
-    var sum1 = costed.length + " of " + on.length + " functions carry a cost" + (R.net ? " across " + nf0.format(state.practices) + " practices" : "") + (R.hasLic ? " (" + (est.length ? est.length + " estimated" : "") + (est.length && own ? ", " : "") + (own ? own + " entered" : "") + ")" : "");
-    var sum2 = R.hasLic
-      ? gbpExact(R.vt.practice) + " paid by " + (R.net ? "the practices" : "the practice") + ", " + gbpExact(R.vt.commissioner) + " by an ICB or other payer"
-      : "Enter your own add-on costs to see a figure";
-    doc.text(sum1, W - M - 6, y + 8.5, { align: "right" });
-    doc.text(sum2, W - M - 6, y + 13.5, { align: "right" });
-    y += sh + 6;
-
+    /* Native functions and the add-ons they retire */
     doc.setFont("helvetica", "bold"); doc.setFontSize(9.5); col(INK); doc.text("Native Medicus functions you plan to use", M, y);
-    doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(MUTED); doc.text("Add-on cost a year", W - M, y, { align: "right" });
+    doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(MUTED); doc.text((costed.length + " of " + on.length + " carry an add-on cost" + (R.net ? " across " + nf0.format(state.practices) + " practices" : "") + (R.hasLic ? " (" + (est.length ? est.length + " estimated" : "") + (est.length && own ? ", " : "") + (own ? own + " entered" : "") + ")" : "")), W - M, y, { align: "right" });
     y += 5.5;
     var rows = Math.ceil(on.length / 2), colW = (cw - 8) / 2;
     var lineH = Math.max(4, Math.min(4.9, (FOOT - 4 - y) / Math.max(1, rows)));   /* squeeze the list a little if the hero ran long */
@@ -2226,7 +2232,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
     /* Important information */
     var legal = [
       ["What this is.", "An illustrative estimate of the staff time a GP practice, or a group of practices, might release, and the value of that time, if it moved to Medicus. It is a planning aid, not a quotation, forecast, offer or guarantee, and it does not form part of any contract."],
-      ["Where the figures come from.", "The time saved per login, per clinical session and in administrative work is the reported experience of one NHS practice of about 12,000 patients that uses Medicus. It has not been independently audited. Results for other practices, and for networks and regions, are scaled from it in proportion to the figures entered and will vary with list size, staffing, hardware, network and ways of working. Figures for a PCN, federation or ICB are aggregates across its practices, not a prediction for any one of them. The cautious case shown alongside applies national-average staffing, half the time saved and 45 working weeks; read the two figures as a range."],
+      ["Where the figures come from.", "The time saved per login, per clinical session and in administrative work is the reported experience of one NHS practice of about 12,000 patients that uses Medicus. It has not been independently audited. Results for other practices, and for networks and regions, are scaled from it in proportion to the figures entered and will vary with list size, staffing, hardware, network and ways of working. Figures for a PCN, federation or ICB are aggregates across its practices, not a prediction for any one of them. Every figure is presented as up to: the top of the range the inputs imply, not a central forecast."],
       ["Time, not cash.", "Hours are valued at the stated session and hourly rates to show what the time is worth. That is not a cash saving unless hours, overtime or locum spend actually fall. Appointment figures show the scale of the time released, not a commitment that it will become extra appointments."],
       ["Third-party costs.", "Add-on prices marked est. are publicly listed prices (Crown Commercial Service G-Cloud and supplier price lists, as dated above) scaled to list size. Actual costs depend on the practice's own contracts and may be lower or higher. Who pays for each add-on is recorded as entered; where an ICB, trust or other commissioner pays, that saving belongs to the payer and is shown separately. Figures entered are used as given and are not verified."],
       ["Third-party names.", "AccuRx, Docman, Patchs, eConsult, Ardens, Healthtech-1, Little Green Button, EDGEALERT, Engage and ICE are trademarks of their respective owners, which are not connected with Medicus. They are named only to identify systems a practice may already use. Whether Medicus replaces a given system for a given practice depends on that practice's requirements and should be confirmed before any decision."],

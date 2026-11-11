@@ -43,7 +43,8 @@ practices entered: staffing is estimated from the total list, admin time
 follows the total list, and each add-on is costed for a practice of average list
 size and multiplied by the number of practices using it (the "of N practices"
 field on the functions step). Leads carry `orgType` and `practices` alongside
-`patients`, plus the add-on saving paid by the practice and the cautious-case figures.
+`patients`, plus the add-on saving paid by the practice and the headline total
+(`totalPerYear`) with the part of it that lands with the practice (`totalPracticePerYear`).
 
 The inputs and current step are kept in the URL hash (`#s=`), so a results link
 can be shared, and in localStorage for a returning visitor. Add-on prices follow
