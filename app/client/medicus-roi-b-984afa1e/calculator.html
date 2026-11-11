@@ -211,13 +211,13 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px 
 
 /* Results card */
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow-card); overflow: hidden; display: grid; max-height: calc(100vh - 32px); overflow-y: auto; }
-.card-hero { background: var(--cta); color: #FFFFFF; padding: 20px 22px 16px; display: grid; gap: 5px; }
+.card-hero { background: var(--cta); color: #FFFFFF; padding: 20px 22px 16px; display: grid; gap: 4px; }
 .card-hero .eyebrow { color: var(--green); }
 .card-hero .big { font-family: var(--font-display); font-weight: 700; font-size: clamp(38px, 2rem + 1vw, 46px); line-height: 1.05; margin-top: 4px; font-variant-numeric: tabular-nums lining-nums; }
 .card-hero .big small { font-size: .4em; font-weight: 400; margin-left: 8px; font-family: var(--font-body); }
 .card-hero p { color: #DBE4EF; font-size: 12.5px; line-height: 1.5; }
 .card-hero .hero-per { color: #FFFFFF; font-weight: 700; }
-.hero-range { margin-top: 8px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.18); display: flex; flex-wrap: wrap; gap: 2px 14px; align-items: baseline; font-size: 13px; color: #DBE4EF; }
+.hero-range { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.18); display: flex; flex-wrap: wrap; gap: 2px 14px; align-items: baseline; font-size: 13px; color: #DBE4EF; }
 .hero-range .hr-label { font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--green); font-weight: 700; }
 .hero-range strong { color: #FFFFFF; font-variant-numeric: tabular-nums lining-nums; }
 .hero-range .info { margin-left: 6px; vertical-align: middle; }
@@ -239,7 +239,7 @@ h3 { font-family: var(--font-body); font-size: 14px; font-weight: 700; color: va
 .tip { position: absolute; bottom: calc(100% + 8px); transform: translateX(-50%); background: var(--ink); color: var(--bg); font-size: 12px; padding: 5px 9px; border-radius: 6px; white-space: nowrap; pointer-events: none; z-index: 2; }
 .lines { display: grid; gap: 6px; margin: 0; }
 .line { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 12px; align-items: center; }
-.side .line .what span, .side #m-cautious, .side .stats dd small, .side #bar-caption { display: none; }   /* the card keeps to the figures; the "i" buttons carry the working */
+.side .line .what span, .side .stats dd small, .side #bar-caption { display: none; }   /* the card keeps to the figures; the "i" buttons carry the working */
 .line .sw { display: none; }
 .line .hrs { grid-row: 1 / span 2; align-self: center; background: var(--green-tint); color: var(--green-ink); font-weight: 700; font-size: 12.5px; border-radius: 8px; padding: 4px 8px; font-variant-numeric: tabular-nums; white-space: nowrap; text-align: center; min-width: 86px; }
 .line .hrs small { display: block; font-weight: 400; font-size: 10.5px; color: var(--green-ink); opacity: .85; }
@@ -255,8 +255,7 @@ h3 { font-family: var(--font-body); font-size: 14px; font-weight: 700; color: va
 .money .lic > span:last-child { white-space: nowrap; }
 .money .lic-split { margin: 0; font-size: 12px; line-height: 1.5; color: var(--text-light); }
 .money .lic-split strong { color: var(--ink); }
-.card-cta { border-top: 1px solid var(--border); padding-top: 12px; display: grid; gap: 8px; }
-.side .card-cta .hint { display: none; }
+.card-cta { border-top: 1px solid var(--border); padding-top: 14px; display: grid; gap: 8px; }
 .card-cta .hint { max-width: none; }
 .card-cta .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 
@@ -325,7 +324,7 @@ dialog.lead-dialog::backdrop { background: rgba(9, 28, 57, .55); }
   .layout { grid-template-columns: minmax(0, 1fr); gap: 32px; }
   .side { position: static; }
   .card { max-height: none; overflow: visible; }
-  .side .line .what span, .side #m-cautious, .side .stats dd small, .side #bar-caption { display: block; }
+
   .mini { display: flex; }
 }
 @media (max-width: 640px) {
@@ -469,8 +468,8 @@ dialog.lead-dialog::backdrop { background: rgba(9, 28, 57, .55); }
         <div class="card-hero">
           <span class="eyebrow" id="hero-eyebrow">Time returned to the practice</span>
           <div class="big"><span id="hero-hrs">0</span><small>hrs a week</small><button type="button" class="info" data-tip="hero" aria-label="How we calculated this">i</button></div>
-          <p id="hero-sub"></p>
-          <p id="hero-per" class="hero-per" hidden></p>
+          <p id="hero-sub" class="visually-hidden"></p>
+          <p id="hero-per" class="hero-per visually-hidden" hidden></p>
           <div class="hero-range" id="hero-range">
             <span class="hr-label">Cautious case</span>
             <span class="hr-val"><strong id="hc-hrs">0</strong> hrs a week · <strong id="hc-val">£0</strong> a year<button type="button" class="info" data-tip="cautious" aria-label="How we calculated the cautious case">i</button></span>
@@ -484,7 +483,7 @@ dialog.lead-dialog::backdrop { background: rgba(9, 28, 57, .55); }
           </dl>
 
           <div class="breakdown">
-            <div class="section-head"><h3>Where the time comes from<button type="button" class="info" data-tip="hero" aria-label="How we calculated this">i</button></h3><span class="hint" id="bar-caption"></span></div>
+            <div class="section-head"><h3>Where the time comes from</h3><span class="hint" id="bar-caption"></span></div>
             <div class="bar" id="bar" style="margin:8px 0 12px">
               <div class="s s-1" id="seg-down" tabindex="0"></div>
               <div class="s s-2" id="seg-login" tabindex="0"></div>
@@ -513,15 +512,13 @@ dialog.lead-dialog::backdrop { background: rgba(9, 28, 57, .55); }
           <div class="money">
             <span class="label">What that time is worth<button type="button" class="info" data-tip="money" aria-label="How we calculated this">i</button></span>
             <div class="amt" id="m-total"></div>
-            <div class="sub" id="m-sub"></div>
-            <div class="sub" id="m-cautious"></div>
+            <div class="sub visually-hidden" id="m-sub"></div>
+            <div class="sub" id="m-cautious" hidden></div>
             <div class="lic"><span id="m-lic-label"></span><span><strong id="m-lic"></strong><button type="button" class="info" data-tip="lic" aria-label="How we calculated this" id="lic-info">i</button></span></div>
             <p class="lic-split" id="m-lic-split" hidden></p>
           </div>
 
           <div class="card-cta">
-            <h3>Take this with you</h3>
-            <p class="hint">Get these figures, the inputs behind them and the basis as a two-page Medicus report.</p>
             <button class="btn wide" id="open-lead" type="button">Get the PDF report</button>
             <div class="row">
               <button class="btn small outline" id="copy" type="button" aria-describedby="copy-note">Copy summary</button>
@@ -1516,17 +1513,15 @@ dialog.lead-dialog::backdrop { background: rgba(9, 28, 57, .55); }
     $("m-sub").textContent = "At " + gbpExact(a.gpSession) + " a GP session and " + gbpExact(a.nurseSession) + " a nurse session (locum and agency replacement rates), admin at £" + money2.format(a.adminRate) + " an hour, " + nf2.format(a.weeks) + " weeks a year.";
     var hasLic = r.licVal > 0;
     $("m-lic-label").textContent = hasLic
-      ? "Add-ons retired by " + costed.length + " function" + (costed.length === 1 ? "" : "s") + (costed.some(function (v) { return !v.userCost; }) ? " (est.)" : "")
+      ? "Add-ons retired" + (costed.some(function (v) { return !v.userCost; }) ? " (est.)" : "")
       : "Add-ons retired: no costs entered yet";
     if (hasLic) setNum("m-lic", r.licVal, function (v) { return gbpExact(v) + " a year"; }); else { $("m-lic").textContent = ""; delete anim["m-lic"]; }
     var payerWho = net ? "the practices" : "the practice";
     $("m-lic-split").hidden = !hasLic;
     if (hasLic) {
       $("m-lic-split").innerHTML = vt.commissioner > 0 && vt.practice > 0
-        ? "<strong>" + gbpExact(vt.practice) + "</strong> is paid by " + payerWho + " today; <strong>" + gbpExact(vt.commissioner) + "</strong> by an ICB, trust or other commissioner, so that part belongs to them."
-        : vt.commissioner > 0
-          ? "All of it is paid by an ICB, trust or other commissioner today, so the saving lands with them rather than " + payerWho + ". Change <em>Paid by</em> beside the function if " + payerWho + " pay" + (net ? "" : "s") + " for any of these."
-          : "All of it is paid by " + payerWho + " today, so the whole saving is " + (net ? "theirs" : "the practice's") + ".";
+        ? "<strong>" + gbpExact(vt.practice) + "</strong> paid by " + payerWho + " · <strong>" + gbpExact(vt.commissioner) + "</strong> by ICB or other"
+        : vt.commissioner > 0 ? "All paid by an ICB, trust or other commissioner" : "All paid by " + payerWho;
     }
 
     setRangeFill();
@@ -1599,6 +1594,9 @@ dialog.lead-dialog::backdrop { background: rgba(9, 28, 57, .55); }
              [net ? "~Estimates are list prices for a practice of average list size, multiplied by the number of practices using each tool; a figure you type (per practice) replaces the estimate. The working for each estimate is beside the function."
                   : "~Estimates are list prices scaled to this list size; a figure you type replaces the estimate. The working for each estimate is beside the function."])
     };
+    tipText.hero = [$("hero-sub").textContent + (net ? " " + $("hero-per").textContent : "")].concat(tipText.hero);
+    tipText.money = [$("m-sub").textContent].concat(tipText.money);
+    if (hasLic) tipText.lic = tipText.lic.concat(["~A saving on an add-on that an ICB, trust or other commissioner pays for belongs to the payer, not " + payerWho + ". Change Paid by beside the function if that is wrong."]);
     state.vendors.forEach(function (v) { if (hasEstimate(v)) tipText["v-" + v.id] = explainVendor(v, avgPractice()); });
     if (calcFor) openCalc(calcFor, calcPinned);
 
