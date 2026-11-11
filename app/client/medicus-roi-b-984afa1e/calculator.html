@@ -256,6 +256,8 @@ h3 { font-family: var(--font-body); font-size: 14px; font-weight: 700; color: va
 .money .label { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .money .amt { font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--ink); line-height: 1.1; font-variant-numeric: tabular-nums lining-nums; }
 .money .sub { font-size: 12px; color: var(--text-light); line-height: 1.5; }
+.money .cautious-line { font-size: 13px; display: flex; justify-content: space-between; gap: 12px; }
+.money .cautious-line strong { color: var(--ink); font-variant-numeric: tabular-nums; }
 .money .lic { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; border-top: 1px solid var(--border); padding-top: 10px; margin-top: 4px; }
 .money .lic strong { color: var(--ink); font-variant-numeric: tabular-nums; }
 .money .lic > span:last-child { white-space: nowrap; }
@@ -486,7 +488,7 @@ dialog.lead-dialog::backdrop { background: rgba(9, 28, 57, .55); }
           <p id="hero-per" class="hero-per visually-hidden" hidden></p>
           <div class="hero-range" id="hero-range">
             <span class="hr-label">Cautious case</span>
-            <span class="hr-val"><strong id="hc-hrs">0</strong> hrs a week · <strong id="hc-val">£0</strong> a year<button type="button" class="info" data-tip="cautious" aria-label="How we calculated the cautious case">i</button></span>
+            <span class="hr-val"><strong id="hc-hrs">0</strong> hrs a week<button type="button" class="info" data-tip="cautious" aria-label="How we calculated the cautious case">i</button></span>
           </div>
         </div>
         <div class="card-body">
@@ -527,7 +529,7 @@ dialog.lead-dialog::backdrop { background: rgba(9, 28, 57, .55); }
             <span class="label">What that time is worth<button type="button" class="info" data-tip="money" aria-label="How we calculated this">i</button></span>
             <div class="amt" id="m-total"></div>
             <div class="sub visually-hidden" id="m-sub"></div>
-            <div class="sub" id="m-cautious" hidden></div>
+            <div class="sub cautious-line" id="m-cautious"></div>
             <div class="lic"><span id="m-lic-label"></span><span><strong id="m-lic"></strong><button type="button" class="info" data-tip="lic" aria-label="How we calculated this" id="lic-info">i</button></span></div>
             <p class="lic-split" id="m-lic-split" hidden></p>
           </div>
@@ -1516,8 +1518,7 @@ dialog.lead-dialog::backdrop { background: rgba(9, 28, 57, .55); }
     $("hero-per").hidden = !net;
     if (net) $("hero-per").textContent = "An average of " + hrs(r.weekHrs / Math.max(1, state.practices)) + " a week for each practice, once all " + nf0.format(state.practices) + " practices are live on Medicus.";
     setNum("hc-hrs", c.weekHrs, function (v) { return nf1.format(v); });
-    setNum("hc-val", c.timeVal, function (v, done) { return done ? gbp(v) : gbpExact(v); });
-    $("m-cautious").textContent = "Cautious case: " + gbp(c.timeVal) + " a year, with " + (state.mode === "actual" ? "your own staffing" : "national-average staffing") + ", half the minutes saved and " + nf2.format(ca.weeks) + " weeks. Read the two as a range.";
+    $("m-cautious").innerHTML = "<span>Cautious case</span><span><strong>" + gbp(c.timeVal) + "</strong> a year</span>";
     setNum("t-perclin", r.perClinDay, function (v) { return nf0.format(v) + "<small>minutes back</small>"; });
     setNum("t-appts", r.appts, function (v) { return nf0.format(v) + "<small>" + nf0.format(a.apptMins) + "-minute appointments</small>"; });
     var clinShare = r.weekHrs > 0 ? r.clinHrs / r.weekHrs : 0, sessPerHr = a.sessionHours > 0 ? 1 / a.sessionHours : 0;
@@ -1804,7 +1805,7 @@ dialog.lead-dialog::backdrop { background: rgba(9, 28, 57, .55); }
         " registered patients with " + nf1.format(s.gp) + " FTE GPs and " + nf1.format(s.nurse) + " FTE practice nurses (" + R.modeName + ").", M, y, cw, 10, LIGHT, 5);
     y += 1;
     doc.setFont("helvetica", "bold"); doc.setFontSize(9); col(INK);
-    var cautLead = "Cautious case: " + nf1.format(R.c.weekHrs) + " hours a week and " + gbp(R.c.timeVal) + " a year.";
+    var cautLead = "Cautious case: " + nf1.format(R.c.weekHrs) + " hours a week.";
     doc.text(cautLead, M, y);
     y += 4.2;
     y = para("With " + (state.mode === "actual" ? "your own staffing" : "national-average staffing") + ", half the minutes saved and " + nf2.format(R.ca.weeks) + " working weeks; admin hours and add-on savings are unchanged. Read the two figures as a range.", M, y, cw, 8, LIGHT, 3.8);
