@@ -43,13 +43,16 @@ practices entered: staffing is estimated from the total list, admin time
 follows the total list, and each add-on is costed for a practice of average list
 size and multiplied by the number of practices using it (the "of N practices"
 field on the functions step). Leads carry `orgType` and `practices` alongside
-`patients`, plus the add-on saving paid by the practice and the headline total
-(`totalPerYear`) with the part of it that lands with the practice (`totalPracticePerYear`).
+`patients`, the clinical and non-clinical hours, and the direct savings by who pays
+(`addOnsPracticePerYear`, `addOnsNetworkPerYear`, `addOnsCommissionerPerYear`).
+Time is reported as hours only; it is not valued in pounds.
 
 The inputs and current step are kept in the URL hash (`#s=`), so a results link
 can be shared, and in localStorage for a returning visitor. Add-on prices follow
 Accurx's G-Cloud 15 tiers by total list size; each add-on records who pays
-(practice, or ICB/trust/other) and the saving is split accordingly.
+(practice, PCN or federation, or ICB/trust/other) and the results list a direct
+saving for each. For a PCN or federation a "PCN hub" line (included with Medicus;
+£15,000 default, from Medicus's commercial team) is counted once for the network.
 
 ## Option B
 

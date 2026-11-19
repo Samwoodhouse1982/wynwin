@@ -30,17 +30,21 @@ export const leadSchema = z.object({
   staffingBasis: z.string().max(60),
   gpFte: z.number().min(0).max(20_000),
   nurseFte: z.number().min(0).max(20_000),
+  // Time released, in hours: the total, and its clinical (GPs and nurses) and non-clinical (admin) parts.
   hoursPerWeek: z.number().min(0),
+  clinicalHoursPerWeek: z.number().min(0).optional().default(0),
+  adminHoursPerWeek: z.number().min(0).optional().default(0),
   hoursPerYear: z.number().min(0),
-  valuePerYear: z.number().min(0),
+  // Direct savings: add-on costs retired, in total and by who pays today (the practice(s), the PCN or federation
+  // itself, or an ICB, trust or other commissioner).
   addOnsPerYear: z.number().min(0),
-  // Share of the add-on saving paid by the practice today (the rest is paid by an ICB, trust or other commissioner).
   addOnsPracticePerYear: z.number().min(0).optional().default(0),
-  // The headline: value of the time returned plus add-ons retired, and the part of it that lands with the practice(s)
-  // (its own staff time plus the add-ons it pays for) rather than with an ICB, trust or other commissioner.
-  totalPerYear: z.number().min(0).optional().default(0),
-  totalPracticePerYear: z.number().min(0).optional().default(0),
-  // Older submissions carried a cautious case; accepted and ignored so a cached page still posts cleanly.
+  addOnsNetworkPerYear: z.number().min(0).optional().default(0),
+  addOnsCommissionerPerYear: z.number().min(0).optional().default(0),
+  // Older submissions valued the time in pounds and carried a cautious case; accepted and ignored so a cached page still posts cleanly.
+  valuePerYear: z.number().min(0).optional(),
+  totalPerYear: z.number().min(0).optional(),
+  totalPracticePerYear: z.number().min(0).optional(),
   cautiousHoursPerWeek: z.number().min(0).optional(),
   cautiousValuePerYear: z.number().min(0).optional(),
   functions: z.array(z.string().max(60)).max(40),
