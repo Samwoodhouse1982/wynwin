@@ -80,14 +80,14 @@ export default function WhoWeArePage() {
                   {item.href ? (
                     <Link
                       href={item.href}
-                      className="block bg-cream dark:bg-white/5 border border-navy/10 dark:border-white/10 hover:border-pink/40 rounded-2xl p-6 space-y-2 h-full shadow-sm hover:shadow-md hover:-translate-y-1 active:scale-[0.99] transition-all duration-200"
+                      className="block bg-cream dark:bg-white/[0.06] hover:ring-1 hover:ring-pink/30 rounded-2xl p-6 space-y-2 h-full shadow-card hover:shadow-card-hover hover:-translate-y-1 active:scale-[0.99] transition-all duration-200"
                     >
                       <p className="text-lg font-bold text-navy dark:text-white leading-snug">{item.stat}</p>
                       <p className="text-sm text-navy/65 dark:text-white/65">{item.label}</p>
                       <p className="text-sm font-semibold text-pink pt-1">See how we handle it →</p>
                     </Link>
                   ) : (
-                    <div className="bg-cream dark:bg-white/5 border border-navy/10 dark:border-white/10 rounded-2xl p-6 space-y-2 h-full shadow-sm transition-colors duration-200">
+                    <div className="bg-cream dark:bg-white/[0.06] rounded-2xl p-6 space-y-2 h-full shadow-card transition-colors duration-200">
                       <p className="text-lg font-bold text-navy dark:text-white leading-snug">{item.stat}</p>
                       <p className="text-sm text-navy/65 dark:text-white/65">{item.label}</p>
                     </div>

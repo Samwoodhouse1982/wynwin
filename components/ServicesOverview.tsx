@@ -42,7 +42,7 @@ export default function ServicesOverview() {
             <motion.div key={pillar.id} variants={card}>
               <Link
                 href={`#${pillar.id}`}
-                className="group flex flex-col h-full bg-white dark:bg-navy dark:border-white/10 rounded-2xl p-5 border border-navy/8 hover:border-pink/40 hover:shadow-md transition-all duration-200"
+                className="group flex flex-col h-full bg-white dark:bg-navy rounded-2xl p-5 shadow-card hover:shadow-card-hover hover:-translate-y-0.5 hover:ring-1 hover:ring-pink/30 transition-all duration-200"
               >
                 <div className="flex items-center justify-between mb-3">
                   {(() => { const Icon = SERVICE_ICON_MAP[pillar.id]; return Icon ? <Icon /> : null; })()}

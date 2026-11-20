@@ -26,7 +26,7 @@ export default function ServiceCard({ title, body, href, index = 0 }: ServiceCar
     >
       <Link
         href={href}
-        className="group block bg-white dark:bg-white/5 hover:bg-white dark:hover:bg-white/10 border border-navy/10 dark:border-white/10 hover:border-pink/50 rounded-2xl p-6 shadow-sm dark:shadow-none hover:shadow-md dark:hover:shadow-none transition-all duration-300 h-full overflow-hidden"
+        className="group block bg-white dark:bg-white/[0.06] hover:bg-white dark:hover:bg-white/10 hover:ring-1 hover:ring-pink/30 rounded-2xl p-6 shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300 h-full overflow-hidden"
       >
         <div className="flex flex-col h-full gap-4">
           {/* Animated top accent line */}

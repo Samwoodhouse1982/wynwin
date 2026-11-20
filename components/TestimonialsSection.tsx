@@ -46,7 +46,7 @@ export default function TestimonialsSection() {
             <motion.div
               key={i}
               variants={card}
-              className="relative bg-white dark:bg-white/5 border border-navy/8 dark:border-white/10 hover:border-pink/30 rounded-2xl p-8 flex flex-col gap-6 overflow-hidden transition-colors duration-300"
+              className="relative bg-white dark:bg-white/[0.06] hover:ring-1 hover:ring-pink/25 rounded-2xl p-8 flex flex-col gap-6 overflow-hidden shadow-card transition-all duration-300"
             >
               {/* Large decorative quote mark */}
               <svg

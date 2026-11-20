@@ -37,7 +37,7 @@ export default function CookiesPage() {
             <h2 className="text-xl font-bold text-navy dark:text-white mb-3">How we use cookies</h2>
             <p className="leading-relaxed">This site uses the following types of cookies:</p>
 
-            <div className="mt-4 overflow-x-auto rounded-xl border border-navy/10 dark:border-white/10">
+            <div className="mt-4 overflow-x-auto rounded-xl shadow-card">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="bg-navy text-white text-left">

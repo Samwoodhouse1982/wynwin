@@ -59,7 +59,7 @@ export default function HeroServiceShowcase({ ready = false }: { ready?: boolean
       onBlur={() => setPaused(false)}
     >
       {/* Outer card */}
-      <div className="border border-navy/10 dark:border-white/10 rounded-2xl overflow-hidden bg-white dark:bg-white/[0.03] shadow-sm dark:shadow-none">
+      <div className="rounded-2xl overflow-hidden bg-white dark:bg-white/[0.05] shadow-card">
 
         {/* Top bar — service counter + pink progress line */}
         <div className="relative h-0.5 bg-navy/10 dark:bg-white/10">

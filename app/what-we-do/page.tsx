@@ -56,7 +56,7 @@ export default function WhatWeDoPage() {
                 <RevealItem key={scenario.href}>
                   <Link
                     href={scenario.href}
-                    className="group flex h-full flex-col justify-between gap-5 rounded-2xl border border-navy/10 dark:border-white/10 hover:border-pink/50 bg-cream dark:bg-white/5 p-6 active:scale-[0.99] transition-all duration-200"
+                    className="group flex h-full flex-col justify-between gap-5 rounded-2xl bg-cream dark:bg-white/[0.06] p-6 shadow-card hover:shadow-card-hover hover:-translate-y-0.5 hover:ring-1 hover:ring-pink/30 active:scale-[0.99] transition-all duration-200"
                   >
                     <p className="text-navy dark:text-white font-semibold leading-snug">
                       {scenario.text}

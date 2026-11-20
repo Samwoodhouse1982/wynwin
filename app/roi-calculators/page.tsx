@@ -120,7 +120,7 @@ export default function RoiCalculatorsPage() {
                 key={scaleItem.title}
                 className={scaleItem.wide ? 'lg:col-span-3' : 'lg:col-span-2'}
               >
-                <div className="h-full rounded-2xl border border-navy/10 bg-cream p-7 dark:border-white/10 dark:bg-navy">
+                <div className="h-full rounded-2xl bg-cream p-7 shadow-card dark:bg-navy">
                   <h3 className="mb-3 text-lg font-bold leading-snug text-navy dark:text-white">
                     {scaleItem.title}
                   </h3>
@@ -155,7 +155,7 @@ export default function RoiCalculatorsPage() {
           <Reveal stagger className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {ROI.examples.cards.map((card) => (
               <RevealItem key={card.client}>
-                <article className="flex h-full flex-col rounded-2xl border border-navy/10 bg-white p-7 dark:border-white/10 dark:bg-navy-light">
+                <article className="flex h-full flex-col rounded-2xl bg-white p-7 shadow-card dark:bg-navy-light">
                   <h3 className="text-lg font-bold leading-snug text-navy dark:text-white">
                     {card.client}
                   </h3>
@@ -396,7 +396,7 @@ export default function RoiCalculatorsPage() {
             </Reveal>
 
             <Reveal delay={0.15}>
-              <div className="rounded-2xl border border-navy/10 bg-cream p-5 shadow-sm dark:border-white/10 dark:bg-white/5 dark:shadow-none sm:p-8 lg:p-10">
+              <div className="rounded-2xl bg-cream p-5 shadow-card dark:bg-white/[0.06] sm:p-8 lg:p-10">
                 <FullContactForm
                   source={ROI.finalCta.source}
                   messagePlaceholder={ROI.finalCta.messagePlaceholder}

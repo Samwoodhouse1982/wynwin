@@ -112,7 +112,7 @@ export default function GetInTouchPage() {
 
           {/* Right — form */}
           <Reveal direction="right" delay={0.2} className="lg:col-span-3">
-            <div className="bg-white dark:bg-white/5 border border-navy/10 dark:border-white/10 rounded-2xl p-5 sm:p-8 lg:p-10 shadow-sm dark:shadow-none">
+            <div className="bg-white dark:bg-white/[0.06] rounded-2xl p-5 sm:p-8 lg:p-10 shadow-card">
               <h2 className="text-xl font-bold text-navy dark:text-white mb-8">Send us a message</h2>
               <FullContactForm source="get-in-touch" />
             </div>

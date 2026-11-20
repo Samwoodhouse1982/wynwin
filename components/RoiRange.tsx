@@ -65,7 +65,7 @@ export default function RoiRange() {
           {range.cards.map((card) => (
             <article
               key={card.title}
-              className="flex h-full flex-col rounded-2xl border border-navy/10 bg-white p-7 dark:border-white/10 dark:bg-navy-light"
+              className="flex h-full flex-col rounded-2xl bg-white p-7 shadow-card dark:bg-navy-light"
             >
               <h3 className="mb-3 text-lg font-bold leading-snug text-navy dark:text-white">{card.title}</h3>
               <p className="mb-6 flex-1 text-sm leading-relaxed text-navy/65 dark:text-white/70">{card.body}</p>

@@ -57,8 +57,8 @@ export default function HowWeHelp() {
                 variants={card}
                 // No lift: these cards are not clickable, and a card that rises
                 // under the cursor promises an affordance the page does not have.
-                // They warm their border and fill instead.
-                className="bg-white dark:bg-white/5 border border-navy/8 dark:border-white/10 hover:border-pink/40 hover:bg-cream dark:hover:bg-white/10 rounded-2xl p-8 transition-colors duration-300 cursor-default"
+                // They warm their fill and take a pink ring instead.
+                className="bg-white dark:bg-white/[0.06] hover:bg-cream dark:hover:bg-white/10 hover:ring-1 hover:ring-pink/30 rounded-2xl p-8 shadow-card transition-all duration-300 cursor-default"
               >
                 <motion.div
                   className="mb-5"

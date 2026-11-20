@@ -15,6 +15,20 @@
   --font-display: var(--font-unbounded), system-ui, sans-serif;
   /* Instrument Sans for body — clean and readable */
   --font-body: var(--font-instrument), system-ui, sans-serif;
+
+  /* Card depth. Boxes no longer have a grey outline; layered shadows lift them
+     off the page instead. Three layers each: a tight contact shadow, a soft
+     mid shadow and a long ambient one, which reads as real depth where a
+     single blurred shadow reads as a smudge. Dark mode swaps in its own set
+     (see .dark below), because soft shadows disappear against navy. */
+  --shadow-card:
+    0 1px 2px rgb(13 27 62 / 0.05),
+    0 6px 16px -4px rgb(13 27 62 / 0.08),
+    0 20px 40px -14px rgb(13 27 62 / 0.14);
+  --shadow-card-hover:
+    0 2px 4px rgb(13 27 62 / 0.06),
+    0 14px 30px -8px rgb(13 27 62 / 0.14),
+    0 32px 60px -18px rgb(13 27 62 / 0.22);
 }
 
 :root {
@@ -26,6 +40,16 @@
 }
 
 .dark {
+  /* A faint top highlight plus deep shadow, so cards separate from the navy
+     without needing an outline. */
+  --shadow-card:
+    inset 0 1px 0 rgb(255 255 255 / 0.07),
+    0 2px 4px rgb(0 0 0 / 0.30),
+    0 16px 32px -10px rgb(0 0 0 / 0.55);
+  --shadow-card-hover:
+    inset 0 1px 0 rgb(255 255 255 / 0.10),
+    0 4px 8px rgb(0 0 0 / 0.35),
+    0 26px 48px -12px rgb(0 0 0 / 0.65);
   --background: #0D1B3E;
   --foreground: #F8F6F2;
   --grid-line: #ffffff;

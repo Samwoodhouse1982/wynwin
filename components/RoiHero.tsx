@@ -112,7 +112,7 @@ export default function RoiHero() {
                 height={hero.image.height}
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 priority
-                className="h-auto w-full rounded-2xl border border-navy/10 object-cover dark:border-white/10"
+                className="h-auto w-full rounded-2xl object-cover shadow-card"
               />
             ) : (
               <div
