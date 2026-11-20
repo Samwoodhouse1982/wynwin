@@ -66,6 +66,7 @@ export default function Nav() {
   }, [open]);
 
   return (
+    <>
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
@@ -150,24 +151,6 @@ export default function Nav() {
       {/* Mobile drawer */}
       <AnimatePresence>
         {open && (
-          <motion.button
-            key="mobile-scrim"
-            type="button"
-            aria-label="Close menu"
-            onClick={() => setOpen(false)}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            // The drawer was a dropdown over a page that stayed live behind it,
-            // and tapping outside did nothing.
-            className="md:hidden fixed inset-0 top-16 z-40 bg-navy/60 backdrop-blur-[2px] cursor-default"
-          />
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {open && (
           <motion.div
             key="mobile-drawer"
             id="mobile-menu"
@@ -224,5 +207,29 @@ export default function Nav() {
         )}
       </AnimatePresence>
     </header>
+
+    {/* Scrim behind the mobile drawer. It must live outside the header: inside it,
+        the scrim (fixed, z-40) painted on top of the drawer, which has no z-index,
+        so the links looked blurred and every tap landed on the scrim and closed
+        the menu. The header's backdrop blur, applied once the page is scrolled,
+        also made a fixed child size itself to the header and not the screen. As a
+        sibling it covers the viewport and sits under the header (z-50), drawer
+        included. */}
+    <AnimatePresence>
+      {open && (
+        <motion.button
+          key="mobile-scrim"
+          type="button"
+          aria-label="Close menu"
+          onClick={() => setOpen(false)}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="md:hidden fixed inset-0 top-16 z-40 bg-navy/60 backdrop-blur-[2px] cursor-default"
+        />
+      )}
+    </AnimatePresence>
+    </>
   );
 }
