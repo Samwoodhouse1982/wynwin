@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Third-party libraries copied in as-is (minified jsPDF for the Medicus
+    // calculator's PDF report). They are not our code, so linting them only
+    // produces noise.
+    "public/vendor/**",
   ]),
 ]);
 

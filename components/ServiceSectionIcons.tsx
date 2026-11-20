@@ -172,6 +172,7 @@ export function LogisticsIcon() {
       ))}
       {/* Travelling dot */}
       <motion.circle r={3.5} fill="#E8006A"
+        initial={{ cx: 22, cy: 6 }}
         animate={{ cx: [22, 38, 6, 22], cy: [6, 36, 36, 6] }}
         transition={{ duration: 2.4, repeat: Infinity, times: [0, 0.33, 0.67, 1] }}
       />

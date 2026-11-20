@@ -135,10 +135,14 @@ export function SunFlare({ className = '' }: { className?: string }) {
           />
         ))}
 
-        {/* ── Scroll-driven: ghost rings — drift down slowly ── */}
+        {/* ── Scroll-driven: ghost rings — drift down slowly ──
+            Every animated circle below sets `initial` to its first keyframe. Without
+            it framer-motion renders cx and cy as undefined for the first frame and
+            the browser logs 'Expected length, "undefined"'. */}
         <motion.g style={{ y: ringsY }}>
           <motion.circle
             r={185}
+            initial={{ cx: 300, cy: 110 }}
             stroke="#E8006A" strokeWidth={1.2} fill="none"
             filter="url(#sf-f-ring)"
             animate={{
@@ -150,6 +154,7 @@ export function SunFlare({ className = '' }: { className?: string }) {
           />
           <motion.circle
             r={72}
+            initial={{ cx: 195, cy: 192 }}
             stroke="#ff4da6" strokeWidth={0.8} fill="none"
             filter="url(#sf-f-ring)"
             animate={{
@@ -165,6 +170,7 @@ export function SunFlare({ className = '' }: { className?: string }) {
         <motion.g style={{ y: spotsY }}>
           <motion.circle
             r={50}
+            initial={{ cx: 275, cy: 130 }}
             fill="url(#sf-grad-ghost)"
             filter="url(#sf-f-mid)"
             animate={{
@@ -176,6 +182,7 @@ export function SunFlare({ className = '' }: { className?: string }) {
           />
           <motion.circle
             r={28}
+            initial={{ cx: 182, cy: 210 }}
             fill="url(#sf-grad-cool)"
             filter="url(#sf-f-tight)"
             animate={{

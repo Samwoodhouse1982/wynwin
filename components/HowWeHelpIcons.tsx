@@ -33,16 +33,19 @@ export function BottleneckIcon() {
 
       {/* Dot — top path */}
       <motion.circle cx={4} cy={10} r={2.5} fill="#E8006A"
+        initial={{ cx: 4, cy: 10 }}
         animate={{ cx: [4, 24, 44], cy: [10, 24, 10], opacity: [0, 1, 0] }}
         transition={{ duration: 1.5, repeat: Infinity, delay: 0 }}
       />
       {/* Dot — middle path */}
       <motion.circle cx={4} cy={24} r={2.5} fill="#E8006A"
+        initial={{ cx: 4, cy: 24 }}
         animate={{ cx: [4, 24, 44], cy: [24, 24, 24], opacity: [0, 1, 0] }}
         transition={{ duration: 1.5, repeat: Infinity, delay: 0.5 }}
       />
       {/* Dot — bottom path */}
       <motion.circle cx={4} cy={38} r={2.5} fill="#E8006A"
+        initial={{ cx: 4, cy: 38 }}
         animate={{ cx: [4, 24, 44], cy: [38, 24, 38], opacity: [0, 1, 0] }}
         transition={{ duration: 1.5, repeat: Infinity, delay: 1.0 }}
       />
@@ -67,6 +70,7 @@ export function TeamIcon() {
         cx={16} cy={24} r={12}
         stroke="#E8006A" strokeWidth={1.5}
         fill="none"
+        initial={{ cx: 16 }}
         animate={{ cx: [16, 32, 32, 16], opacity: [0, 1, 1, 0] }}
         transition={{ duration: 2.8, repeat: Infinity, times: [0, 0.3, 0.7, 1] }}
       />
