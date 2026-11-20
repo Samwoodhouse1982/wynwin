@@ -6,12 +6,12 @@
 export const BRAND = {
   name: 'WYN WIN',
   tagline: 'Whatever You Need, Whenever It\'s Needed.',
-  phone: '07307 176143',
-  phoneHref: 'tel:+447307176143',
+  phone: '07736 304101',
+  phoneHref: 'tel:+447736304101',
   email: 'hello@wynwin.co.uk',
   emailHref: 'mailto:hello@wynwin.co.uk',
   linkedin: 'https://www.linkedin.com/company/wyn-win',
-  whatsapp: 'https://wa.me/447307176143',
+  whatsapp: 'https://wa.me/447736304101',
   // Single source of truth for the response-time promise. It appears beside
   // both form buttons, in both success states, on the contact page and in the
   // Get In Touch meta description — change it here only.
